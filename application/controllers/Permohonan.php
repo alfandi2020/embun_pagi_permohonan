@@ -33,7 +33,7 @@ class Permohonan extends CI_Controller {
         if($this->uri->segment(3)){
             $filter = $this->uri->segment(3);
             $this->session->set_userdata('filterPermohonan', $filter);
-            redirect('permohonan/list');
+            redirect('permohonan/list2');
         }
     }
     public function submit()
@@ -66,7 +66,7 @@ class Permohonan extends CI_Controller {
         $this->session->unset_userdata('setUnik');
         redirect('permohonan');
     }
-    function list()
+    function list2()
     {
         $data = [
             'nama' => $this->session->userdata('nama'),
@@ -186,7 +186,7 @@ class Permohonan extends CI_Controller {
             ];
             $this->db->where('unik',$unik);
             $this->db->update('tb_permohonan',$update);
-            redirect('permohonan/list');
+            redirect('permohonan/list2');
         }
     }
     function fetch_permohonan()
