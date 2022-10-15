@@ -30,10 +30,10 @@ class M_Permohonan extends CI_Model {
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
         }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
-            // $this->db->where('status_permohonan','Waiting');
             $this->db->or_where('status_permohonan','Approved');
         }else{
-            $this->db->where('status_permohonan','Selesai');
+            $this->db->or_where('status_permohonan','Rejected');
+            $this->db->or_where('status_permohonan','Done');
         }
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {

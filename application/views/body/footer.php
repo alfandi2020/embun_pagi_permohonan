@@ -93,25 +93,26 @@ $('.reject-confirm').on('click', function (eventx) {
 		allowOutsideClick: () => !Swal.isLoading()
 		}).then((result) => {
 		if (result.isConfirmed) {
-			// console.log(result.value)
-			// Swal.fire({
-			// title: `xx`,
-			// imageUrl: result.value.avatar_url
-			// })
 			$.ajax({
 				url: base_url+"permohonan/status",
 				type: "POST",
-				data: {id: id,status : "reject"},
+				data: {id: id,status : "Rejected",keterangan: result.value},
 				dataType :'json',
 				success: function (data) {
 					Swal.fire({
-						title: '1111',
-						// imageUrl: result.value.avatar_url
+						title: 'Berhasil',
+						text: 'Permohonan berhasil di reject',
+						icon: 'success',
+					}).then((result2) => {
+						if (result2.isConfirmed == true) {
+							window.location.replace('<?= base_url('permohonan/list2') ?>');
+						}
+						window.location.replace('<?= base_url('permohonan/list2') ?>');
 					})
 				},
 				error: function (error) {
 					Swal.fire({
-						title: 'awdwawa',
+						title: 'Error',
 						// imageUrl: result.value.avatar_url
 					})
 				}

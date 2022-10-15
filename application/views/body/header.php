@@ -177,7 +177,7 @@
             <?php 
             if(strpos($role,'2') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('permohonan/list');?>" class="menu-link">
+              <a href="<?= base_url('permohonan/list2');?>" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-money"></i>
                 <div data-i18n="Basic">List Permohonan</div>
               </a>

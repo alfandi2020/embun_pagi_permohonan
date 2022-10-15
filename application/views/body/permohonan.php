@@ -6,7 +6,7 @@
         <div class="container-xxl flex-grow-1 container-p-y">
           <div class="row">
             <!-- Form controls -->
-            <form action="<?= base_url('permohonan/submit') ?>" method="POST">
+            <form action="<?= base_url('permohonan/submit') ?>" method="POST" enctype="multipart/form-data">
             <input type="hidden" value="1" name="row[]">
               <div class="col-md-12">
                 <div class="card mb-4">
@@ -31,6 +31,11 @@
                               <?php } ?>
                           </select>
                         </div>
+                        
+                        <div class="col-md-3">
+                          <label for="exampleFormControlInput1" class="form-label">File</label>
+                          <input type="file" name="att" class="form-control" id="exampleFormControlInput1"/>
+                          </div>
                       </div>
                     </div>
                     <div class="mb-3">
@@ -45,7 +50,7 @@
                           <input required type="text" name="nominal1" id="rupiah" placeholder="1.000.000" class="form-control" id="exampleFormControlInput1"
                             />
                           </div>
-                          <div class="col-md-3 mt-4">
+                          <div class="col-md-2 mt-4">
                             <button id="add-permohonan" class="btn btn-primary"><i class="tf-icons bx bx-plus"></i></button>
                           </div>
                       </div>

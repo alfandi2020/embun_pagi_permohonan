@@ -45,13 +45,21 @@ class Permohonan extends CI_Controller {
             'unik' => $set_unik,
             'id_user' => $id_user,
             'nama_pemohon' => $nama,
+            'file' => time().'_' .$_FILES['att']['name'],
             'tgl_permohonan' => date('Y-m-d H:i:s'),
             'tahun' => date('Y'),
             'id_admin' => $this->input->post('admin'),
             'status_permohonan' => 'Waiting'
         ];
         $this->db->insert('tb_permohonan',$data);
-
+        $target_dir = "upload/file/";
+        $file = $_FILES['att']['name'];
+        $path = pathinfo($file);
+        $filename = time().'_'.$path['filename'];
+        $ext = $path['extension'];
+        $temp_name = $_FILES['att']['tmp_name'];
+        $path_filename_ext = $target_dir.$filename.".".$ext;
+        move_uploaded_file($temp_name,$path_filename_ext);
         $row = $this->input->post('row');
         for ($i=0; $i < count($row)+1; $i++) { 
            if ($this->input->post('isi'.$i) != "") {
@@ -113,11 +121,15 @@ class Permohonan extends CI_Controller {
             //     $dis = "disabled";
             //     $edit = 'disabled';
             // }
-            if ($field->status_permohonan == 'Approved') {
-                $status = '<span class="btn btn-primary">'.$field->status_permohonan.'</span>';
-            }else{
+            if ($field->status_permohonan == 'Waiting') {
                 $status = '<a href="'.'detail/'.$field->unik.'" class="btn btn-warning"><i class="tf-icons bx bx-chevron-right"></i></a>';
-
+            }else if($field->status_permohonan == 'Approved'){
+                $status = '<span class="btn btn-primary"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
+            }else if($field->status_permohonan == 'Done'){
+                $status = '<span class="btn btn-primary"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
+            }else{
+                $status = '<span class="btn btn-danger"><i class="bx bx-x-circle"></i> '.$field->status_permohonan.'</span>';
+                
             }
             if ($field->no_permohonan == '') {
                $permohonan = '';
@@ -171,9 +183,12 @@ class Permohonan extends CI_Controller {
     }
     function status()
     {
-        if ($this->input->post('status') == 'reject') {
-            $this->db->where('');
-            echo json_encode('da');
+        if ($this->input->post('status') == 'Rejected') {
+            $this->db->where('unik',$this->input->post('id'));
+            $this->db->set('status_permohonan','Rejected');
+            $this->db->set('note_status_permohonan',$this->input->post('keterangan'));
+            $this->db->update('tb_permohonan');
+            echo json_encode('Success');
             // redirect('permohonan/list');
         }else{
             $unik = $this->uri->segment(3);

@@ -6,7 +6,7 @@
         <div class="container-xxl flex-grow-1 container-p-y">
           <div class="row mb-3">
             <div class="col-md-5">
-              <a href="<?= base_url('permohonan/list') ?>" class="btn btn-warning"><i class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="<?= base_url('permohonan/list2') ?>" class="btn btn-warning"><i class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved') ?>" class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved  </a>&nbsp;&nbsp;&nbsp;&nbsp;
               <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i class="tf-icons bx bx-task-x"></i> Reject  </button>
             </div>
