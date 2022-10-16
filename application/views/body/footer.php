@@ -96,7 +96,12 @@ $('.reject-confirm').on('click', function (eventx) {
 			$.ajax({
 				url: base_url+"permohonan/status",
 				type: "POST",
-				data: {id: id,status : "Rejected",keterangan: result.value},
+				data: {
+					id: id,
+					status : "Rejected",
+					keterangan: result.value,
+					atasan : '<?= $this->session->userdata('filterPermohonan') == 'data_baru' ? 'data_baru' : 'waiting' ?>'
+				},
 				dataType :'json',
 				success: function (data) {
 					Swal.fire({
@@ -112,7 +117,7 @@ $('.reject-confirm').on('click', function (eventx) {
 				},
 				error: function (error) {
 					Swal.fire({
-						title: 'Error',
+						title: 'Errorrrr',
 						// imageUrl: result.value.avatar_url
 					})
 				}

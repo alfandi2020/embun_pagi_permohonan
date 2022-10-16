@@ -19,7 +19,7 @@
                           <input type="text" name="nama" readonly value="<?= $this->session->userdata('nama') ?>" class="form-control" id="exampleFormControlInput1"
                           />
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                           <label for="exampleFormControlInput1" class="form-label">Nama Admin</label>
                           <select name="admin" id="" class="form-control">
                             <option selected>Pilih Admin</option>
@@ -30,7 +30,7 @@
                               <option value="<?= $x->id ?>" > <?=  $x->nama?> </option>
                               <?php } ?>
                           </select>
-                        </div>
+                        </div> -->
                         
                         <div class="col-md-3">
                           <label for="exampleFormControlInput1" class="form-label">File</label>

@@ -30,10 +30,13 @@ class M_Permohonan extends CI_Model {
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
         }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
+            $this->db->or_where('status_permohonan_atasan !=','Rejected');
             $this->db->or_where('status_permohonan','Approved');
+            $this->db->where('no_permohonan >',0);
         }else{
             $this->db->or_where('status_permohonan','Rejected');
             $this->db->or_where('status_permohonan','Done');
+            $this->db->or_where('status_permohonan_atasan','Rejected');
         }
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {
@@ -121,6 +124,7 @@ class M_Permohonan extends CI_Model {
         $length = $this->input->post('length');
         if ($length != -1)
             $this->db->limit($length, $this->input->post('start'));
+         
         // if(isset($setTahun)) $this->db->where('tahun', $setTahun);
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {

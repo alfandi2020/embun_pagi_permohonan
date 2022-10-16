@@ -7,7 +7,8 @@
           <div class="row mb-3">
             <div class="col-md-5">
               <a href="<?= base_url('permohonan/list2') ?>" class="btn btn-warning"><i class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved') ?>" class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved  </a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
+              <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>" class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved  </a>&nbsp;&nbsp;&nbsp;&nbsp;
               <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i class="tf-icons bx bx-task-x"></i> Reject  </button>
             </div>
           </div>
@@ -68,6 +69,9 @@
                         <th>Nama</th>
                         <th>No Permohonan</th>
                         <th>Tanggal Permohonan</th>
+                        <?php if($this->session->userdata('filterPermohonan') == 'data_baru'){ ?>
+                          <th>Status Admin</th>
+                        <?php } ?>
                         <th>Status</th>
                       </tr>
                     </thead>
