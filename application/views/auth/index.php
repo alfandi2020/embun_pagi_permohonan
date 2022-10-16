@@ -9,7 +9,7 @@
              <!-- Logo -->
              <div class="app-brand justify-content-center">
                <a href="index.html" class="app-brand-link gap-2">
-                 <span class="app-brand-logo demo">
+                 <!-- <span class="app-brand-logo demo">
                    <svg
                      width="25"
                      viewBox="0 0 25 42"
@@ -63,8 +63,8 @@
                        </g>
                      </g>
                    </svg>
-                 </span>
-                 <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
+                 </span> -->
+                 <!-- <span class="app-brand-text demo text-body fw-bolder">Sneat</span> -->
                </a>
              </div>
              <!-- /Logo -->
