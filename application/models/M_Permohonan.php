@@ -30,9 +30,13 @@ class M_Permohonan extends CI_Model {
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
         }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
-            $this->db->or_where('status_permohonan_atasan !=','Rejected');
-            $this->db->or_where('status_permohonan','Approved');
-            $this->db->where('no_permohonan >',0);
+            $this->db->where('status_permohonan_atasan !=','Rejected');
+            // $this->db->where('(status_permohonan_atasan !="Rejected" and status_permohonan !="Rejected")');
+            $this->db->or_where('status_permohonan_atasan',null);
+            $this->db->where('status_permohonan !=','Waiting');
+            $this->db->where('status_permohonan !=','Rejected');
+            // $this->db->or_where('note_status_permohonan !=','');
+            // $this->db->or_where('no_permohonan','');
         }else{
             $this->db->or_where('status_permohonan','Rejected');
             $this->db->or_where('status_permohonan','Done');

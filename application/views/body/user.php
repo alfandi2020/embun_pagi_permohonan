@@ -94,10 +94,10 @@
                       <tr>
                         <td><?= $no++ ?></td>
                         <td><?= $x->nama ?></td>
-                        <td><?= $x->level ?></td>
-                        <td>SMP</td>
+                        <td><?= $x->nama_level ?></td>
+                        <td><?= $x->status_sekolah ?></td>
                         <td>
-                          <form action="<?= base_url('user/status/'.$x->id) ?>" method="POST">
+                          <form action="<?= base_url('user/status/'.$x->id_user) ?>" method="POST">
                             <label class="switch switch-primary">
                               <input type="checkbox" onchange="this.form.submit()" name="status" value="<?php if($x->status != 'Aktif')
                                 {
@@ -116,7 +116,7 @@
                           </form>
                         </td>
                         <td>
-                          <a href="<?= base_url('user/edit/'.$x->id) ?>" class="btn btn-primary"><i class="bx bx-edit"></i></a>
+                          <a href="<?= base_url('user/edit/'.$x->id_user) ?>" class="btn btn-primary"><i class="bx bx-edit"></i></a>
                         </td>
                       </tr>
                       <?php } ?>
@@ -234,9 +234,11 @@
                   <div class="input-group input-group-merge">
                     <select name="level" id="" class="form-control">
                       <option selected>Pilih Level</option>
-                      <option value="Admin Approval">Admin Approval</option>
-                      <option value="Admin Filter">Admin Filter</option>
-                      <option value="User Pengajuan">User Pengajuan</option>
+                      <?php 
+                      $d = $this->db->get_where('tb_level',['status' => 1])->result();
+                      foreach($d as $x){ ?>
+                        <option value="<?= $x->id ?>"><?= $x->nama ?></option>
+                      <?php } ?>
                     </select>
                   </div>
                 </div>     

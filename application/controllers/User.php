@@ -12,23 +12,32 @@ class User extends CI_Controller {
     {
         $add = $this->input->post('adduser');
         if ($add == 'add') {
+            if ($this->input->post('level') == '1') {
+                $role = '1,2,3';
+            }else if ($this->input->post('level') == '2') {
+                $role = '1,2';
+            }else{
+                $role = '1';
+            }
             $insert= [
                 "nama" => $this->input->post('nama'),
                 "username" => $this->input->post('username'),
-                "password" => $this->input->post('password'),
+                "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
                 "level" => $this->input->post('level'),
-                "role" => 1,
-                "role" => 1,
+                "role" => $role,
                 "status_sekolah" => $this->input->post('status_sekolah'),
                 "status" => 'Aktif',
             ];
             $this->db->insert('users',$insert);
             redirect('user');
         }
+        $this->db->select('*,b.status as level_status,a.status,a.nama,b.nama as nama_level,a.id as id_user');
+        $this->db->join('tb_level as b','a.level=b.id');
+        $user = $this->db->get('users as a')->result();
         $data = [
             'title' => "List User",
             'titlePage' => 'List User',
-            'data' => $this->db->get('users')->result()
+            'data' => $user
         ];
 
 		$this->load->view('body/header', $data);
@@ -43,8 +52,7 @@ class User extends CI_Controller {
         $this->db->where('id',$id);
         $cek=$this->db->update('users');
         if ($cek == true) {
-            # code...
-        redirect('user');
+            redirect('user');
         }
     }
     function edit($id)

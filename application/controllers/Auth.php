@@ -32,25 +32,33 @@ class Auth extends CI_Controller {
         $password = $this->input->post('password');
 
         $user = $this->db->get_where('users', ['username' => $username])->row_array();
+        $cek_status = $this->db->get_where('users', ['username' => $username])->num_rows();
         
         //usernya ada
-        if($user) {
-            // cek password
-            if(password_verify($password, $user['password'])) {
-                $data = [
-                    'id_user' => $user['id'],
-                    'nama' => $user['nama'],
-                    'username' => $user['username'],
-                    'role' => $user['role'],
-                    'status_sekolah' => $user['status_sekolah'],
-                ];
+        if($cek_status == true) {
+            if ($user['status'] == 'Aktif') {
+                // cek password
+                if(password_verify($password, $user['password'])) {
+                    $data = [
+                        'id_user' => $user['id'],
+                        'nama' => $user['nama'],
+                        'username' => $user['username'],
+                        'role' => $user['role'],
+                        'status_sekolah' => $user['status_sekolah'],
+                    ];
 
-                $this->session->set_userdata($data);
-                redirect('permohonan');
+                    $this->session->set_userdata($data);
+                    redirect('permohonan');
+                }else{
+                    $this->session->set_flashdata('msg','<div class="alert alert-danger">Password salah..!</div>');
+                    redirect('auth');
+                }
             }else{
+                $this->session->set_flashdata('msg','<div class="alert alert-danger">username <b>'.$username.' </b> tidak aktif</div>');
                 redirect('auth');
             }
         }else{
+            $this->session->set_flashdata('msg','<div class="alert alert-danger">tidak ada dengan username <b>'.$username.' </b></div>');
             redirect('auth');
         }
     }

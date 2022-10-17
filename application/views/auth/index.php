@@ -68,6 +68,7 @@
                </a>
              </div>
              <!-- /Logo -->
+             <?= $this->session->flashdata('msg') ?>
              <h4 class="mb-2">Selamat Datang di Embun Pagi 👋</h4>
              <p class="mb-4">Mohon masuk dengan akun anda</p>
 

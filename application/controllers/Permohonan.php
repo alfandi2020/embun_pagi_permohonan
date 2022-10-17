@@ -6,6 +6,8 @@ class Permohonan extends CI_Controller {
     {
         parent::__construct();
         $this->load->model(array('M_Permohonan'));
+        date_default_timezone_set("Asia/Jakarta");
+
     }
 
     public function index()
@@ -121,44 +123,55 @@ class Permohonan extends CI_Controller {
             //     $dis = "disabled";
             //     $edit = 'disabled';
             // }
-            if ($field->status_permohonan == 'Waiting') {
+
+            if ($field->status_permohonan === 'Waiting') {
                 $status = '<a href="'.'detail/'.$field->unik.'" class="btn btn-warning"><i class="tf-icons bx bx-chevron-right"></i></a>';
             }else if($field->status_permohonan == 'Approved'){
                 $status = '<a href="'.'detail/'.$field->unik.'" class="btn btn-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
             }else if($field->status_permohonan == 'Done'){
                 $status = '<span class="btn btn-primary"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
             }else{
-                $status = '<span class="btn btn-danger"><i class="bx bx-x-circle"></i> '.$field->status_permohonan.'</span>';
-                
+                $status = '';
             }
-            if ($field->no_permohonan == '') {
-               $permohonan = '';
+
+            if ($field->no_permohonan > 0) {
+               $permohonan = '<span class="badge bg-primary">'.$field->no_permohonan.'</span>';
             }else{
-               $permohonan = '<span class="badge bg-warning"> '.$field->no_permohonan.'</span>';
+               $permohonan='<span class="btn btn-warning"> <i class="bx bx-time-five"></i></span>';
             }
 
             if($field->status_permohonan == 'Approved'){
-                $status_admin ='<span class="btn btn-warning"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span>';
+                $status_admin ='<span class="btn btn-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.$field->tgl_status_admin;
+            }else if($field->status_permohonan == 'Rejected'){
+                $status_admin ='<span class="btn btn-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_admin .'</span>';
+            }else{
+                $status_admin = '12321';
             }
+            
+            if($field->status_permohonan_atasan == 'Approved'){
+                $status_atasan ='<span class="btn btn-primary"> <i class="bx bx-check"></i> '. $field->nama_atasan .'</span><br>'.$field->tgl_status_admin;
+            }else if($field->status_permohonan_atasan == 'Rejected'){
+                $status_atasan ='<span class="btn btn-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</span>';
+            }else if($field->status_permohonan == 'Rejected'){
+                $status_atasan = 'Ditolak '.$field->nama_admin;
+            }else{
+                $status_atasan ='<span class="btn btn-warning"> <i class="bx bx-time-five"></i></span>';
+            }
+            
             $row = array();
             
 			$row[] = $no;
 			$row[] = $field->nama_pemohon;
 			$row[] = $permohonan;
 			$row[] = $field->tgl_permohonan;
-            if($this->session->userdata('filterPermohonan') == 'data_baru'){
+            if($this->session->userdata('filterPermohonan') == 'data_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
                 $row[] = $status_admin;
+                $row[] = $status_atasan;
             }
+
 			$row[] = $status;
 
-            // if($level == 2 || $level == 22) {
-            //     if($field->status_terbit === 'Sudah Terbit' && $x_cek_survey == true) {
-            //         $row[] = '<a href="' . base_url() . 'permohonan/view_lhu/' . $field->unik . '" target="_blank" id="' . $field->unik . '" class="btn btn-info btn-xs view_permohonan" data-toggle="tooltip" title="View"><i class="glyphicon glyphicon-search"></i></a>';
-            //     } else {
-            //         $row[] = '';
-            //     }
-            // }
-
+            
             $data[] = $row;
         }
 
@@ -173,8 +186,9 @@ class Permohonan extends CI_Controller {
     function detail()
     {
         $unik = $this->uri->segment(3);
-        $this->db->where('unik',$unik);
-        $db_detail = $this->db->get('tb_permohonan_detail')->result();
+        $this->db->where('a.unik',$unik);
+        $this->db->join('tb_permohonan as a','a.unik=b.unik');
+        $db_detail = $this->db->get('tb_permohonan_detail as b')->result();
         $total = $this->db->query("SELECT SUM(nominal) as nominal from tb_permohonan_detail where unik='$unik'")->row_array();
         $data = [
             'nama' => $this->session->userdata('nama'),
@@ -218,6 +232,7 @@ class Permohonan extends CI_Controller {
         //approved atau rejected untuk admin
         if ($this->input->post('status') == 'Rejected' && $this->input->post('atasan') == 'waiting') {
             $this->db->where('unik',$this->input->post('id'));
+            $this->db->set('nama_admin',$this->session->userdata('nama'));
             $this->db->set('status_permohonan','Rejected');
             $this->db->set('note_status_permohonan',$this->input->post('keterangan'));
             $this->db->set('tgl_status_admin',date('Y-m-d H:i:s'));
@@ -229,14 +244,17 @@ class Permohonan extends CI_Controller {
             $status = $this->uri->segment(4);
             // $this->db->select_max('no_permohonan');
             // $no = $this->db->get('tb_permohonan')->row_array();
-            $update = [
-                // "no_permohonan" => $no['no_permohonan']+1,
-                "nama_admin" => $this->session->userdata('nama'),
-                "status_permohonan" => $status,
-                "tgl_status_admin" => date('Y-m-d H:i:s')
-            ];
+            // $update = [
+            //     // "no_permohonan" => $no['no_permohonan']+1,
+            //     "nama_admin" => $this->session->userdata('nama'),
+            //     "status_permohonan" => $status,
+            //     "tgl_status_admin" => date('Y-m-d H:i:s')
+            // ];
+            $this->db->set('nama_admin',$this->session->userdata('nama'));
+            $this->db->set('status_permohonan',$status);
+            $this->db->set('tgl_status_admin',date('Y-m-d H:i:s'));
             $this->db->where('unik',$unik);
-            $this->db->update('tb_permohonan',$update);
+            $this->db->update('tb_permohonan');
             redirect('permohonan/list2');
         }
     }
