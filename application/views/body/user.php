@@ -93,7 +93,7 @@
                       foreach ($data as $x) { ?>
                       <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= $x->nama ?></td>
+                        <td><?= $x->nama ?></td>  
                         <td><?= $x->nama_level ?></td>
                         <td><?= $x->status_sekolah ?></td>
                         <td>

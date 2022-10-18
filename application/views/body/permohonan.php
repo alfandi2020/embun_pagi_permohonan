@@ -19,6 +19,11 @@
                           <input type="text" name="nama" readonly value="<?= $this->session->userdata('nama') ?>" class="form-control" id="exampleFormControlInput1"
                           />
                         </div>
+                        <div class="col-md-4">
+                          <label for="exampleFormControlInput1" class="form-label">Tanggal</label>
+                          <input type="text" name="nama" readonly value="<?= date('Y-m-d H:i:s') ?>" class="form-control" id="exampleFormControlInput1"
+                          />
+                        </div>
                         <!-- <div class="col-md-4">
                           <label for="exampleFormControlInput1" class="form-label">Nama Admin</label>
                           <select name="admin" id="" class="form-control">
@@ -31,14 +36,9 @@
                               <?php } ?>
                           </select>
                         </div> -->
-                        
-                        <div class="col-md-3">
-                          <label for="exampleFormControlInput1" class="form-label">File</label>
-                          <input type="file" name="att" class="form-control" id="exampleFormControlInput1"/>
-                          </div>
                       </div>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                       <div class="row">
                           <div class="col-md-4">
                           <label for="exampleFormControlInput1" class="form-label">Isi Pengajuan</label>
@@ -46,24 +46,32 @@
                             />
                           </div>
                           <div class="col-md-3">
-                          <label for="exampleFormControlInput1" class="form-label">Nominal</label>
-                          <input required type="text" name="nominal1" id="rupiah" placeholder="1.000.000" class="form-control" id="exampleFormControlInput1"
-                            />
+                            <label for="exampleFormControlInput1" class="form-label">Nominal</label>
+                            <input required type="text" name="nominal1" id="rupiah" placeholder="1.000.000" class="form-control" id="exampleFormControlInput1"
+                              />
                           </div>
-                          <div class="col-md-2 mt-4">
-                            <button id="add-permohonan" class="btn btn-primary"><i class="tf-icons bx bx-plus"></i></button>
+                          <div class="col-md-3">
+                            <label for="exampleFormControlInput1" class="form-label">File</label>
+                            <input type="file" name="att1" class="form-control" id="exampleFormControlInput1"/>
                           </div>
+                         
                       </div>
-                    </div>
+                    </div> -->
                     <div id="permohonan-wrapper">
                     </div>
                     <div class="mb-3 text-center">
                     <!-- <label for="exampleFormControlInput1" class="form-label">Total Pengajuan</label> -->
-                    <p>Total : Rp.0</p>
+                    <!-- <p>Total : Rp.0</p> -->
                     </div>
-                    <div class="mb-3">
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="row">
+                        <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                      </div>&nbsp;&nbsp;&nbsp;
+                      <div class="col-md-2">
+                            <button id="add-permohonan" class="btn btn-warning"><i class="tf-icons bx bx-plus"></i> Tambah Item</button>
+                        </div>
                     </div>
+                   
                   </div>
                 </div>
               </div>

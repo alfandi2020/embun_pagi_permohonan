@@ -47,28 +47,39 @@ class Permohonan extends CI_Controller {
             'unik' => $set_unik,
             'id_user' => $id_user,
             'nama_pemohon' => $nama,
-            'file' => time().'_' .$_FILES['att']['name'],
+            // 'file' => time().'_' .$_FILES['att']['name'],
             'tgl_permohonan' => date('Y-m-d H:i:s'),
             'tahun' => date('Y'),
             // 'id_admin' => $this->input->post('admin'),
             'status_permohonan' => 'Waiting'
         ];
         $this->db->insert('tb_permohonan',$data);
-        $target_dir = "upload/file/";
-        $file = $_FILES['att']['name'];
-        $path = pathinfo($file);
-        $filename = time().'_'.$path['filename'];
-        $ext = $path['extension'];
-        $temp_name = $_FILES['att']['tmp_name'];
-        $path_filename_ext = $target_dir.$filename.".".$ext;
-        move_uploaded_file($temp_name,$path_filename_ext);
+       
+        // $target_dir = "upload/file/";
+        // $file = $_FILES['att']['name'];
+        // $path = pathinfo($file);
+        // $filename = time().'_'.$path['filename'];
+        // $ext = $path['extension'];
+        // $temp_name = $_FILES['att']['tmp_name'];
+        // $path_filename_ext = $target_dir.$filename.".".$ext;
+        // move_uploaded_file($temp_name,$path_filename_ext);
+
         $row = $this->input->post('row');
         for ($i=0; $i <count($row)+1; $i++) { 
+            $target_dir = "upload/file/";
+            $file = $_FILES['att'.$i]['name'];
+            $path = pathinfo($file);
+            $filename = time().'_'.$path['filename'];
+            $ext = $path['extension'];
+            $temp_name = $_FILES['att']['tmp_name'];
+            $path_filename_ext = $target_dir.$filename.".".$ext;
+            move_uploaded_file($temp_name,$path_filename_ext);
            if ($this->input->post('isi'.$i) != "") {
                 $detail = [
                     "unik" => $set_unik,
                     "isi_permohonan" => $this->input->post('isi'.$i),
-                    "nominal" => substr($this->remove_special($this->input->post('nominal'.$i)),2)
+                    "nominal" => substr($this->remove_special($this->input->post('nominal'.$i)),2),
+                    "file" => time().'_' .$_FILES['att'.$i]['name']
                 ];
                 $this->db->insert('tb_permohonan_detail',$detail);
            }
@@ -125,7 +136,9 @@ class Permohonan extends CI_Controller {
             // }
 
             if ($field->status_permohonan === 'Waiting') {
-                $status = '<a href="'.'detail/'.$field->unik.'" class="btn btn-warning"><i class="tf-icons bx bx-chevron-right"></i></a>';
+                $status = '<a href="'.'detail/'.$field->unik.'" class="btn btn-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
+                <a href="'.'detail/'.$field->unik.'" class="btn btn-primary"><i class="bx bx-edit"></i></a>
+                ';
             }else if($field->status_permohonan == 'Approved'){
                 $status = '<a href="'.'detail/'.$field->unik.'" class="btn btn-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
             }else if($field->status_permohonan == 'Done'){
@@ -212,6 +225,15 @@ class Permohonan extends CI_Controller {
             $this->db->set('note_atasan',$this->input->post('keterangan'));
             $this->db->set('tgl_status_atasan',date('Y-m-d H:i:s'));
             $this->db->update('tb_permohonan');
+
+               //insert table atasan
+            $atasan = [
+                "id_user" => $this->session->userdata('id_user'),
+                "nama" => $this->session->userdata('nama'),
+                "unik" => $this->input->post('id'),
+                "status" => $this->input->post('status')
+            ];
+            $this->db->insert('tb_atasan',$atasan);
             echo json_encode('Success');
         }else if($this->uri->segment(5) == 'confirm_atasan'){
             $unik = $this->uri->segment(3);
@@ -226,6 +248,15 @@ class Permohonan extends CI_Controller {
             ];
             $this->db->where('unik',$unik);
             $this->db->update('tb_permohonan',$update);
+
+            //insert table atasan
+            $atasan = [
+                "id_user" => $this->session->userdata('id_user'),
+                "nama" => $this->session->userdata('nama'),
+                "unik" => $unik,
+                "status" => $status
+            ];
+            $this->db->insert('tb_atasan',$atasan);
             redirect('permohonan/list2');
         }
 

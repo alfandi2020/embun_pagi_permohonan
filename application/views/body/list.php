@@ -55,32 +55,51 @@
             <div class="row mt-5">
               <div class="col-md-12">
                 <div class="card">
-                  <h5 class="card-header">Timeline Permohonan</h5>
+                  <h5 class="card-header">Progress Permohonan</h5>
                   <div class="card-body">
                     <ul class="timeline timeline-dashed mt-3">
+                      <?php 
+                        $this->db->where('unik',$this->uri->segment(3));
+                        $data = $this->db->get('tb_atasan')->result();
+                      ?>
+
                       <li class="timeline-item timeline-item-primary mb-4">
                         <span class="timeline-indicator timeline-indicator-primary">
                           <i class="bx bx-paper-plane"></i>
                         </span>
                         <div class="timeline-event">
                           <div class="timeline-header border-bottom mb-3">
-                            <h6 class="mb-0">Get on the flight</h6>
-                            <small class="text-muted">3rd October</small>
+                            <b class="mb-0">Approved Admin</b>
+                            <!-- <small class="text-muted">3rd October</small> -->
                           </div>
-                          <div class="d-flex justify-content-between flex-wrap mb-2">
-                            <div>
-                              <span>Charles de Gaulle Airport, Paris</span>
-                              <i class="bx bx-right-arrow-alt scaleX-n1-rtl mx-3"></i>
-                              <span>Heathrow Airport, London</span>
-                            </div>
-                            <div>
-                              <span>6:30 AM</span>
-                            </div>
-                          </div>
-                          <a href="javascript:void(0)">
+                          <?php 
+                          $no = 1;
+                          foreach($data as $x) { 
+                            if ($x->status == 'Approved') {
+                              $color = '#1abc9c';
+                            }else if ($x->status == 'Rejected') {
+                              $color = '#e74c3c';
+                            }else{
+                              $color ='';
+                            }
+                            ?>
+                            <div class="d-flex justify-content-between flex-wrap mb-2">
+                                <div>
+                                  <span>Admin <?= $no++; ?></span>
+                                  <i class="bx bx-right-arrow-alt scaleX-n1-rtl mx-3"></i>
+                                  <span><?= $x->nama ?></span>
+                                </div>
+                                <div>
+                                  <span><?= date('d-M-Y H:i:s',strtotime($x->date_created)) ?></span>
+                                </div>
+                              </div>
+                              <b style="color: <?= $color ?>;"><?= $x->status ?></b> <br> <?= $x->status == 'Rejected' ? 'Keterangan : '. '<b>' .$x->keterangan.'</b>' : '' ?>
+                            <hr>
+                            <?php } ?>
+                          <!-- <a href="javascript:void(0)">
                             <i class="bx bx-link"></i>
                             bookingCard.pdf
-                          </a>
+                          </a> -->
                         </div>
                       </li>
                       <li class="timeline-item timeline-item-success mb-4">
@@ -109,7 +128,7 @@
                           </div>
                         </div>
                       </li>
-                      <li class="timeline-item timeline-item-danger mb-4">
+                      <!--<li class="timeline-item timeline-item-danger mb-4">
                         <span class="timeline-indicator timeline-indicator-danger">
                           <i class="bx bx-shopping-bag"></i>
                         </span>
@@ -222,7 +241,7 @@
                             </li>
                           </ul>
                         </div>
-                      </li>
+                      </li> -->
                       <li class="timeline-end-indicator">
                         <i class="bx bx-check-circle"></i>
                       </li>
