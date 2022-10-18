@@ -65,21 +65,21 @@ class Permohonan extends CI_Controller {
         // move_uploaded_file($temp_name,$path_filename_ext);
 
         $row = $this->input->post('row');
-        for ($i=0; $i <count($row)+1; $i++) { 
-            $target_dir = "upload/file/";
-            $file = $_FILES['att'.$i]['name'];
-            $path = pathinfo($file);
-            $filename = time().'_'.$path['filename'];
-            $ext = $path['extension'];
-            $temp_name = $_FILES['att']['tmp_name'];
-            $path_filename_ext = $target_dir.$filename.".".$ext;
-            move_uploaded_file($temp_name,$path_filename_ext);
+        for ($i=0; $i <count($row); $i++) { 
            if ($this->input->post('isi'.$i) != "") {
+                $target_dir = "upload/file/";
+                $file = $_FILES['att'.$i]['name'];
+                $path = pathinfo($file);
+                $filename = $set_unik.'_'. $i . '_'.$path['filename'];
+                $ext = $path['extension'];
+                $temp_name = $_FILES['att'.$i]['tmp_name'];
+                $path_filename_ext = $target_dir.$filename.".".$ext;
+                move_uploaded_file($temp_name,$path_filename_ext);
                 $detail = [
                     "unik" => $set_unik,
                     "isi_permohonan" => $this->input->post('isi'.$i),
                     "nominal" => substr($this->remove_special($this->input->post('nominal'.$i)),2),
-                    "file" => time().'_' .$_FILES['att'.$i]['name']
+                    "file" => $set_unik.'_' . $i . '_'.$_FILES['att'.$i]['name']
                 ];
                 $this->db->insert('tb_permohonan_detail',$detail);
            }
