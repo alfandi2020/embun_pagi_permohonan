@@ -40,53 +40,44 @@ class Permohonan extends CI_Controller {
     }
     public function submit()
     {
-        $set_unik = $this->session->userdata('setUnik');
-        $id_user = $this->session->userdata('id_user');
-        $nama = $this->input->post('nama');
-        $data = [
-            'unik' => $set_unik,
-            'id_user' => $id_user,
-            'nama_pemohon' => $nama,
-            // 'file' => time().'_' .$_FILES['att']['name'],
-            'tgl_permohonan' => date('Y-m-d H:i:s'),
-            'tahun' => date('Y'),
-            // 'id_admin' => $this->input->post('admin'),
-            'status_permohonan' => 'Waiting'
-        ];
-        $this->db->insert('tb_permohonan',$data);
-       
-        // $target_dir = "upload/file/";
-        // $file = $_FILES['att']['name'];
-        // $path = pathinfo($file);
-        // $filename = time().'_'.$path['filename'];
-        // $ext = $path['extension'];
-        // $temp_name = $_FILES['att']['tmp_name'];
-        // $path_filename_ext = $target_dir.$filename.".".$ext;
-        // move_uploaded_file($temp_name,$path_filename_ext);
-
         $row = $this->input->post('row');
-        for ($i=0; $i <count($row); $i++) { 
-           if ($this->input->post('isi'.$i) != "" && $this->input->post('isi'.$i) != "") {
-                $target_dir = "upload/file/";
-                $file = $_FILES['att'.$i]['name'];
-                $path = pathinfo($file);
-                $filename = $set_unik.'_'. $i . '_'.$path['filename'];
-                $ext = $path['extension'];
-                $temp_name = $_FILES['att'.$i]['tmp_name'];
-                $path_filename_ext = $target_dir.$filename.".".$ext;
-                move_uploaded_file($temp_name,$path_filename_ext);
+        if (count($row) > 1) {
+            $set_unik = $this->session->userdata('setUnik');
+            $id_user = $this->session->userdata('id_user');
+            $nama = $this->input->post('nama');
+            $data = [
+                'unik' => $set_unik,
+                'id_user' => $id_user,
+                'nama_pemohon' => $nama,
+                // 'file' => time().'_' .$_FILES['att']['name'],
+                'tgl_permohonan' => date('Y-m-d H:i:s'),
+                'tahun' => date('Y'),
+                // 'id_admin' => $this->input->post('admin'),
+                'status_permohonan' => 'Waiting'
+            ];
+            $this->db->insert('tb_permohonan',$data);
+        
+            for ($i=0; $i <count($row); $i++) { 
+                    $target_dir = "upload/file/";
+                    $file = $_FILES['att'.$i]['name'];
+                    $path = pathinfo($file);
+                    $filename = $set_unik.'_'. $i . '_'.$path['filename'];
+                    $ext = $path['extension'];
+                    $temp_name = $_FILES['att'.$i]['tmp_name'];
+                    $path_filename_ext = $target_dir.$filename.".".$ext;
+                    move_uploaded_file($temp_name,$path_filename_ext);
 
-                $detail = [
-                    "unik" => $set_unik,
-                    "isi_permohonan" => $this->input->post('isi'.$i),
-                    "nominal" => substr($this->remove_special($this->input->post('nominal'.$i)),2),
-                    "file" => $set_unik.'_' . $i . '_'.$_FILES['att'.$i]['name']
-                ];
-                $this->db->insert('tb_permohonan_detail',$detail);
-           }else{
+                    $detail = [
+                        "unik" => $set_unik,
+                        "isi_permohonan" => $this->input->post('isi'.$i),
+                        "nominal" => substr($this->remove_special($this->input->post('nominal'.$i)),2),
+                        "file" => $set_unik.'_' . $i . '_'.$_FILES['att'.$i]['name']
+                    ];
+                    $this->db->insert('tb_permohonan_detail',$detail);
+            }
+        }else{
             $this->session->set_flashdata('msg','<div class="alert alert-danger">Permohonan tidak boleh kosong,silahkan tambah item</div>');
             redirect('permohonan');
-           }
         }
         $this->session->unset_userdata('setUnik');
         redirect('permohonan');
