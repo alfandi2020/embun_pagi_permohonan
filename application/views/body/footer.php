@@ -34,6 +34,22 @@
 <script type="text/javascript" src="<?= base_url() ?>assets/custom.js"></script>
 <script src="<?= base_url()?>assets/vendor/libs/toastr/toastr.js"></script>
     <script>
+		window.setTimeout(function() {
+			$(".alert-success").fadeTo(500, 0).slideUp(500, function() {
+				$(this).remove();
+			});
+		}, 3000);
+		window.setTimeout(function() {
+			$(".alert-primary").fadeTo(500, 0).slideUp(500, function() {
+				$(this).remove();
+			});
+		}, 3000);
+
+		window.setTimeout(function() {
+			$(".alert-danger").fadeTo(500, 0).slideUp(500, function() {
+				$(this).remove();
+			});
+		}, 3000);
   $(document).ready(function(){
     $('#tabel-data').DataTable();
     $('#tabel-data2').DataTable();
@@ -44,6 +60,7 @@ var base_url = '<?=base_url()?>';
 
 <!-- Rupiah 1 -->
   <script type="text/javascript">
+
 
 $('.approve-confirm').on('click', function (eventx) {	
     eventx.preventDefault();

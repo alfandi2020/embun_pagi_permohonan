@@ -19,7 +19,7 @@
 
 <html
   lang="en"
-  class="light-style layout-menu-fixed"
+  class="light-style layout-menu-collapsed"
   dir="ltr"
   data-theme="theme-default"
   data-assets-path="<?= base_url('assets/');?>"
@@ -144,7 +144,7 @@
                   </g>
                 </svg>
               </span>
-              <span class="demo menu-text fw-bolder ms-2">Embun Pagi</span>
+              <!-- <span class="demo menu-text fw-bolder ms-2">Embun Pagi</span> -->
             </a>
 
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link ms-auto">
@@ -168,8 +168,8 @@
             $role = $this->session->userdata('role');
             if(strpos($role,'1') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('permohonan');?>" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-money"></i>
+              <a href="<?= base_url('permohonan');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>Permohonan</span>">
+              <i class='bx bx-notepad'></i>
                 <div data-i18n="Basic">Permohonan</div>
               </a>
             </li>
@@ -177,8 +177,8 @@
             <?php 
             if(strpos($role,'2') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('permohonan/list2');?>" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-money"></i>
+              <a href="<?= base_url('permohonan/list2');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>List Permohonan</span>">
+              <i class='bx bx-list-check' ></i>
                 <div data-i18n="Basic">List Permohonan</div>
               </a>
             </li>
@@ -186,7 +186,7 @@
             <?php 
             if(strpos($role,'3') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('user');?>" class="menu-link">
+              <a href="<?= base_url('user');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>User</span>">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Basic">Create User</div>
               </a>

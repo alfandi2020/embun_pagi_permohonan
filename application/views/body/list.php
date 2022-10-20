@@ -60,7 +60,7 @@
                     <ul class="timeline timeline-dashed mt-3">
                       <?php 
                         $this->db->where('unik',$this->uri->segment(3));
-                        $data = $this->db->get('tb_atasan')->result();
+                        $datax = $this->db->get('tb_atasan')->result();
                       ?>
 
                       <li class="timeline-item timeline-item-primary mb-4">
@@ -69,12 +69,12 @@
                         </span>
                         <div class="timeline-event">
                           <div class="timeline-header border-bottom mb-3">
-                            <b class="mb-0">Approved Admin</b>
+                            <b class="mb-0">Admin Approved</b>
                             <!-- <small class="text-muted">3rd October</small> -->
                           </div>
                           <?php 
                           $no = 1;
-                          foreach($data as $x) { 
+                          foreach($datax as $x) { 
                             if ($x->status == 'Approved') {
                               $color = '#1abc9c';
                             }else if ($x->status == 'Rejected') {
@@ -104,11 +104,50 @@
                       </li>
                       <li class="timeline-item timeline-item-success mb-4">
                         <span class="timeline-indicator timeline-indicator-success">
+                          <i class="bx bx-paper-plane"></i>
+                        </span>
+                        <div class="timeline-event">
+                          <div class="timeline-header border-bottom mb-3">
+                            <b class="mb-0">Admin Filter</b>
+                            <!-- <small class="text-muted">3rd October</small> -->
+                          </div>
+                          <?php 
+                          $no = 1;
+                          foreach($datax as $x) { 
+                            if ($x->status == 'Approved') {
+                              $color = '#1abc9c';
+                            }else if ($x->status == 'Rejected') {
+                              $color = '#e74c3c';
+                            }else{
+                              $color ='';
+                            }
+                            ?>
+                            <div class="d-flex justify-content-between flex-wrap mb-2">
+                                <div>
+                                  <span>Admin <?= $no++; ?></span>
+                                  <i class="bx bx-right-arrow-alt scaleX-n1-rtl mx-3"></i>
+                                  <span><?= $x->nama ?></span>
+                                </div>
+                                <div>
+                                  <span><?= date('d-M-Y H:i:s',strtotime($x->date_created)) ?></span>
+                                </div>
+                              </div>
+                              <b style="color: <?= $color ?>;"><?= $x->status ?></b> <br> <?= $x->status == 'Rejected' ? 'Keterangan : '. '<b>' .$x->keterangan.'</b>' : '' ?>
+                            <hr>
+                            <?php } ?>
+                          <!-- <a href="javascript:void(0)">
+                            <i class="bx bx-link"></i>
+                            bookingCard.pdf
+                          </a> -->
+                        </div>
+                      </li>
+                      <!--<li class="timeline-item timeline-item-success mb-4">
+                        <span class="timeline-indicator timeline-indicator-success">
                           <i class="bx bx-paint"></i>
                         </span>
                         <div class="timeline-event">
                           <div class="timeline-header mb-sm-0 mb-3">
-                            <h6 class="mb-0">Design Review</h6>
+                            <h6 class="mb-0">Admin Filter</h6>
                             <small class="text-muted">4th October</small>
                           </div>
                           <p>
@@ -128,7 +167,7 @@
                           </div>
                         </div>
                       </li>
-                      <!--<li class="timeline-item timeline-item-danger mb-4">
+                      <li class="timeline-item timeline-item-danger mb-4">
                         <span class="timeline-indicator timeline-indicator-danger">
                           <i class="bx bx-shopping-bag"></i>
                         </span>
@@ -283,6 +322,7 @@
                         <th width="200">Status Admin</th>
                         <th width="200">Status Atasan</th>
                         <?php } ?>
+                        <th>Upload Bukti</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -362,3 +402,6 @@
       <div class="drag-target"></div>
 
       </div>
+
+
+

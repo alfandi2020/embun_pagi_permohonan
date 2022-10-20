@@ -1,38 +1,90 @@
 <!-- Content wrapper -->
 <div class="content-wrapper">
-            <!-- Content -->
+  <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row">
-                <div class="col-lg-8 mb-4 order-0">
-                  <div class="card">
-                    <div class="d-flex align-items-end row">
-                      <div class="col-sm-7">
-                        <div class="card-body">
-                          <h5 class="card-title text-primary">Hello <?= $nama;?>! 🎉</h5>
-                            <!-- <p class="mb-4">
-                              You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in
-                              your profile.
-                            </p> -->
-
-                          <a href="javascript:;" class="btn btn-sm btn-outline-primary">View</a>
-                        </div>
-                      </div>
-                      <div class="col-sm-5 text-center text-sm-left">
-                        <div class="card-body pb-0 px-0 px-md-4">
-                          <img
-                            src="<?= base_url('assets/img/illustrations/man-with-laptop-light.png');?>"
-                            height="140"
-                            alt="View Badge User"
-                            data-app-dark-img="illustrations/man-with-laptop-dark.png"
-                            data-app-light-img="illustrations/man-with-laptop-light.png"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+      <div class="col-sm-6 col-xl-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-start justify-content-between">
+              <div class="content-left">
+                <span><div class="badge bg-warning">Data Waiting</div></span>
+                <div class="d-flex align-items-end mt-2">
+                <a href="<?= base_url('permohonan/filter/waiting') ?>"><h4 class="mb-0 me-2"><?= $waiting ?></h4></a>
+                  <!-- <small class="text-success">(+29%)</small> -->
                 </div>
-                <!-- <div class="col-lg-4 col-md-4 order-1">
+                <!-- <small>Total Users</small> -->
+              </div>
+              <span class="badge bg-label-warning rounded p-2">
+                <i class="bx bx-time bx-sm"></i>
+                <!-- <i class='bx bxs-time-five'></i> -->
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-start justify-content-between">
+              <div class="content-left">
+                <span><div class="badge bg-primary">Data Approved</div></span>
+                <div class="d-flex align-items-end mt-2">
+                 <a href="<?= base_url('permohonan/filter/data_baru') ?>" ><h4 class="mb-0 me-2"><?= $approved ?></h4></a>
+                  <!-- <small class="text-success">(+29%)</small> -->
+                </div>
+                <!-- <small>Total Users</small> -->
+              </div>
+              <span class="badge bg-label-primary rounded p-2">
+                <i class="bx bx-check-circle bx-sm"></i>
+                <!-- <i class='bx bxs-time-five'></i> -->
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-start justify-content-between">
+              <div class="content-left">
+                <span><div class="badge bg-danger">Data Rejected</div></span>
+                <div class="d-flex align-items-end mt-2">
+                 <a href="<?= base_url('permohonan/filter/data_lama') ?>"><h4 class="mb-0 me-2"><?= $rejected ?></h4></a>
+                  <!-- <small class="text-success">(+29%)</small> -->
+                </div>
+                <!-- <small>Total Users</small> -->
+              </div>
+              <span class="badge bg-label-danger rounded p-2">
+                <i class="bx bx-x-circle bx-sm"></i>
+                <!-- <i class='bx bxs-time-five'></i> -->
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-start justify-content-between">
+              <div class="content-left">
+                <span><div class="badge bg-success">Data Done</div></span>
+                <div class="d-flex align-items-end mt-2">
+                 <a href="<?= base_url('permohonan/filter/data_lama') ?>"><h4 class="mb-0 me-2"><?= $done ?></h4></a>
+                  <!-- <small class="text-success">(+29%)</small> -->
+                </div>
+                <!-- <small>Total Users</small> -->
+              </div>
+              <span class="badge bg-label-success rounded p-2">
+                <i class="bx bx-check bx-sm"></i>
+                <!-- <i class='bx bxs-time-five'></i> -->
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-lg-4 col-md-4 order-1">
                   <div class="row">
                     <div class="col-lg-6 col-md-12 col-6 mb-4">
                       <div class="card">
@@ -104,8 +156,8 @@
                     </div>
                   </div>
                 </div> -->
-                <!-- Total Revenue -->
-                <!-- <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
+      <!-- Total Revenue -->
+      <!-- <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
                   <div class="card">
                     <div class="row row-bordered g-0">
                       <div class="col-md-8">
@@ -161,21 +213,101 @@
                     </div>
                   </div>
                 </div> -->
-                <!--/ Total Revenue -->
-                
+      <!--/ Total Revenue -->
+
+    </div>
+    <div class="row mt-5">
+    <div class="col-md-12 col-lg-12 mb-4">
+    <div class="card">
+      <div class="row row-bordered g-0">
+        <div class="col-md-12">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Report</h5>
+            <small class="card-subtitle">Yearly report</small>
+          </div>
+          <div class="card-body">
+            <div id="chart2"></div>
+          </div>
+        </div>
+        <!-- <div class="col-md-4">
+          <div class="card-header d-flex justify-content-between">
+            <div>
+              <h5 class="card-title mb-0">Report</h5>
+              <small class="card-subtitle">Monthly Avg. $45.578k</small>
+            </div>
+            <div class="dropdown">
+              <button class="btn p-0" type="button" id="totalIncome" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="totalIncome">
+                <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+                <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
+                <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
               </div>
             </div>
-            <!-- / Content -->
-
-            <div class="content-backdrop fade"></div>
           </div>
-          <!-- Content wrapper -->
-        </div>
-
-
-             
-        <!-- / Layout page -->
+          <div class="card-body">
+            <div class="report-list">
+              <div class="report-list-item rounded-2 mb-3">
+                <div class="d-flex align-items-start">
+                  <div class="report-list-icon shadow-sm me-2">
+                    <img src="../../assets/svg/icons/paypal-icon.svg" width="22" height="22" alt="Paypal">
+                  </div>
+                  <div class="d-flex justify-content-between align-items-end w-100 flex-wrap gap-2">
+                    <div class="d-flex flex-column">
+                      <span>Income</span>
+                      <h5 class="mb-0">$42,845</h5>
+                    </div>
+                    <small class="text-success">+2.34k</small>
+                  </div>
+                </div>
+              </div>
+              <div class="report-list-item rounded-2 mb-3">
+                <div class="d-flex align-items-start">
+                  <div class="report-list-icon shadow-sm me-2">
+                    <img src="../../assets/svg/icons/shopping-bag-icon.svg" width="22" height="22" alt="Shopping Bag">
+                  </div>
+                  <div class="d-flex justify-content-between align-items-end w-100 flex-wrap gap-2">
+                    <div class="d-flex flex-column">
+                      <span>Expense</span>
+                      <h5 class="mb-0">$38,658</h5>
+                    </div>
+                    <small class="text-danger">-1.15k</small>
+                  </div>
+                </div>
+              </div>
+              <div class="report-list-item rounded-2">
+                <div class="d-flex align-items-start">
+                  <div class="report-list-icon shadow-sm me-2">
+                    <img src="../../assets/svg/icons/wallet-icon.svg" width="22" height="22" alt="Wallet">
+                  </div>
+                  <div class="d-flex justify-content-between align-items-end w-100 flex-wrap gap-2">
+                    <div class="d-flex flex-column">
+                      <span>Profit</span>
+                      <h5 class="mb-0">$18,220</h5>
+                    </div>
+                    <small class="text-success">+1.35k</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
       </div>
+    </div>
+    </div>
+  </div>
+  <!-- / Content -->
+
+  <div class="content-backdrop fade"></div>
+</div>
+<!-- Content wrapper -->
+</div>
+
+
+
+<!-- / Layout page -->
+</div>
 
 <!-- Overlay -->
 <div class="layout-overlay layout-menu-toggle"></div>

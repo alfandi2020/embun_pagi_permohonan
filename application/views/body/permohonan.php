@@ -9,6 +9,7 @@
             <form action="<?= base_url('permohonan/submit') ?>" method="POST" enctype="multipart/form-data">
             <input type="hidden" value="1" name="row[]">
               <div class="col-md-12">
+                <?= $this->session->flashdata('msg') ?>
                 <div class="card mb-4">
                    <h5 class="card-header">Add Permohonan Pengeluaran</h5>
                   <div class="card-body">
@@ -21,7 +22,7 @@
                         </div>
                         <div class="col-md-4">
                           <label for="exampleFormControlInput1" class="form-label">Tanggal</label>
-                          <input type="text" name="nama" readonly value="<?= date('Y-m-d H:i:s') ?>" class="form-control" id="exampleFormControlInput1"
+                          <input type="text" readonly value="<?= date('Y-m-d H:i:s') ?>" class="form-control" id="exampleFormControlInput1"
                           />
                         </div>
                         <!-- <div class="col-md-4">
