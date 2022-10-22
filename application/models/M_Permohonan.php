@@ -39,9 +39,9 @@ class M_Permohonan extends CI_Model {
             $this->db->or_where('status_permohonan','Done');
             $this->db->or_where('status_permohonan_atasan','Rejected');
         }
-        $level= $this->session->userdata('id_user');
-        if ($level != 1) {
-            $this->db->where('id_user',$level);
+        $level = $this->session->userdata('level');
+        if($level == 3) {
+            $this->db->where('id_user', $this->session->userdata('id_user'));
         }
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {

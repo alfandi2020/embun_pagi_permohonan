@@ -8,7 +8,9 @@
             <div class="col-md-5">
               <a href="<?= base_url('permohonan/list2') ?>" class="btn btn-warning"><i
                   class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
-              <?php if($data[0]->status_permohonan_atasan != 'Approved' && $data[0]->id_user != $this->session->userdata('id_user')) { ?>
+              <?php 
+                      $level = $this->session->userdata('level');
+              if($data[0]->status_permohonan_atasan != 'Approved' && $level != 3) { ?>
               <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
                 class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved
