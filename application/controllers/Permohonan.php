@@ -57,7 +57,7 @@ class Permohonan extends CI_Controller {
             ];
             $this->db->insert('tb_permohonan',$data);
         
-            for ($i=0; $i <count($row); $i++) { 
+            for ($i=1; $i <count($row); $i++) { 
                     $target_dir = "upload/file/";
                     $file = $_FILES['att'.$i]['name'];
                     $path = pathinfo($file);

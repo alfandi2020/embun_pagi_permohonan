@@ -77,7 +77,7 @@ $(document).ready( function () {
 var max_fields = 100;
     var wrapper = $("#permohonan-wrapper");
     var add_kom = $("#add-permohonan");
-    var x = 0;
+    var x = 1;
     $(add_kom).click(function(e) {
         e.preventDefault();
         if (x < max_fields) {
