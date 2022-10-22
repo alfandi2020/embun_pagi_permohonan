@@ -28,6 +28,7 @@
                       <tr>
                         <th>No</th>
                         <th>Isi Permohonan</th>
+                        <th>File</th>
                         <th>Nominal</th>
                       </tr>
                     </thead>
@@ -36,6 +37,7 @@
                       <tr>
                         <td><?= $no++; ?></td>
                         <td><?= $x->isi_permohonan ?></td>
+                        <td><?= $x->file ?></td>
                         <td>Rp.<?= number_format($x->nominal,0,'.','.') ?></td>
                       </tr>
 
