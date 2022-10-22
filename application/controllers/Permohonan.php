@@ -76,7 +76,7 @@ class Permohonan extends CI_Controller {
                     $this->db->insert('tb_permohonan_detail',$detail);
             }
         }else{
-            $this->session->set_flashdata('msg','<div class="alert alert-danger">Permohonan tidak boleh kosong,silahkan tambah item</div>');
+            $this->session->set_flashdata('msg','not_item');
             redirect('permohonan');
         }
         $this->session->unset_userdata('setUnik');
@@ -122,11 +122,11 @@ class Permohonan extends CI_Controller {
             }
 
             if($field->status_permohonan == 'Approved'){
-                $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.$field->tgl_status_admin;
+                $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }else if($field->status_permohonan == 'Rejected'){
-                $status_admin ='<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_admin .'</span>';
+                $status_admin = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }else{
-                $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.$field->tgl_status_admin;
+                $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }
             
             if($field->status_permohonan_atasan == 'Approved'){
@@ -134,7 +134,7 @@ class Permohonan extends CI_Controller {
             }else if($field->status_permohonan_atasan == 'Rejected'){
                 $status_atasan ='<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</span>';
             }else if($field->status_permohonan == 'Rejected'){
-                $status_atasan = 'Ditolak '.$field->nama_admin;
+                $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
             }else{
                 $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
             }
@@ -229,7 +229,8 @@ class Permohonan extends CI_Controller {
                 "id_user" => $this->session->userdata('id_user'),
                 "nama" => $this->session->userdata('nama'),
                 "unik" => $this->input->post('id'),
-                "status" => $this->input->post('status')
+                "status" => $this->input->post('status'),
+                "tgl_status_atasan" => date('Y-m-d H:i:s')
             ];
             $this->db->insert('tb_atasan',$atasan);
             echo json_encode('Success');

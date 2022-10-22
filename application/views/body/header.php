@@ -68,6 +68,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/datatables_buttons.bootstrap5.css') ?>">
   <link rel="stylesheet" href="<?= base_url() ?>assets/css/sweetalert2.css">
 <link rel="stylesheet" src="<?= base_url()?>assets/vendor/libs/toastr/toastr.css">
+<script src="<?= base_url() ?>assets/js/sweetalert2.js"></script>
 
     <!-- Page CSS -->
 

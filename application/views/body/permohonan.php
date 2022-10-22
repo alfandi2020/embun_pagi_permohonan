@@ -9,7 +9,15 @@
             <form action="<?= base_url('permohonan/submit') ?>" method="POST" enctype="multipart/form-data">
             <input type="hidden" value="1" name="row[]">
               <div class="col-md-12">
-                <?= $this->session->flashdata('msg') ?>
+                <?php if($this->session->flashdata('msg') == 'not_item'){ ?>
+                    <script>
+                      Swal.fire(
+                      'Opss..!',
+                      'isi permohonan tidak kosong, <br>silahkan tambah item...',
+                      'error'
+                    )
+                    </script>
+                  <?php } ?>
                 <div class="card mb-4">
                    <h5 class="card-header">Add Permohonan Pengeluaran</h5>
                   <div class="card-body">
