@@ -23,12 +23,12 @@
                   <div class="card-body">
                     <div class="mb-3">
                       <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                           <label for="exampleFormControlInput1" class="form-label">Nama</label>
                           <input type="text" name="nama" readonly value="<?= $this->session->userdata('nama') ?>" class="form-control" id="exampleFormControlInput1"
                           />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                           <label for="exampleFormControlInput1" class="form-label">Tanggal</label>
                           <input type="text" readonly value="<?= date('Y-m-d H:i:s') ?>" class="form-control" id="exampleFormControlInput1"
                           />
