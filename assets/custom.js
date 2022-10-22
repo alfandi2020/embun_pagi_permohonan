@@ -95,7 +95,7 @@ var max_fields = 100;
                 '<input required type="text" id="rupiah'+x+'" class="form-control" name="nominal' + x + '" placeholder="1.000.000" value="">' +
                 '</div>' +
 
-                '<div class="col-md-3 col-sm-4 col-xs-3">'+
+                '<div class="col-md-4 col-sm-12 col-xs-12">'+
                 '<label for="exampleFormControlInput1" class="form-label">File</label>'+
                 '<input type="file" required name="att'+x+'" class="form-control" id="exampleFormControlInput1"/>'+
                 '</div>'+
