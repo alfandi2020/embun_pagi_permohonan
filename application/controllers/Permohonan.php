@@ -57,7 +57,7 @@ class Permohonan extends CI_Controller {
             ];
             $this->db->insert('tb_permohonan',$data);
         
-            for ($i=1; $i <=count($row); $i++) { 
+            for ($i=1; $i <count($row); $i++) { 
                     $target_dir = "upload/file/";
                     $file = $_FILES['att'.$i]['name'];
                     $path = pathinfo($file);
@@ -197,6 +197,7 @@ class Permohonan extends CI_Controller {
     function detail()
     {
         $unik = $this->uri->segment(3);
+        $this->db->select('*,b.file as file_detail');
         $this->db->where('a.unik',$unik);
         $this->db->join('tb_permohonan as a','a.unik=b.unik');
         $db_detail = $this->db->get('tb_permohonan_detail as b')->result();

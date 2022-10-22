@@ -77,7 +77,7 @@ $(document).ready( function () {
 var max_fields = 100;
     var wrapper = $("#permohonan-wrapper");
     var add_kom = $("#add-permohonan");
-    var x = 1;
+    var x = 0;
     $(add_kom).click(function(e) {
         e.preventDefault();
         if (x < max_fields) {
@@ -90,7 +90,7 @@ var max_fields = 100;
                 '<label for="exampleFormControlInput1" class="form-label">ISI Pengajuan</label>' +
                 '<input required type="text" class="form-control"  name="isi' + x + '" value="" placeholder="Pengeluaran" required>' +
                 '</div>' +
-                
+
                 '<div class="col-md-3 col-sm-3 col-xs-3">' +
                 '<label for="exampleFormControlInput1" class="form-label">Nominal</label>' +
                 '<input required type="text" id="rupiah'+x+'" class="form-control" name="nominal' + x + '" placeholder="1.000.000" value="">' +

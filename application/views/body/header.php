@@ -176,14 +176,14 @@
             </li>
             <?php } ?>
             <?php 
-            if(strpos($role,'2') !==  false){ ?>
+            //if(strpos($role,'2') !==  false){ ?>
             <li class="menu-item">
               <a href="<?= base_url('permohonan/list2');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>List Permohonan</span>">
               <i class='bx bx-list-check' ></i>
                 <div data-i18n="Basic">List Permohonan</div>
               </a>
             </li>
-            <?php } ?>
+            <?php //} ?>
             <?php 
             if(strpos($role,'3') !==  false){ ?>
             <li class="menu-item">

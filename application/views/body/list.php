@@ -8,7 +8,7 @@
             <div class="col-md-5">
               <a href="<?= base_url('permohonan/list2') ?>" class="btn btn-warning"><i
                   class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
-              <?php if($data[0]->status_permohonan_atasan != 'Approved') { ?>
+              <?php if($data[0]->status_permohonan_atasan != 'Approved' && $data[0]->id_user != $this->session->userdata('id_user')) { ?>
               <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
                 class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved
@@ -26,7 +26,7 @@
                   <table class="datatables-basic table">
                     <thead>
                       <tr>
-                        <th>No</th>
+                        <!-- <th>No</th> -->
                         <th>Isi Permohonan</th>
                         <th>File</th>
                         <th>Nominal</th>
@@ -35,15 +35,16 @@
                     <tbody>
                       <?php $no=1; foreach ($data as $x) {?>
                       <tr>
-                        <td><?= $no++; ?></td>
+                        <!-- <td><?= $no++; ?></td> -->
                         <td><?= $x->isi_permohonan ?></td>
-                        <td><?= $x->file ?></td>
+                        <td><a href=""><?= $x->file_detail ?></a></td>
                         <td>Rp.<?= number_format($x->nominal,0,'.','.') ?></td>
                       </tr>
 
                       <?php } ?>
                       <tr style="background-color: rgba(105,108,255,.1);color:black;">
-                        <td><?= $no ?></td>
+                        <!-- <td><?= $no ?></td> -->
+                        <td></td>
                         <td>TOTAL</td>
                         <td>Rp.<?= number_format($total_nominal['nominal'],0,'.','.') ?></td>
                       </tr>
