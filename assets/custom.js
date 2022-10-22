@@ -86,7 +86,7 @@ var max_fields = 100;
                 '<div>'+
                 '<div class="mb-3">' +
                 '<div class="row">' +
-                '<div class="col-md-4 col-sm-12 col-xs-12">' +
+                '<div class="col-md-3 col-sm-12 col-xs-12">' +
                 '<label for="exampleFormControlInput1" class="form-label">ISI Pengajuan</label>' +
                 '<input required type="text" class="form-control"  name="isi' + x + '" value="" placeholder="Pengeluaran" required>' +
                 '</div>' +
