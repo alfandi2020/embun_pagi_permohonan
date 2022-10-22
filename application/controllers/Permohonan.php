@@ -105,7 +105,7 @@ class Permohonan extends CI_Controller {
 
             if ($field->status_permohonan === 'Waiting') {
                 $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
-                <a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="bx bx-edit"></i></a>
+                <a href="'.'detail/'.$field->unik.'" class="badge bg-primary invisible"><i class="bx bx-edit"></i></a>
                 ';
             }else if($field->status_permohonan == 'Approved'){
                 $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
