@@ -97,7 +97,7 @@ var max_fields = 100;
 
                 '<div class="col-md-3 col-sm-4 col-xs-3">'+
                 '<label for="exampleFormControlInput1" class="form-label">File</label>'+
-                '<input type="file" name="att'+x+'" class="form-control" id="exampleFormControlInput1"/>'+
+                '<input type="file" required name="att'+x+'" class="form-control" id="exampleFormControlInput1"/>'+
                 '</div>'+
 
                 '<div class="col-md-2 col-sm-3 col-xs-3 mt-4">' +
