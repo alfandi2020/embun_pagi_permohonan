@@ -149,7 +149,7 @@ class Permohonan extends CI_Controller {
                 $row[] = $status_admin;
                 $row[] = $status_atasan;
             }
-            if ($field->status_permohonan_atasan == 'Approved') {
+            if (count(explode(',',$field->nama_atasan)) == 3) {
                 $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
                 <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
@@ -226,28 +226,15 @@ class Permohonan extends CI_Controller {
             $this->db->update('tb_permohonan');
 
             //insert table atasan
-            $id = $this->input->post('id');
-            $nip = $this->session->userdata('nip');
-            $sql = "SELECT nama_atasan FROM memo WHERE unik=$id";
-            $query = $this->db->query($sql);
-            $result = $query->row();
-            $kalimat = $result->nama_atasan;
-            if (preg_match("/$nip/i", $kalimat)){}else{
-                $kalimat1 = $kalimat . ' ' . $nip;
-                $data_update1	= array(
-                    'read'	=> $kalimat1
-                );
-                $this->db->where('unik', $id);
-                $this->db->update('nama_atasan', $data_update1);
-            }
-            // $atasan = [
-            //     "id_user" => $this->session->userdata('id_user'),
-            //     "nama" => $this->session->userdata('nama'),
-            //     "unik" => $this->input->post('id'),
-            //     "status" => $this->input->post('status'),
-            //     // "tgl_status_atasan" => date('Y-m-d H:i:s')
-            // ];
-            // $this->db->insert('tb_atasan',$atasan);
+          
+            $atasan = [
+                "id_user" => $this->session->userdata('id_user'),
+                "nama" => $this->session->userdata('nama'),
+                "unik" => $this->input->post('id'),
+                "status" => $this->input->post('status'),
+                // "tgl_status_atasan" => date('Y-m-d H:i:s')
+            ];
+            $this->db->insert('tb_atasan',$atasan);
             echo json_encode('Success');
         }else if($this->uri->segment(5) == 'confirm_atasan'){
             $unik = $this->uri->segment(3);
@@ -257,7 +244,7 @@ class Permohonan extends CI_Controller {
             $no = $this->db->get('tb_permohonan')->row_array();
             $update = [
                 "no_permohonan" => $no['no_permohonan']+1,
-                "nama_atasan" => $this->session->userdata('nama'),
+                // "nama_atasan" => $this->session->userdata('nama'),
                 "status_permohonan_atasan" => $status,
                 "tgl_status_atasan" => date('Y-m-d H:i:s')
             ];
@@ -265,13 +252,26 @@ class Permohonan extends CI_Controller {
             $this->db->update('tb_permohonan',$update);
 
             //insert table atasan
-            $atasan = [
-                "id_user" => $this->session->userdata('id_user'),
-                "nama" => $this->session->userdata('nama'),
-                "unik" => $unik,
-                "status" => $status
-            ];
-            $this->db->insert('tb_atasan',$atasan);
+            $id_user = $this->session->userdata('id_user');
+            $sql = "SELECT nama_atasan FROM tb_permohonan WHERE unik=$unik";
+            $query = $this->db->query($sql);
+            $result = $query->row();
+            $kalimat = $result->nama_atasan;
+            if (preg_match("/$id_user/i", $kalimat)){}else{
+                $kalimat1 = $kalimat . ',' . $id_user;
+                $data_update1	= array(
+                    'nama_atasan'	=> $kalimat1
+                );
+                $this->db->where('unik', $unik);
+                $this->db->update('tb_permohonan', $data_update1);
+            }
+            // $atasan = [
+            //     "id_user" => $this->session->userdata('id_user'),
+            //     "nama" => $this->session->userdata('nama'),
+            //     "unik" => $unik,
+            //     "status" => $status
+            // ];
+            // $this->db->insert('tb_atasan',$atasan);
             redirect('permohonan/list2');
         }
 

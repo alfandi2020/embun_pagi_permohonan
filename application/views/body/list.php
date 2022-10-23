@@ -10,7 +10,7 @@
                   class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
               <?php 
               $level = $this->session->userdata('level');
-              if($data[0]->status_permohonan_atasan != 'Approved' && $level != 3) { ?>
+              if(count(explode(',',$data[0]->nama_atasan)) != 3 && $level != 3) { ?>
               <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
                 class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved
