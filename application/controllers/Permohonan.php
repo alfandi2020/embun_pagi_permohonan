@@ -265,13 +265,13 @@ class Permohonan extends CI_Controller {
                 $this->db->where('unik', $unik);
                 $this->db->update('tb_permohonan', $data_update1);
             }
-            // $atasan = [
-            //     "id_user" => $this->session->userdata('id_user'),
-            //     "nama" => $this->session->userdata('nama'),
-            //     "unik" => $unik,
-            //     "status" => $status
-            // ];
-            // $this->db->insert('tb_atasan',$atasan);
+            $atasan = [
+                "id_user" => $this->session->userdata('id_user'),
+                "nama" => $this->session->userdata('nama'),
+                "unik" => $unik,
+                "status" => $status
+            ];
+            $this->db->insert('tb_atasan',$atasan);
             redirect('permohonan/list2');
         }
 
