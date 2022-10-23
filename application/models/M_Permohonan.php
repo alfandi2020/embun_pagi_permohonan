@@ -85,6 +85,9 @@ class M_Permohonan extends CI_Model {
         if($_POST['nama_pemohon']) $this->db->like("nama_pemohon", $_POST['nama_pemohon']);
         if($_POST['no_permohonan']) $this->db->like("no_permohonan", $_POST['no_permohonan']);
         if($_POST['tgl_permohonan']) $this->db->like("DATE_FORMAT(tgl_permohonan, '%Y-%m-%d')", $_POST['tgl_permohonan']);
+        if($_POST['no_permohonan']) $this->db->like("status_permohonan", $_POST['status_admin']);
+        if($_POST['no_permohonan']) $this->db->like("status_permohonan_atasan", $_POST['status_atasan']);
+
         // if($_POST['status_sampel']) $this->db->like('status_sampel', $_POST['status_sampel']);
         // if($_POST['tgl_sampel_masuk']) $this->db->like("DATE_FORMAT(tgl_sampel_masuk, '%d-%m-%Y')", $_POST['tgl_sampel_masuk']);
         // if($_POST['kode_sampel']) $this->db->like("LPAD(kode_sampel, 4, '0')", $_POST['kode_sampel']);

@@ -225,20 +225,35 @@ class Permohonan extends CI_Controller {
             $this->db->set('tgl_status_atasan',date('Y-m-d H:i:s'));
             $this->db->update('tb_permohonan');
 
-               //insert table atasan
-            $atasan = [
-                "id_user" => $this->session->userdata('id_user'),
-                "nama" => $this->session->userdata('nama'),
-                "unik" => $this->input->post('id'),
-                "status" => $this->input->post('status'),
-                // "tgl_status_atasan" => date('Y-m-d H:i:s')
-            ];
-            $this->db->insert('tb_atasan',$atasan);
+            //insert table atasan
+            $id = $this->input->post('id');
+            $nip = $this->session->userdata('nip');
+            $sql = "SELECT nama_atasan FROM memo WHERE unik=$id";
+            $query = $this->db->query($sql);
+            $result = $query->row();
+            $kalimat = $result->nama_atasan;
+            if (preg_match("/$nip/i", $kalimat)){}else{
+                $kalimat1 = $kalimat . ' ' . $nip;
+                $data_update1	= array(
+                    'read'	=> $kalimat1
+                );
+                $this->db->where('unik', $id);
+                $this->db->update('nama_atasan', $data_update1);
+            }
+            // $atasan = [
+            //     "id_user" => $this->session->userdata('id_user'),
+            //     "nama" => $this->session->userdata('nama'),
+            //     "unik" => $this->input->post('id'),
+            //     "status" => $this->input->post('status'),
+            //     // "tgl_status_atasan" => date('Y-m-d H:i:s')
+            // ];
+            // $this->db->insert('tb_atasan',$atasan);
             echo json_encode('Success');
         }else if($this->uri->segment(5) == 'confirm_atasan'){
             $unik = $this->uri->segment(3);
             $status = $this->uri->segment(4);
             $this->db->select_max('no_permohonan');
+            $this->db->where('tahun',date('Y'));
             $no = $this->db->get('tb_permohonan')->row_array();
             $update = [
                 "no_permohonan" => $no['no_permohonan']+1,

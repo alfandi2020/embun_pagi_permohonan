@@ -28,7 +28,20 @@ $(document).ready( function () {
         if(i > 0 && i < 10){
             if (i === 3) {
                 $(this).html('<input type="date" style="width: 95%" placeholder="" name="ser'+ i +'" class="ser" id="ser'+ i +'" />');
-            }else{
+            }
+            else if(i === 4){
+                $(this).html('');
+            }
+            else if(i === 5){
+                $(this).html('');
+            }
+            else if(i === 6){
+                $(this).html('');
+            }
+            else if(i === 7){
+                $(this).html('');
+            }
+            else{
                 $(this).html('<input type="text" style="width: 95%" placeholder="" name="ser'+ i +'" class="ser" id="ser'+ i +'" />');
             }
         }
@@ -48,10 +61,12 @@ $(document).ready( function () {
             "url": base_url + "permohonan/get_list_permohonan",
             "type": "POST",
             "data": function (data) {
-                    data.nama_pemohon = $('#ser1').val();
-                    data.no_permohonan = $('#ser2').val();
-                    data.tgl_permohonan = $('#ser3').val();
-                    data.status = $('#ser4').val();
+                data.nama_pemohon = $('#ser1').val();
+                data.no_permohonan = $('#ser2').val();
+                data.tgl_permohonan = $('#ser3').val();
+                data.status_admin = $('#ser4').val();
+                data.status_atasan = $('#ser5').val();
+                data.upload = $('#ser6').val();
             }
         },
         "columnDefs": [
@@ -85,7 +100,9 @@ $(document).ready( function () {
                     data.nama_pemohon = $('#ser1').val();
                     data.no_permohonan = $('#ser2').val();
                     data.tgl_permohonan = $('#ser3').val();
-                    data.status = $('#ser4').val();
+                    data.status_admin = $('#ser4').val();
+                    data.status_atasan = $('#ser5').val();
+                    data.upload = $('#ser6').val();
             }
         },
         "columnDefs": [
