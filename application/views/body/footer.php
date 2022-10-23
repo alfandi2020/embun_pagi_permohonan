@@ -60,6 +60,63 @@ var base_url = '<?=base_url()?>';
 <!-- Rupiah 1 -->
   <script type="text/javascript">
 
+var options = {
+        series: [
+            {
+                name: '',
+                data: ['<?= $bulan1['jan'] ?>','<?= $bulan2['feb'] ?>','<?= $bulan3['mar'] ?>','<?= $bulan4['apr'] ?>','<?= $bulan5['mei'] ?>','<?= $bulan6['jun'] ?>','<?= $bulan7['jul'] ?>','<?= $bulan8['agu'] ?>','<?= $bulan9['sep'] ?>','<?= $bulan10['okt'] ?>','<?= $bulan11['nov'] ?>','<?= $bulan12	['des'] ?>'],
+            }
+        ],
+        chart: {
+        type: 'bar',
+        height: 350,
+        click: onClick,
+        dataPoint : [
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+        ]
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+          endingShape: 'rounded'
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+      },
+      xaxis: {
+        categories: ['Januari','Febuari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober','November','Desember'],
+      },
+      yaxis: {
+        title: {
+          text: 'Statistik Permohonan'
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return "Total Biaya Permohonan Rp."+val.toLocaleString()+""
+          }
+        }
+      }
+    };
+
+      var chart = new ApexCharts(document.querySelector("#chart2"), options);
+      chart.render();
+
+
 
 $('.approve-confirm').on('click', function (eventx) {	
     eventx.preventDefault();

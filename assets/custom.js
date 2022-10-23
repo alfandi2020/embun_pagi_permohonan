@@ -184,61 +184,6 @@ var max_fields = 100;
     function onClick(e){ 
         window.open(e.dataPoint.link,'_blank');  
 };
-    var options = {
-        series: [
-            {
-                name: '',
-                data: ['1200000', '900000', '1200000', '1300000', '1200000', '1230000', '1542100', '1512400', '1200000','1200000','1200000','1200000'],
-                url: 'https://google.com'
-            }
-        ],
-        chart: {
-        type: 'bar',
-        height: 350,
-        click: onClick,
-        dataPoint : [
-            {label : "awda",y:22,link:"https://awdawwa.com"},
-            {label : "awda",y:22,link:"https://awdawwa.com"},
-            {label : "awda",y:22,link:"https://awdawwa.com"},
-            {label : "awda",y:22,link:"https://awdawwa.com"},
-        ]
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          endingShape: 'rounded'
-        },
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-      },
-      xaxis: {
-        categories: ['Januari','Febuari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober','November','Desember'],
-      },
-      yaxis: {
-        title: {
-          text: 'Statistik Permohonan'
-        }
-      },
-      fill: {
-        opacity: 1
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return "Total Biaya Permohonan Rp."+val+""
-          }
-        }
-      }
-    };
 
-      var chart = new ApexCharts(document.querySelector("#chart2"), options);
-      chart.render();
 
     
