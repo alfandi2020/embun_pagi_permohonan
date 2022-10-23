@@ -50,7 +50,11 @@ class Auth extends CI_Controller {
                     ];
 
                     $this->session->set_userdata($data);
-                    redirect('permohonan');
+                    if ($user['level'] == 3) {
+                        redirect('permohonan');
+                    }else{
+                        redirect('dashboard');
+                    }
                 }else{
                     $this->session->set_flashdata('msg','<div class="alert alert-danger">Password salah..!</div>');
                     redirect('auth');
