@@ -15,7 +15,7 @@ class Permohonan extends CI_Controller {
         $data = [
             'nama' => $this->session->userdata('nama'),
             'title' => "Tambah Permohonan",
-            'titlePage' => 'Dashboard Admin Embun Pagi'
+            'titlePage' => 'Tambah Permohonan'
         ];
         $set_unik = time() . rand(111, 999);
         $this->session->set_userdata('setUnik', $set_unik);
@@ -87,7 +87,7 @@ class Permohonan extends CI_Controller {
         $data = [
             'nama' => $this->session->userdata('nama'),
             'title' => "List Permohonan",
-            'titlePage' => 'Dashboard Admin Embun Pagi',
+            'titlePage' => 'List Permohonan',
             // 'data' => $this->db->get('tb_permohonan')->result()
         ];
 
@@ -132,9 +132,9 @@ class Permohonan extends CI_Controller {
             if($field->status_permohonan_atasan == 'Approved'){
                 $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_atasan .'</span><br>'.$field->tgl_status_admin;
             }else if($field->status_permohonan_atasan == 'Rejected'){
-                $status_atasan ='<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</span>';
+                $status_atasan ='<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
             }else if($field->status_permohonan == 'Rejected'){
-                $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
+                $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>';
             }else{
                 $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
             }
@@ -231,7 +231,7 @@ class Permohonan extends CI_Controller {
                 "nama" => $this->session->userdata('nama'),
                 "unik" => $this->input->post('id'),
                 "status" => $this->input->post('status'),
-                "tgl_status_atasan" => date('Y-m-d H:i:s')
+                // "tgl_status_atasan" => date('Y-m-d H:i:s')
             ];
             $this->db->insert('tb_atasan',$atasan);
             echo json_encode('Success');

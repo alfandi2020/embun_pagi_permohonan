@@ -64,7 +64,7 @@ var options = {
         series: [
             {
                 name: '',
-                data: ['<?= $bulan1['jan'] ?>','<?= $bulan2['feb'] ?>','<?= $bulan3['mar'] ?>','<?= $bulan4['apr'] ?>','<?= $bulan5['mei'] ?>','<?= $bulan6['jun'] ?>','<?= $bulan7['jul'] ?>','<?= $bulan8['agu'] ?>','<?= $bulan9['sep'] ?>','<?= $bulan10['okt'] ?>','<?= $bulan11['nov'] ?>','<?= $bulan12	['des'] ?>'],
+                data: ['<?= isset($bulan1['jan']) ?>','<?= isset($bulan2['feb']) ?>','<?= isset($bulan3['mar']) ?>','<?= isset($bulan4['apr']) ?>','<?= isset($bulan5['mei']) ?>','<?= isset($bulan6['jun']) ?>','<?= isset($bulan7['jul']) ?>','<?= isset($bulan8['agu']) ?>','<?= isset($bulan9['sep']) ?>','<?= isset($bulan10['okt']) ?>','<?= isset($bulan11['nov']) ?>','<?= isset($bulan12	['des']) ?>'],
             }
         ],
         chart: {

@@ -4,7 +4,7 @@
 
   <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row">
-      <div class="col-sm-6 col-xl-3">
+      <div class="col-sm-6 col-xl-3 mt-4">
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-start justify-content-between">
@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-xl-3">
+      <div class="col-sm-6 col-xl-3 mt-4">
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-start justify-content-between">
@@ -52,7 +52,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-xl-3">
+      <div class="col-sm-6 col-xl-3 mt-4">
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-start justify-content-between">
@@ -76,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-xl-3">
+      <div class="col-sm-6 col-xl-3 mt-4">
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-start justify-content-between">

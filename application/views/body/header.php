@@ -91,7 +91,8 @@
           <div class="app-brand demo">
             <a href="<?= base_url('permohonan') ?>" class="app-brand-link">
               <span class="app-brand-logo demo">
-                <svg
+                <img src="<?= base_url('assets/img/logo.png') ?>" alt="">
+                <!-- <svg
                   width="25"
                   viewBox="0 0 25 42"
                   version="1.1"
@@ -143,7 +144,7 @@
                       </g>
                     </g>
                   </g>
-                </svg>
+                </svg> -->
               </span>
               <!-- <span class="demo menu-text fw-bolder ms-2">Embun Pagi</span> -->
             </a>
@@ -169,27 +170,27 @@
             $role = $this->session->userdata('role');
             if(strpos($role,'1') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('permohonan');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>Permohonan</span>">
+              <a href="<?= base_url('permohonan');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>Permohonan</span>">
               <i class='bx bx-notepad'></i>
-                <div data-i18n="Basic">Permohonan</div>
+                <div data-i18n="Basic"> Permohonan</div>
               </a>
             </li>
             <?php } ?>
             <?php 
             //if(strpos($role,'2') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('permohonan/list2');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>List Permohonan</span>">
-              <i class='bx bx-list-check' ></i>
-                <div data-i18n="Basic">List Permohonan</div>
+              <a href="<?= base_url('permohonan/list2');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>List Permohonan</span>">
+              <i class='bx bx-list-check'></i> 
+                <div data-i18n="Basic"> List Permohonan</div>
               </a>
             </li>
             <?php //} ?>
             <?php 
             if(strpos($role,'3') !==  false){ ?>
             <li class="menu-item">
-              <a href="<?= base_url('user');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>User</span>">
+              <a href="<?= base_url('user');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>User</span>">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Basic">Create User</div>
+                <div data-i18n="Basic">User</div>
               </a>
             </li>
             <?php } ?>
@@ -239,7 +240,7 @@
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
               <!-- Search -->
               <div class="navbar-nav align-items-center">
-              <h3 class="align-items-center m-0"><?= $titlePage;?></h3>
+              <h5 class="align-items-center m-0"><?= $titlePage;?></h5>
               </div>
               <!-- /Search -->
 
