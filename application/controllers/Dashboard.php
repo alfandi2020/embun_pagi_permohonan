@@ -10,9 +10,22 @@ class Dashboard
 
     public function index()
 	{
-        $waiting = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Waiting'])->num_rows();
+        $level = $this->session->userdata('level');
+        if($level == 3) {
+           $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
+        }
+        $waiting = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Waiting' ])->num_rows();
+        if($level == 3) {
+            $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
+         }
         $approved = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Approved'])->num_rows();
+        if($level == 3) {
+            $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
+         }
         $rejected = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Rejected'])->num_rows();
+        if($level == 3) {
+            $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
+         }
         $done = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Done'])->num_rows();
         $this->db->group_by('a.unik');
         $this->db->join('tb_permohonan as a','a.unik=b.unik');

@@ -146,13 +146,13 @@ class Laporan extends CI_Controller {
             $sheet->setCellValue('B'.$column, $x->no_permohonan);
             $sheet->setCellValue('C'.$column, $x->tgl_permohonan);
             $sheet->setCellValue('D'.$column, $x->tahun);
-            $sheet->setCellValue('E'.$column, $x->nominal);
+            $sheet->setCellValue('E'.$column, 'Rp.'.number_format($x->nominal,0,'.','.'));
             $column++;
             $total_nominal += $x->nominal;
         }
         $sheet->setCellValue('D'.$column, 'Total Nominal');
         $sheet->setCellValue('E'.$column, 'Rp.'.number_format($total_nominal,0,'.','.'));
-        $filename = 'Report.xlsx';
+        $filename = 'Report_'.$bulan.'_'.$tahun.'.xlsx';
         $writer = new Xlsx($spreadsheet);
         $writer->save('upload/'.$filename);
         $this->load->helper('download');
