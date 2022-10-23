@@ -71,6 +71,40 @@ $(document).ready( function () {
             });
         }
     });
+
+
+    $('#table_laporan').DataTable({
+        /*"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],*/
+        "processing": true,
+        "serverSide": true,
+        "order": [],
+        "ajax": {
+            "url": base_url + "laporan/get_list_laporan",
+            "type": "POST",
+            "data": function (data) {
+                    data.nama_pemohon = $('#ser1').val();
+                    data.no_permohonan = $('#ser2').val();
+                    data.tgl_permohonan = $('#ser3').val();
+                    data.status = $('#ser4').val();
+            }
+        },
+        "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "orderable": true
+            }
+        ],
+        "orderCellsTop": true,
+        "fixedHeader": true,
+        fnDrawCallback:function (oSettings) {
+            console.log("after table create");
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+            elems.forEach(function(html) {
+                var switchery = new Switchery(html);
+            });
+        }
+    });
 } );
 
 
@@ -84,8 +118,13 @@ var max_fields = 100;
             x++;
             $(wrapper).append(
                 '<div>'+
-                '<div class="mb-3">' +
+
+                // '<div class="mb-3">' +
                 '<div class="row">' +
+                '<div>' +
+                '<input type="hidden" id="id' + x + '" name="id' + x + '" value="' + x + '">' +
+                '<input type="hidden" id="row' + x + '" name="row[]" value="' + x + '">'+
+                '</div>'+
                 '<div class="col-md-3 col-sm-3 col-xs-3">' +
                 '<label for="exampleFormControlInput1" class="form-label">ISI Pengajuan</label>' +
                 '<input required type="text" class="form-control"  name="isi' + x + '" value="" placeholder="Pengeluaran" required>' +
@@ -100,15 +139,14 @@ var max_fields = 100;
                 '<label for="exampleFormControlInput1" class="form-label">File</label>'+
                 '<input type="file" required name="att'+x+'" class="form-control" id="exampleFormControlInput1"/>'+
                 '</div>'+
-
+                
                 '<div class="col-md-2 col-sm-3 col-xs-3 mt-4">' +
                 '<button class="btn btn-danger remove_sampel"><i class="tf-icons bx bx-minus"></i></button>'+
                 '</div>' +
                 '</div>' +
                
-                '<input type="hidden" id="id' + x + '" name="id' + x + '" value="' + x + '">' +
-                '<input type="hidden" id="row' + x + '" name="row[]" value="' + x + '">' +
-                '</div>'+
+                
+                // '</div>'+
                 '</div>'
             );
 
@@ -143,17 +181,27 @@ var max_fields = 100;
         $(this).parent('div').parent('div').remove(); x--;
     });
 
-  
+    function onClick(e){ 
+        window.open(e.dataPoint.link,'_blank');  
+};
     var options = {
         series: [
             {
-                name: 'Januari',
-                data: ['1200000', '900000', '1200000', '1300000', '1200000', '1230000', '1542100', '1512400', '1200000','1200000','1200000','1200000']
+                name: '',
+                data: ['1200000', '900000', '1200000', '1300000', '1200000', '1230000', '1542100', '1512400', '1200000','1200000','1200000','1200000'],
+                url: 'https://google.com'
             }
         ],
         chart: {
         type: 'bar',
-        height: 350
+        height: 350,
+        click: onClick,
+        dataPoint : [
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+            {label : "awda",y:22,link:"https://awdawwa.com"},
+        ]
       },
       plotOptions: {
         bar: {
@@ -184,11 +232,11 @@ var max_fields = 100;
       tooltip: {
         y: {
           formatter: function (val) {
-            return "Total Biaya Permohonan Rp."+val+" "
+            return "Total Biaya Permohonan Rp."+val+""
           }
         }
       }
-      };
+    };
 
       var chart = new ApexCharts(document.querySelector("#chart2"), options);
       chart.render();

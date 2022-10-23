@@ -9,7 +9,7 @@
               <a href="<?= base_url('permohonan/list2') ?>" class="btn btn-warning"><i
                   class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
               <?php 
-                      $level = $this->session->userdata('level');
+              $level = $this->session->userdata('level');
               if($data[0]->status_permohonan_atasan != 'Approved' && $level != 3) { ?>
               <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
@@ -39,7 +39,7 @@
                       <tr>
                         <!-- <td><?= $no++; ?></td> -->
                         <td><?= $x->isi_permohonan ?></td>
-                        <td><a href=""><?= $x->file_detail ?></a></td>
+                        <td><a download href="<?= base_url("upload/file/".$x->file_detail)?> "><?= $x->file_detail ?></a></td>
                         <td>Rp.<?= number_format($x->nominal,0,'.','.') ?></td>
                       </tr>
 

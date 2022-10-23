@@ -41,7 +41,7 @@ class Permohonan extends CI_Controller {
     public function submit()
     {
         $row = $this->input->post('row');
-        if (count($row) > 1) {
+        if (count($row) > 0) {
             $set_unik = $this->session->userdata('setUnik');
             $id_user = $this->session->userdata('id_user');
             $nama = $this->input->post('nama');

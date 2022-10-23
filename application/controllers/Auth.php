@@ -46,6 +46,7 @@ class Auth extends CI_Controller {
                         'role' => $user['role'],
                         'status_sekolah' => $user['status_sekolah'],
                         'level' => $user['level'],
+                        'filterTahun' => date('Y')
                     ];
 
                     $this->session->set_userdata($data);

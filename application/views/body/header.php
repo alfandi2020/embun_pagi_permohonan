@@ -193,42 +193,15 @@
               </a>
             </li>
             <?php } ?>
-
-            <!-- Pages -->
-            <!-- <li class="menu-header small text-uppercase">
-              <span class="menu-header-text">Halaman</span>
-            </li> -->
-
-            
-            <!-- Stock -->
+            <?php 
+            //if(strpos($role,'3') !==  false){ ?>
             <!-- <li class="menu-item">
-              <a href="<?= base_url('index/gudang');?>" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-box"></i>
-                <div data-i18n="Basic">Gudang</div>
+              <a href="<?= base_url('laporan');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs' ></i> <span>Laporan</span>">
+                <i class="menu-icon tf-icons bx bxs-report"></i>
+                <div data-i18n="Basic">Create User</div>
               </a>
             </li> -->
-            
-            <!-- Dana -->
-             <!-- <li class="menu-item">
-              <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-credit-card"></i>
-                <div data-i18n="Layouts">Dana</div>
-              </a>
-
-              <ul class="menu-sub">
-                <li class="menu-item">
-                  <a href="layouts-without-menu.html" class="menu-link">
-                    <div data-i18n="Without menu">Pemasukkan</div>
-                  </a>
-                </li>
-               
-                <li class="menu-item">
-                  <a href="layouts-without-menu.html" class="menu-link">
-                    <div data-i18n="Without menu">Pengeluaran</div>
-                  </a>
-                </li>
-              </ul>
-            </li> -->
+            <?php // } ?>
 
             
             <!-- Components -->
@@ -300,17 +273,12 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="<?= base_url('user/profile') ?>">
                         <i class="bx bx-user me-2"></i>
-                        <span class="align-middle">My Profile</span>
+                        <span class="align-middle">Profile</span>
                       </a>
                     </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <i class="bx bx-cog me-2"></i>
-                        <span class="align-middle">Settings</span>
-                      </a>
-                    </li>
+                   
                     <li>
                       <div class="dropdown-divider"></div>
                     </li>

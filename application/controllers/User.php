@@ -55,6 +55,14 @@ class User extends CI_Controller {
             redirect('user');
         }
     }
+    function profile()
+    {
+        $this->db->where('id',$this->session->userdata('id_user'));
+        $data['user'] = $this->db->get('users')->row_array();   
+        $this->load->view('body/header');
+		$this->load->view('body/user',$data);
+		$this->load->view('body/footer');
+    }
     function edit($id)
     {
         $this->db->where('id',$id);
