@@ -69,7 +69,33 @@ class Auth extends CI_Controller {
         }
     }
 
-
+    function registrasi()
+    {
+        $this->load->view('auth/header');
+        $this->load->view('auth/index');
+        $this->load->view('auth/footer');
+    }
+    function action_regis()
+    {
+        if ($this->input->post('level') == '1') {
+            $role = '1,2,3';
+        }else if ($this->input->post('level') == '2') {
+            $role = '1,2';
+        }else{
+            $role = '1';
+        }
+        $insert= [
+            "nama" => $this->input->post('nama'),
+            "username" => $this->input->post('username'),
+            "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
+            "level" => $this->input->post('level'),
+            "role" => $role,
+            "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
+            "status" => 'Aktif',
+        ];
+        $this->db->insert('users',$insert);
+        redirect('user');
+    }
     public function logout() {
         $this->session->unset_userdata('id_users');
         $this->session->unset_userdata('nama');
