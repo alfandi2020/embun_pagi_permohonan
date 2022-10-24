@@ -10,10 +10,11 @@
           </div> -->
         <div class="row">
             <!-- Form controls -->
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="card mb-4">
-                    <h5 class="card-header">Add Permohonan Pengeluaran</h5>
+                    <h5 class="card-header">Update Profile</h5>
                     <div class="card-body">
+                        <?= $this->session->flashdata('msg') ?>
                         <form id="formAuthentication" class="mb-3" method="POST"
                             action="<?= base_url('auth/update');?>">
                             <div class="row">
@@ -29,33 +30,18 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input readonly type="email" class="form-control" name="email" autocomplete="off"
+                                    <input type="email" class="form-control" name="email" autocomplete="off"
                                         value="<?= $data['email']?>" placeholder="Masukkan email " />
                                 </div>
                             </div>
-                            <div class="row">
-                            <div class="col-md-4 mb-3 form-password-toggle">
-                                <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="password">Password</label>
-                                </div>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password"
-                                        placeholder="Masukkan password" aria-describedby="password" />
-                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            <!-- <div class="row mb-4">
+                                <div class="col-md-4">
+                                        <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Ganti Password</button>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3 form-password-toggle">
-                                <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="password">Password Konfirmasi</label>
-                                </div>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password_konfirmasi"
-                                        placeholder="Masukkan password konfirmasi" aria-describedby="password" />
-                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                </div>
-                            </div>
-                            </div>
-        
+                            <div class="collapse" id="collapseExample">
+                   
+                            </div> -->
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label>Level</label>
@@ -95,8 +81,45 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-1 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <button class="btn btn-primary d-grid w-100" type="submit">Update</button><br>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <h5 class="card-header">Update Password</h5>
+                    <div class="card-body">
+                        <?= $this->session->flashdata('msg2') ?>
+                        <form id="formAuthentication" class="mb-3" method="POST"
+                            action="<?= base_url('auth/update');?>">
+                            <input type="hidden" value="password" name="change">
+                            <div class="row">
+                                    <div class="col-md-4 mb-3 form-password-toggle">
+                                        <div class="d-flex justify-content-between">
+                                            <label class="form-label" for="password">Password</label>
+                                        </div>
+                                        <div class="input-group input-group-merge">
+                                            <input type="password" id="password" class="form-control" name="password"
+                                                placeholder="Masukkan password" aria-describedby="password" />
+                                            <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3 form-password-toggle">
+                                        <div class="d-flex justify-content-between">
+                                            <label class="form-label" for="password">Password Konfirmasi</label>
+                                        </div>
+                                        <div class="input-group input-group-merge">
+                                            <input type="password" id="password" class="form-control" name="password_konfirmasi"
+                                                placeholder="Masukkan password konfirmasi" aria-describedby="password" />
+                                            <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="col-md-2 mb-3">
+                                <button class="btn btn-warning d-grid w-100" type="submit">Update</button><br>
                             </div>
                         </form>
                     </div>

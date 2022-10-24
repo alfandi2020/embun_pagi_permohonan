@@ -105,17 +105,43 @@ class Auth extends CI_Controller {
         }else{
             $role = '1';
         }
-        $insert= [
-            "nama" => $this->input->post('nama'),
-            "username" => $this->input->post('username'),
-            "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
-            "level" => $this->input->post('level'),
-            "role" => $role,
-            "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
-        ];
-        $this->db->where('id',$this->session->userdata('id_user'));
-        $this->db->update('users',$insert);
-        redirect('user');
+        if ($this->input->post('password') == "" && $this->input->post('password') == "") {
+            $insert= [
+                "nama" => $this->input->post('nama'),
+                "username" => $this->input->post('username'),
+                "email" => $this->input->post('email'),
+                "level" => $this->input->post('level'),
+                "role" => $role,
+                "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
+            ];
+            $this->db->where('id',$this->session->userdata('id_user'));
+            $this->db->update('users',$insert);
+            $this->session->set_flashdata('msg','<div class="alert alert-primary">Profile berhasil di update..!</div>');
+            redirect('user/profile');
+        }
+        if ($this->input->post('change') == 'password') {
+            if ($this->input->post('password') == $this->input->post('password_konfirmasi')) {
+                $insert= [
+                    "nama" => $this->input->post('nama'),
+                    "username" => $this->input->post('username'),
+                    "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
+                    "level" => $this->input->post('level'),
+                    "role" => $role,
+                    "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
+                ];
+                $this->db->where('id',$this->session->userdata('id_user'));
+                $this->db->update('users',$insert);
+                $this->session->set_flashdata('msg2','<div class="alert alert-primary">Password berhasil di update..!</div>');
+                redirect('user/profile');
+            }else{
+                $this->session->set_flashdata('msg2','<div class="alert alert-danger">Password harus sama..!</div>');
+                redirect('user/profile');
+            }
+        }else{
+            $this->session->set_flashdata('msg2','<div class="alert alert-danger">error..!</div>');
+            redirect('user/profile');
+        }
+        // redirect('user');
     }
     public function logout() {
         $this->session->unset_userdata('id_users');
