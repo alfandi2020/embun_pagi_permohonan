@@ -91,9 +91,30 @@ class Auth extends CI_Controller {
             "level" => $this->input->post('level'),
             "role" => $role,
             "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
-            "status" => 'Aktif',
+            "status" => 'NonAktif',
         ];
         $this->db->insert('users',$insert);
+        redirect('user');
+    }
+    function update()
+    {
+        if ($this->input->post('level') == '1') {
+            $role = '1,2,3';
+        }else if ($this->input->post('level') == '2') {
+            $role = '1,2';
+        }else{
+            $role = '1';
+        }
+        $insert= [
+            "nama" => $this->input->post('nama'),
+            "username" => $this->input->post('username'),
+            "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
+            "level" => $this->input->post('level'),
+            "role" => $role,
+            "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
+        ];
+        $this->db->where('id',$this->session->userdata('id_user'));
+        $this->db->update('users',$insert);
         redirect('user');
     }
     public function logout() {
