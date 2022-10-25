@@ -59,6 +59,18 @@
                  />
                  <?= form_error('username', '<small class="text-danger pl-3">', '</small'); ?>
                </div>
+               <div class="mb-3">
+                 <label for="email" class="form-label">No Telp</label>
+                 <input
+                   type="number"
+                   class="form-control"
+                   name="telp"
+                   autocomplete="off"
+                   value="<?= set_value('email');?>"
+                   placeholder="Masukkan No Telp "
+                 />
+                 <?= form_error('username', '<small class="text-danger pl-3">', '</small'); ?>
+               </div>
               
                <div class="mb-3 form-password-toggle">
                  <div class="d-flex justify-content-between">

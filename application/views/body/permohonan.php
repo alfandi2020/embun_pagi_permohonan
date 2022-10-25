@@ -36,7 +36,7 @@
                         <div class="col-md-4">
                           <label for="exampleFormControlInput1" class="form-label">Tujuan Sekolah</label>
                           <select name="tujuan_sekolah" id="" class="form-control">
-                            <option selected value="">Pilih Admin</option>
+                            <option selected value="">Pilih Tujuan sekolah</option>
                             <option value="TK">TK</option>
                             <option value="SD">SD</option>
                             <option value="SMP">SMP</option>
