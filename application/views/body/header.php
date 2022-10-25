@@ -37,7 +37,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/logo.png') ?>" />
 
     <!-- Data Table JQuery -->
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
