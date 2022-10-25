@@ -49,7 +49,7 @@ class Permohonan extends CI_Controller {
                 'unik' => $set_unik,
                 'id_user' => $id_user,
                 'nama_pemohon' => $nama,
-                // 'file' => time().'_' .$_FILES['att']['name'],
+                'tujuan_sekolah' => $this->input->post('tujuan_sekolah'),
                 'tgl_permohonan' => date('Y-m-d H:i:s'),
                 'tahun' => date('Y'),
                 // 'id_admin' => $this->input->post('admin'),
@@ -128,9 +128,18 @@ class Permohonan extends CI_Controller {
             }else{
                 $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }
-            
+            $xxx = array();
+            $ex_user = explode(',',$field->nama_atasan);
+            foreach ($ex_user as $x) {
+               $user_atasan = $this->db->get_where('users',['id' => $x])->row();
+               $xxx[] = isset($user_atasan->nama) ? $user_atasan->nama : '';
+            }
+            $atasan1 = isset($xxx[0]) ? $xxx[0] :'';
+            $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
+            $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
+
             if($field->status_permohonan_atasan == 'Approved'){
-                $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_atasan .'</span><br>'.$field->tgl_status_admin;
+                $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.$atasan1.','.$atasan2.','.$atasan3.'</span><br>'.$field->tgl_status_admin;
             }else if($field->status_permohonan_atasan == 'Rejected'){
                 $status_atasan ='<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
             }else if($field->status_permohonan == 'Rejected'){

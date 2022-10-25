@@ -265,7 +265,18 @@
                           </div>
                           <div class="flex-grow-1">
                             <span class="fw-semibold d-block"><?= $this->session->userdata('nama') ?></span>
-                            <!-- <small class="text-muted">Admin</small> -->
+                            <small class="text-muted">
+                              <?php $level = $this->session->userdata('level');
+                              if ($level == 1) {
+                                $level_x = 'Admin Approval';
+                              }elseif ($level == 2) {
+                                $level_x = 'Admin Filter';
+                              }elseif ($level == 3) {
+                                $level_x = 'Admin Filter';
+                              }
+                              echo $level_x;
+                              ?>
+                            </small>
                           </div>
                         </div>
                       </a>

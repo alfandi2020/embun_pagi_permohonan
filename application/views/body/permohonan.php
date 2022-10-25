@@ -33,18 +33,15 @@
                           <input type="text" readonly value="<?= date('Y-m-d H:i:s') ?>" class="form-control" id="exampleFormControlInput1"
                           />
                         </div>
-                        <!-- <div class="col-md-4">
-                          <label for="exampleFormControlInput1" class="form-label">Nama Admin</label>
-                          <select name="admin" id="" class="form-control">
-                            <option selected>Pilih Admin</option>
-                            <?php
-                              $this->db->where('level','Admin Approval');
-                                $data = $this->db->get('users')->result();
-                                foreach ($data as $x) { ?>
-                              <option value="<?= $x->id ?>" > <?=  $x->nama?> </option>
-                              <?php } ?>
+                        <div class="col-md-4">
+                          <label for="exampleFormControlInput1" class="form-label">Tujuan Sekolah</label>
+                          <select name="tujuan_sekolah" id="" class="form-control">
+                            <option selected value="">Pilih Admin</option>
+                            <option value="TK">TK</option>
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
                           </select>
-                        </div> -->
+                        </div>
                       </div>
                     </div>
                     <!-- <div class="mb-3">

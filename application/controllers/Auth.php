@@ -44,7 +44,7 @@ class Auth extends CI_Controller {
                         'nama' => $user['nama'],
                         'username' => $user['username'],
                         'role' => $user['role'],
-                        'status_sekolah' => $user['status_sekolah'],
+                        'tujuan_sekolah' => $user['status_sekolah'],
                         'level' => $user['level'],
                         'filterTahun' => date('Y')
                     ];
@@ -77,24 +77,36 @@ class Auth extends CI_Controller {
     }
     function action_regis()
     {
-        if ($this->input->post('level') == '1') {
-            $role = '1,2,3';
-        }else if ($this->input->post('level') == '2') {
-            $role = '1,2';
+        $cek = $this->db->get_where('users',['username' => $this->input->post('username')])->num_rows();
+        if ($cek != 1) {
+            if ($this->input->post('password') == $this->input->post('password_konfirmasi')) {
+                if ($this->input->post('level') == '1') {
+                    $role = '1,2,3';
+                }else if ($this->input->post('level') == '2') {
+                    $role = '1,2';
+                }else{
+                    $role = '1';
+                }
+                $insert= [
+                    "nama" => $this->input->post('nama'),
+                    "username" => $this->input->post('username'),
+                    "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
+                    "level" => $this->input->post('level'),
+                    "role" => $role,
+                    "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
+                    "status" => 'NonAktif',
+                ];
+                $this->db->insert('users',$insert);
+                $this->session->set_flashdata('msg','<div class="alert alert-primary">Registrasi berhasil</div>');
+                redirect('auth/registrasi');
+            }else{
+                $this->session->set_flashdata('msg','<div class="alert alert-danger">Password harus sama..!</div>');
+                redirect('auth/registrasi');
+            }
         }else{
-            $role = '1';
+            $this->session->set_flashdata('msg','<div class="alert alert-danger">Username sudah digunakan..!</div>');
+            redirect('auth/registrasi');
         }
-        $insert= [
-            "nama" => $this->input->post('nama'),
-            "username" => $this->input->post('username'),
-            "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
-            "level" => $this->input->post('level'),
-            "role" => $role,
-            "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
-            "status" => 'NonAktif',
-        ];
-        $this->db->insert('users',$insert);
-        redirect('user');
     }
     function update()
     {

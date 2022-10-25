@@ -43,6 +43,9 @@ class M_Permohonan extends CI_Model {
         if($level == 3) {
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
+        if ($level == 2) {
+            $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
+        }
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {
         //     $date = date('Y-m-d');

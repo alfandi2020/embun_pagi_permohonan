@@ -11,22 +11,31 @@ class Dashboard
     public function index()
 	{
         $level = $this->session->userdata('level');
-        if($level == 3) {
-           $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
+        $tujuan_sklh = explode(',',$this->session->userdata('tujuan_sekolah'));
+
+        if ($level == 2) {
+            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
         }
-        $waiting = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Waiting' ])->num_rows();
-        if($level == 3) {
-            $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
-         }
-        $approved = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Approved'])->num_rows();
-        if($level == 3) {
-            $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
-         }
-        $rejected = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Rejected'])->num_rows();
-        if($level == 3) {
-            $cek_level =  $this->db->where('id_user', $this->session->userdata('id_user'));
-         }
-        $done = $this->db->get_where('tb_permohonan',['status_permohonan' => 'Done'])->num_rows();
+        $this->db->where('status_permohonan','Waiting');
+        $waiting = $this->db->get('tb_permohonan')->num_rows();
+     
+        if ($level == 2) {
+            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+        }
+        $this->db->where('status_permohonan','Approved');
+        $approved = $this->db->get('tb_permohonan')->num_rows();
+
+        if ($level == 2) {
+            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+        }
+        $this->db->where('status_permohonan','Rejected');
+        $rejected = $this->db->get('tb_permohonan')->num_rows();
+
+        if ($level == 2) {
+            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+        }
+        $this->db->where('status_permohonan','Done');
+        $done = $this->db->get('tb_permohonan')->num_rows();
         
 
         $data = [
