@@ -263,9 +263,9 @@
                       </label>
                     </div>
                     <div class="form-check">
-                      <input name="status_sekolah[]" class="form-check-input" type="checkbox" value="SMA" id="defaultRadio3"
+                      <input name="status_sekolah[]" class="form-check-input" type="checkbox" value="SMA" id="defaultRadio4"
                         />
-                      <label class="form-check-label" for="defaultRadio3">
+                      <label class="form-check-label" for="defaultRadio4">
                         SMA
                       </label>
                     </div>

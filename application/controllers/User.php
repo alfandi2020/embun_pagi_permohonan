@@ -25,7 +25,7 @@ class User extends CI_Controller {
                 "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
                 "level" => $this->input->post('level'),
                 "role" => $role,
-                "status_sekolah" => $this->input->post('status_sekolah'),
+                "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
                 "status" => 'Aktif',
             ];
             $this->db->insert('users',$insert);
