@@ -135,7 +135,11 @@ class Auth extends CI_Controller {
             }
             $this->db->update('users',$insert);
             $this->session->set_flashdata('msg','<div class="alert alert-primary">Profile berhasil di update..!</div>');
+            if ($this->input->post('edit_user') == true) {
+            redirect('user/profile/'.$this->input->post('edit_user'));
+            }else{
             redirect('user/profile');
+            }
         }
         if ($this->input->post('change') == 'password') {
             if ($this->input->post('password') == $this->input->post('password_konfirmasi')) {
