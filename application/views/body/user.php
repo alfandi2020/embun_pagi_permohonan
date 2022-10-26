@@ -116,7 +116,7 @@
                           </form>
                         </td>
                         <td>
-                          <a href="" class="btn btn-primary"><i class="bx bx-edit"></i></a>
+                          <a href="<?= base_url('user/profile/'.$x->id_user) ?>" class="btn btn-primary"><i class="bx bx-edit"></i></a>
                         </td>
                       </tr>
                       <?php } ?>

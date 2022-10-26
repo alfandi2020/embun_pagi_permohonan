@@ -57,13 +57,23 @@ class User extends CI_Controller {
     }
     function profile()
     {
-        $this->db->where('id',$this->session->userdata('id_user'));
-        $user = $this->db->get('users')->row_array();   
-        $data = [
-            'title' => "List User",
-            'titlePage' => 'List User',
-            'data' => $user
-        ];
+        if ($this->uri->segment(3) == true) {
+            $this->db->where('id',$this->uri->segment(3));
+            $user = $this->db->get('users')->row_array();   
+            $data = [
+                'title' => "List User",
+                'titlePage' => 'List User',
+                'data' => $user
+            ];
+        }else{
+            $this->db->where('id',$this->session->userdata('id_user'));
+            $user = $this->db->get('users')->row_array();   
+            $data = [
+                'title' => "List User",
+                'titlePage' => 'List User',
+                'data' => $user
+            ];
+        }
         $this->load->view('body/header',$data);
 		$this->load->view('body/profile',$data);
 		$this->load->view('body/footer');
