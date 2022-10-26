@@ -268,12 +268,21 @@ class Permohonan extends CI_Controller {
             $result = $query->row();
             $kalimat = $result->nama_atasan;
             if (preg_match("/$id_user/i", $kalimat)){}else{
-                $kalimat1 = $kalimat . ',' . $id_user;
-                $data_update1	= array(
-                    'nama_atasan'	=> $kalimat1
-                );
-                $this->db->where('unik', $unik);
-                $this->db->update('tb_permohonan', $data_update1);
+                if ($kalimat == null) {
+                    $kalimat1 = $id_user;
+                    $data_update1	= array(
+                        'nama_atasan'	=> $kalimat1
+                    );
+                    $this->db->where('unik', $unik);
+                    $this->db->update('tb_permohonan', $data_update1);
+                }else{
+                    $kalimat1 = $kalimat . ',' . $id_user;
+                    $data_update1	= array(
+                        'nama_atasan'	=> $kalimat1
+                    );
+                    $this->db->where('unik', $unik);
+                    $this->db->update('tb_permohonan', $data_update1);
+                }
             }
             $atasan = [
                 "id_user" => $this->session->userdata('id_user'),
