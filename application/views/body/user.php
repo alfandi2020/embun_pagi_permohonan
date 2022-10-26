@@ -243,23 +243,30 @@
                   <div class="col-12">
                     <label class="form-label" for="modalAddCardCvv">Status Sekolah</label>
                     <div class="form-check">
-                      <input name="status_sekolah" class="form-check-input" type="radio" value="TK" id="defaultRadio1" />
+                      <input name="status_sekolah[]" class="form-check-input" type="checkbox" value="TK" id="defaultRadio1" />
                       <label class="form-check-label" for="defaultRadio1">
                         TK
                       </label>
                     </div>
                     <div class="form-check">
-                      <input name="status_sekolah" class="form-check-input" type="radio" value="SD" id="defaultRadio2"
+                      <input name="status_sekolah[]" class="form-check-input" type="checkbox" value="SD" id="defaultRadio2"
                         />
                       <label class="form-check-label" for="defaultRadio2">
                         SD
                       </label>
                     </div>
                     <div class="form-check">
-                      <input name="status_sekolah" class="form-check-input" type="radio" value="SMP" id="defaultRadio3"
+                      <input name="status_sekolah[]" class="form-check-input" type="checkbox" value="SMP" id="defaultRadio3"
                         />
                       <label class="form-check-label" for="defaultRadio3">
                         SMP
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input name="status_sekolah[]" class="form-check-input" type="checkbox" value="SMA" id="defaultRadio3"
+                        />
+                      <label class="form-check-label" for="defaultRadio3">
+                        SMA
                       </label>
                     </div>
                   </div>

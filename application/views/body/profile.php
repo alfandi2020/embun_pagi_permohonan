@@ -79,6 +79,13 @@
                                             SMP
                                         </label>
                                     </div>
+                                    <div class="col-md-2 form-check">
+                                        <input name="status_sekolah[]" <?= strpos($data['status_sekolah'],'SMA') !== false ? 'checked' : '' ?>  class="form-check-input" type="checkbox" value="SMA"
+                                            id="defaultRadio3" />
+                                        <label class="form-check-label" for="defaultRadio3">
+                                            SMA
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-2 mb-3">
