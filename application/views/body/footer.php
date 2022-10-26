@@ -33,6 +33,7 @@
 <script type="text/javascript" src="<?= base_url() ?>assets/custom.js"></script>
 <script src="<?= base_url()?>assets/vendor/libs/toastr/toastr.js"></script>
     <script>
+		
 		window.setTimeout(function() {
 			$(".alert-success").fadeTo(500, 0).slideUp(500, function() {
 				$(this).remove();
@@ -116,8 +117,59 @@ var options = {
       var chart = new ApexCharts(document.querySelector("#chart2"), options);
       chart.render();
 
-
-
+// $(document).on('click', '.uji_sampel', function (e) {
+$(document).on('click', '.status_admin', function (e) {	
+    var id = this.id;
+    e.preventDefault();
+			$.ajax({
+				url: base_url+"permohonan/permohonan_info",
+				type: "POST",
+				data: {
+					id: id,
+				},
+				dataType :'json',
+				success: function (data) {
+					console.log(data)
+					Swal.fire({
+						title: 'Keterangan Direject',
+						text: data.note_status_permohonan,
+						icon: 'info',
+					})
+				},
+				error: function (error) {
+					Swal.fire({
+						title: 'Errorrrr',
+						// imageUrl: result.value.avatar_url
+					})
+				}
+			});
+});
+$(document).on('click', '.status_atasan', function (e) {	
+    var id = this.id;
+    e.preventDefault();
+			$.ajax({
+				url: base_url+"permohonan/permohonan_info",
+				type: "POST",
+				data: {
+					id: id,
+				},
+				dataType :'json',
+				success: function (data) {
+					console.log(data)
+					Swal.fire({
+						title: 'Keterangan Direject',
+						text: data.note_atasan,
+						icon: 'info',
+					})
+				},
+				error: function (error) {
+					Swal.fire({
+						title: 'Errorrrr',
+						// imageUrl: result.value.avatar_url
+					})
+				}
+			});
+});
 $('.approve-confirm').on('click', function (eventx) {	
     eventx.preventDefault();
     //   var id = $(this).attr('val');

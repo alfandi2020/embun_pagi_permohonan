@@ -13,11 +13,19 @@
                     <script>
                       Swal.fire(
                       'Opss..!',
-                      'isi permohonan tidak kosong, <br>silahkan tambah item...',
+                      'isi permohonan tidak boleh kosong, <br>silahkan tambah item...',
                       'error'
                     )
                     </script>
-                  <?php } ?>
+                  <?php }else if($this->session->flashdata('msg') == 'berhasil_x'){ ?>
+                    <script>
+                      Swal.fire(
+                      'Berhasil..!',
+                      'Permhonan berhasil diinput',
+                      'success'
+                    )
+                    </script>
+                    <?php } ?>
                 <div class="card mb-4">
                    <h5 class="card-header">Add Permohonan Pengeluaran</h5>
                   <div class="card-body">
@@ -35,7 +43,7 @@
                         </div>
                         <div class="col-md-4">
                           <label for="exampleFormControlInput1" class="form-label">Tujuan Sekolah</label>
-                          <select name="tujuan_sekolah" id="" class="form-control">
+                          <select required name="tujuan_sekolah" id="" class="form-control">
                             <option selected value="">Pilih Tujuan sekolah</option>
                             <option value="TK">TK</option>
                             <option value="SD">SD</option>

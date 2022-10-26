@@ -41,7 +41,7 @@ class Permohonan extends CI_Controller {
     public function submit()
     {
         $row = $this->input->post('row');
-        if (count($row) > 0) {
+        if (count($row) > 1) {
             $set_unik = $this->session->userdata('setUnik');
             $id_user = $this->session->userdata('id_user');
             $nama = $this->input->post('nama');
@@ -75,6 +75,7 @@ class Permohonan extends CI_Controller {
                     ];
                     $this->db->insert('tb_permohonan_detail',$detail);
             }
+            $this->session->set_flashdata('msg','berhasil_x');
         }else{
             $this->session->set_flashdata('msg','not_item');
             redirect('permohonan');
@@ -124,7 +125,7 @@ class Permohonan extends CI_Controller {
             if($field->status_permohonan == 'Approved'){
                 $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }else if($field->status_permohonan == 'Rejected'){
-                $status_admin = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                $status_admin = '<button type="button" id="'.$field->unik.'" class="btn btn-danger status_admin"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }else{
                 $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }
@@ -141,7 +142,7 @@ class Permohonan extends CI_Controller {
             if($field->status_permohonan_atasan == 'Approved'){
                 $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.$atasan1.','.$atasan2.','.$atasan3.'</span><br>'.$field->tgl_status_admin;
             }else if($field->status_permohonan_atasan == 'Rejected'){
-                $status_atasan ='<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
+                $status_atasan ='<button type="button" id="'.$field->unik.'" class="btn btn-danger status_atasan"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
             }else if($field->status_permohonan == 'Rejected'){
                 $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>';
             }else{
@@ -343,6 +344,13 @@ class Permohonan extends CI_Controller {
         // $data['sts'] = $this->Mpermohonan->st_permohonan($this->input->post('sampel_id'));
         // $data['tgl_sampel_diterima'] = ($data['sts']['tgl_sampel_diterima'] != '0000-00-00 00:00:00') ? dmyhis($data['sts']['tgl_sampel_diterima']) : $tgl_sampel_diterima;
         $this->load->view('body/modal_permohonan', $data);
+    }
+    function permohonan_info()
+    {
+        $unik = $this->input->post('id');
+        $this->db->where('unik',$unik);
+        $data = $this->db->get('tb_permohonan')->row_array();
+        echo json_encode($data);
     }
     public function logout() {
         $this->session->unset_userdata('id_user');
