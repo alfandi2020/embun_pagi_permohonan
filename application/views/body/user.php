@@ -117,6 +117,7 @@
                         </td>
                         <td>
                           <a href="<?= base_url('user/profile/'.$x->id_user) ?>" class="btn btn-primary"><i class="bx bx-edit"></i></a>
+                          <a href="<?= base_url('user/delete/'.$x->id_user) ?>" class="btn btn-danger confirm-delete"><i class="bx bx-trash"></i></a>
                         </td>
                       </tr>
                       <?php } ?>

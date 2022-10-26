@@ -78,6 +78,12 @@ class User extends CI_Controller {
 		$this->load->view('body/profile',$data);
 		$this->load->view('body/footer');
     }
+    function delete()
+    {
+        $this->db->where('id',$this->uri->segment(3));
+        $this->db->delete('users');
+        redirect('user');
+    }
     function edit($id)
     {
         $this->db->where('id',$id);

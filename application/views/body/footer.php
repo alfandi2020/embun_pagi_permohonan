@@ -170,6 +170,41 @@ $(document).on('click', '.status_atasan', function (e) {
 				}
 			});
 });
+$('.confirm-delete').on('click', function (eventx) {	
+    eventx.preventDefault();
+    //   var id = $(this).attr('val');
+    const url = $(this).attr('href');
+    Swal.fire({
+    title: 'Yakin untuk delete user?',
+    text: "Data Akan di delete !",
+    icon: 'question',
+    showCancelButton: true,
+    cancelButtonColor: '#d33',
+
+    }).then(function(result) {
+    if (result.value) {
+        Swal.fire(
+            {
+                icon: "success",
+                title: 'Berhasil!',
+                text: 'User berhasil didelete',
+                // confirmButtonClass: 'btn btn-success',
+            }
+            )
+        setTimeout(() => {
+            document.location.href = url;
+        }, 1500);
+        // console.log(href);
+    }else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+            title: 'Cencel',
+            text: 'Data Belum diapproved',
+            icon: 'error',
+            // confirmButtonClass: 'btn btn-success',
+        })
+        }
+    });
+});
 $('.approve-confirm').on('click', function (eventx) {	
     eventx.preventDefault();
     //   var id = $(this).attr('val');
