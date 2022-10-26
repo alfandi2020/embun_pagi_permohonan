@@ -159,7 +159,7 @@ class Permohonan extends CI_Controller {
                 $row[] = $status_admin;
                 $row[] = $status_atasan;
             }
-            if (count(explode(',',$field->nama_atasan)) == 3) {
+            if (count(explode(',',$field->nama_atasan)) == 3 && $field->status_permohonan != 'Done') {
                 $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
                 <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
