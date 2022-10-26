@@ -87,6 +87,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" value="<?= $this->uri->segment(3) ?>" name="edit_user">
                             <div class="col-md-2 mb-3">
                                 <button class="btn btn-primary d-grid w-100" type="submit">Update</button><br>
                             </div>

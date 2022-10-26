@@ -128,7 +128,11 @@ class Auth extends CI_Controller {
                 "role" => $role,
                 "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
             ];
-            $this->db->where('id',$this->session->userdata('id_user'));
+            if ($this->input->post('edit_user') == true) {
+                $this->db->where('id',$this->input->post('edit_user'));
+            }else{
+                $this->db->where('id',$this->session->userdata('id_user'));
+            }
             $this->db->update('users',$insert);
             $this->session->set_flashdata('msg','<div class="alert alert-primary">Profile berhasil di update..!</div>');
             redirect('user/profile');
