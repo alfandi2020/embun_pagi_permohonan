@@ -85,6 +85,11 @@ class Permohonan extends CI_Controller {
     }
     function list2()
     {
+        // $level = $this->session->userdata('level');
+        // if ($level == 2) {
+        //     $filter = 'waiting';
+        //     $this->session->set_userdata('filterPermohonan', $filter);
+        // }
         $data = [
             'nama' => $this->session->userdata('nama'),
             'title' => "List Permohonan",

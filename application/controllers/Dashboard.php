@@ -10,40 +10,76 @@ class Dashboard
 
     public function index()
 	{
+ 
         $level = $this->session->userdata('level');
         $tujuan_sklh = explode(',',$this->session->userdata('tujuan_sekolah'));
-
+        //Waiting
         if ($level == 2) {
             $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
         }
+        if($level == 3) {
+            $this->db->where('id_user', $this->session->userdata('id_user'));
+        }
         $this->db->where('status_permohonan','Waiting');
         $waiting = $this->db->get('tb_permohonan')->num_rows();
-     
+        
+
+        //Approved
+
+        if($level == 3) {
+            $this->db->where('status_permohonan_atasan','Approved');
+            $this->db->where('id_user', $this->session->userdata('id_user'));
+            $approved_dashboard_user = $this->db->get('tb_permohonan')->num_rows();
+            $this->db->where('id_user', $this->session->userdata('id_user'));
+        }
         if ($level == 2) {
             $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
         }
         $this->db->where('status_permohonan','Approved');
+        $this->db->where('status_permohonan_atasan',null);
+        if($level == 2 || $level == 1 ) {
+            $this->db->or_not_like('status_permohonan_atasan','Rejected');
+        }
+        $this->db->not_like('status_permohonan','Done');
         $approved = $this->db->get('tb_permohonan')->num_rows();
 
+        //Rejected
+        if ($level == 2) {
+            $this->db->where('status_permohonan','Rejected');
+            $this->db->or_where('status_permohonan_atasan','Rejected');
+            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+        }
+        if($level == 3) {
+            $this->db->where('status_permohonan','Rejected');
+            $this->db->or_where('status_permohonan_atasan','Rejected');
+            $this->db->where('(status_permohonan = "Done" and status_permohonan = "Rejected")');//bisa di user
+            $this->db->where('id_user', $this->session->userdata('id_user'));
+        }
+        if ($level == 1) {
+            $this->db->where('status_permohonan','Rejected');
+            $this->db->or_where('status_permohonan_atasan','Rejected');
+            $this->db->where('(status_permohonan = "Done" or status_permohonan = "Rejected")');//bisa di admin approval
+        }
+       
+        $rejected = $this->db->get('tb_permohonan')->num_rows();
+
+        //Done
         if ($level == 2) {
             $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
         }
-        $this->db->where('status_permohonan','Rejected');
-        $rejected = $this->db->get('tb_permohonan')->num_rows();
-
-        if ($level == 2) {
-            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+        if($level == 3) {
+            $this->db->where('id_user', $this->session->userdata('id_user'));
         }
         $this->db->where('status_permohonan','Done');
         $done = $this->db->get('tb_permohonan')->num_rows();
-        
+        $approved_dashboard_user_x = isset($approved_dashboard_user) ? $approved_dashboard_user : 0;
 
         $data = [
             'nama' => $this->session->userdata('nama'),
             'title' => "Selamat Datang di Dashboard Admin",
             'titlePage' => 'Dashboard Embun Pagi',
             'waiting' => $waiting,
-            'approved' => $approved,
+            'approved' => $approved + $approved_dashboard_user_x,
             'rejected' => $rejected,
             'done' => $done,
             'bulan1' => $this->db->query("SELECT SUM(b.nominal) as jan from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='01'")->row_array(),
@@ -61,6 +97,12 @@ class Dashboard
         ];
         // $data['bulan'] = $this->db->query("SELECT SUM(b.nominal) as jan from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='09'")->row_array();
 
+
+        $level = $this->session->userdata('level');
+        if ($level == 2) {
+            $filter = 'waiting';
+            $this->session->set_userdata('filterPermohonan', $filter);
+        }
 		$this->load->view('body/header', $data);
 		$this->load->view('body/content');
 		$this->load->view('body/footer',$data);

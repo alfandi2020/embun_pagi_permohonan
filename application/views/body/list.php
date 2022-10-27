@@ -5,7 +5,7 @@
         <?php if ($this->uri->segment(3)== true) {?>
         <div class="container-xxl flex-grow-1 container-p-y">
           <div class="row mb-3">
-            <div class="col-md-5">
+            <div class="col-md-8">
               <a href="<?= base_url('permohonan/list2') ?>" class="btn btn-warning"><i
                   class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
               <?php 
@@ -18,8 +18,11 @@
               <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i
                   class="tf-icons bx bx-task-x"></i> Reject </button>
                 <?php } ?>
+
             </div>
           </div>
+          <h6>Tujuan Sekolah : <?= $data[0]->tujuan_sekolah  ?></h6> 
+
           <div class="row">
             <!-- Form controls -->
             <div class="col-md-12">
@@ -301,14 +304,20 @@
         <div class="container-xxl flex-grow-1 container-p-y">
           <div class="row mb-3">
             <div class="col-md-5 col-sm-12">
+              <?php if($this->session->userdata('level') != 1){ ?>
               <a href="<?= base_url('permohonan/filter/waiting') ?>"
                 class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'waiting' ? 'active' : '' ?>">Waiting</a>&nbsp;&nbsp;
+                <?php } ?>
+              <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3){ ?>
               <a href="<?= base_url('permohonan/filter/data_baru') ?>"
                 class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'data_baru' ? 'active' : '' ?>">Data
                 Baru</a>&nbsp;&nbsp;
+                <?php } ?>
+              <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3 || $this->session->userdata('level') == 2){ ?>
               <a href="<?= base_url('permohonan/filter/data_lama') ?>"
                 class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'data_lama' ? 'active' : '' ?>">Data
                 lama</a>
+                <?php } ?>
             </div>
           </div>
           <div class="row">

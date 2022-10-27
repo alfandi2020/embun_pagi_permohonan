@@ -101,8 +101,26 @@
         </div>
       </div>
     </div>
+    <div class="row mt-2 text-center">
+        <div class="col-sm-12 col-xl-12 mt-4">
+          <div class="card">
+            <div class="card-body">
+              Selamat datang,  <b><?= $this->session->userdata('nama') ?></b><br>
+              <b><?php if ($this->session->userdata('level') == 1) {
+               echo "Admin Approval";
+              }elseif ($this->session->userdata('level') == 2) {
+                echo "Admin Filter";
+              }else{
+                echo "User";
+
+              }  ?></b>
+              <p><?= date('d M Y H:i:s') ?></p>
+            </div>
+          </div>
+        </div>
+    </div>
 <?php if($this->session->userdata('level') != 3){ ?>
-    <div class="row mt-5">
+    <div class="row mt-4">
       <div class="col-md-12 col-lg-12 mb-4">
         <div class="card">
           <div class="row row-bordered g-0">

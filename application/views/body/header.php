@@ -272,7 +272,7 @@
                               }elseif ($level == 2) {
                                 $level_x = 'Admin Filter';
                               }elseif ($level == 3) {
-                                $level_x = 'Admin Filter';
+                                $level_x = 'User Pengajuan';
                               }
                               echo $level_x;
                               ?>

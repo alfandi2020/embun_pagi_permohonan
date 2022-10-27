@@ -24,28 +24,59 @@ class M_Permohonan extends CI_Model {
     {
         $setTahun = $this->session->userdata('setTahun');
         $filterPermohonan = $this->session->userdata('filterPermohonan');
+        $level = $this->session->userdata('level');
         $this->db->from($this->tb_fo);
         if(isset($setTahun)) $this->db->where('tahun', $setTahun);
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
-            $this->db->where('status_permohonan','Waiting');
+            if ($level == 2) {
+                $this->db->where('status_permohonan','Waiting');
+            }else if($level == 3){
+                $this->db->where('id_user', $this->session->userdata('id_user'));
+                $this->db->where('status_permohonan','Waiting');
+            }
         }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
-            $this->db->where('status_permohonan','Approved');
-            $this->db->where('status_permohonan_atasan',null);
-            $this->db->or_not_like('status_permohonan_atasan','Rejected');
-            $this->db->not_like('status_permohonan','Done');
-
-        }else{
-            $this->db->or_where('status_permohonan','Rejected');
-            $this->db->or_where('status_permohonan','Done');
-            $this->db->or_where('status_permohonan_atasan','Rejected');
+            if ($level == 2) { // admin filter
+                $this->db->where('status_permohonan','Approved');
+                $this->db->where('status_permohonan_atasan',null);
+                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                $this->db->not_like('status_permohonan','Done');
+                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
+            }else if($level == 1){ // admin approval
+                $this->db->where('status_permohonan','Approved');
+                $this->db->where('status_permohonan_atasan',null);
+                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                $this->db->not_like('status_permohonan','Done');
+            }else{
+                $this->db->where('status_permohonan','Approved');
+                $this->db->where('status_permohonan_atasan',null);
+                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                $this->db->not_like('status_permohonan','Done');
+            }
+        }else{ // data_lama
+            if ($level == 2) {
+                $this->db->or_where('status_permohonan','Rejected');
+                $this->db->or_where('status_permohonan','Done');
+                $this->db->or_where('status_permohonan_atasan','Rejected');
+                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
+            }else if($level == 1){
+                $this->db->or_where('status_permohonan','Rejected');
+                $this->db->or_where('status_permohonan','Done');
+                $this->db->or_where('status_permohonan_atasan','Rejected');
+            }else{
+                if($level == 3) {
+                    $this->db->where('id_user', $this->session->userdata('id_user'));
+                }
+                $this->db->or_where('status_permohonan','Rejected');
+                $this->db->where('status_permohonan','Done');
+                $this->db->where('status_permohonan_atasan','Rejected');
+            }
         }
-        $level = $this->session->userdata('level');
         if($level == 3) {
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
-        if ($level == 2) {
-            $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
-        }
+        // if ($level == 2) {
+        //     $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
+        // }
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {
         //     $date = date('Y-m-d');
