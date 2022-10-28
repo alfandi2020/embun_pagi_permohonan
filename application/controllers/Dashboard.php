@@ -113,6 +113,10 @@ class Dashboard
             $filter = 'data_baru';
             $this->session->set_userdata('filterPermohonan', $filter);
         }
+        if ($level == 3) {
+            $filter = 'data_baru';
+            $this->session->set_userdata('filterPermohonan', $filter);
+        }
 		$this->load->view('body/header', $data);
 		$this->load->view('body/content');
 		$this->load->view('body/footer',$data);

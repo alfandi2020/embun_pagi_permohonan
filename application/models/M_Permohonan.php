@@ -30,6 +30,7 @@ class M_Permohonan extends CI_Model {
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             if ($level == 2) {
                 $this->db->where('status_permohonan','Waiting');
+                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
             }else if($level == 3){
                 $this->db->where('id_user', $this->session->userdata('id_user'));
                 $this->db->where('status_permohonan','Waiting');
