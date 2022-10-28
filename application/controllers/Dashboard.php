@@ -28,6 +28,7 @@ class Dashboard
 
         if($level == 3) {
             $this->db->where('status_permohonan_atasan','Approved');
+            $this->db->where('status_permohonan!=','Done');
             $this->db->where('id_user', $this->session->userdata('id_user'));
             $approved_dashboard_user = $this->db->get('tb_permohonan')->num_rows();
             $this->db->where('id_user', $this->session->userdata('id_user'));
@@ -50,9 +51,14 @@ class Dashboard
             $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
         }
         if($level == 3) {
+            $this->db->where('status_permohonan !=','Done');
             $this->db->where('status_permohonan','Rejected');
-            $this->db->or_where('status_permohonan_atasan','Rejected');
-            $this->db->where('(status_permohonan = "Done" and status_permohonan = "Rejected")');//bisa di user
+            $this->db->where('id_user', $this->session->userdata('id_user'));
+            $rejected_user_2 =$this->db->get('tb_permohonan')->num_rows();
+
+            $this->db->where('status_permohonan !=','Done');
+            $this->db->where('status_permohonan_atasan','Rejected');
+            // $this->db->where('(status_permohonan != "Done" or status_permohonan = "Rejected")');//bisa di user
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
         if ($level == 1) {
@@ -73,14 +79,14 @@ class Dashboard
         $this->db->where('status_permohonan','Done');
         $done = $this->db->get('tb_permohonan')->num_rows();
         $approved_dashboard_user_x = isset($approved_dashboard_user) ? $approved_dashboard_user : 0;
-
+        $rejected_user_x = isset($rejected_user_2) ? $rejected_user_2 : 0;
         $data = [
             'nama' => $this->session->userdata('nama'),
             'title' => "Selamat Datang di Dashboard Admin",
             'titlePage' => 'Dashboard Embun Pagi',
             'waiting' => $waiting,
             'approved' => $approved + $approved_dashboard_user_x,
-            'rejected' => $rejected,
+            'rejected' => $rejected + $rejected_user_x,
             'done' => $done,
             'bulan1' => $this->db->query("SELECT SUM(b.nominal) as jan from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='01'")->row_array(),
             'bulan2' => $this->db->query("SELECT SUM(b.nominal) as feb from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='02'")->row_array(),
@@ -101,6 +107,10 @@ class Dashboard
         $level = $this->session->userdata('level');
         if ($level == 2) {
             $filter = 'waiting';
+            $this->session->set_userdata('filterPermohonan', $filter);
+        }
+        if ($level == 1) {
+            $filter = 'data_baru';
             $this->session->set_userdata('filterPermohonan', $filter);
         }
 		$this->load->view('body/header', $data);
