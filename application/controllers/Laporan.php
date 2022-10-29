@@ -160,6 +160,7 @@ class Laporan extends CI_Controller {
         $data = file_get_contents(base_url('upload/'.$filename));
         force_download($filename, $data);
         unlink('upload/'.$filename);
+        redirect('dashboard');
     }
     function filter()
     {

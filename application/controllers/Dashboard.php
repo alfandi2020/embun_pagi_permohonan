@@ -10,7 +10,19 @@ class Dashboard
 
     public function index()
 	{
- 
+        $level = $this->session->userdata('level');
+        if ($level == 2) {
+            $filter = 'waiting';
+            $this->session->set_userdata('filterPermohonan', $filter);
+        }
+        if ($level == 1) {
+            $filter = 'data_baru';
+            $this->session->set_userdata('filterPermohonan', $filter);
+        }
+        if ($level == 3) {
+            $filter = 'data_baru';
+            $this->session->set_userdata('filterPermohonan', $filter);
+        }
         $level = $this->session->userdata('level');
         $tujuan_sklh = explode(',',$this->session->userdata('tujuan_sekolah'));
         //Waiting
@@ -104,19 +116,7 @@ class Dashboard
         // $data['bulan'] = $this->db->query("SELECT SUM(b.nominal) as jan from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='09'")->row_array();
 
 
-        $level = $this->session->userdata('level');
-        if ($level == 2) {
-            $filter = 'waiting';
-            $this->session->set_userdata('filterPermohonan', $filter);
-        }
-        if ($level == 1) {
-            $filter = 'data_baru';
-            $this->session->set_userdata('filterPermohonan', $filter);
-        }
-        if ($level == 3) {
-            $filter = 'data_baru';
-            $this->session->set_userdata('filterPermohonan', $filter);
-        }
+      
 		$this->load->view('body/header', $data);
 		$this->load->view('body/content');
 		$this->load->view('body/footer',$data);

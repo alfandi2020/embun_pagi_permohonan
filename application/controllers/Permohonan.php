@@ -48,7 +48,7 @@ class Permohonan extends CI_Controller {
             $data = [
                 'unik' => $set_unik,
                 'id_user' => $id_user,
-                'nama_pemohon' => $nama,
+                'nama_pemohon' => strtoupper($nama),
                 'tujuan_sekolah' => $this->input->post('tujuan_sekolah'),
                 'tgl_permohonan' => date('Y-m-d H:i:s'),
                 'tahun' => date('Y'),
