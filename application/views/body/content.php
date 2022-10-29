@@ -44,9 +44,15 @@
                   <div class="badge bg-primary">Data Approved</div>
                 </span>
                 <div class="d-flex align-items-end mt-2">
-                  <a href="<?= base_url('permohonan/filter/data_baru') ?>">
+                <?php if($this->session->userdata('level') == 2) { ?>
+                  <a href="<?= base_url('permohonan/filter/waiting') ?>">
                     <h4 class="mb-0 me-2"><?= $approved ?></h4>
                   </a>
+                  <?php }else{ ?>
+                    <a href="<?= base_url('permohonan/filter/data_baru') ?>">
+                    <h4 class="mb-0 me-2"><?= $approved ?></h4>
+                  </a>
+                  <?php } ?>
                   <!-- <small class="text-success">(+29%)</small> -->
                 </div>
                 <!-- <small>Total Users</small> -->
