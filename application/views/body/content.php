@@ -13,9 +13,16 @@
                   <div class="badge bg-warning">Data Waiting</div>
                 </span>
                 <div class="d-flex align-items-end mt-2">
+                <?php if($this->session->userdata('level') == 1) { ?>
+
+                    <a href="<?= base_url('permohonan/filter/data_baru') ?>">
+                      <h4 class="mb-0 me-2"><?= $waiting ?></h4>
+                    </a>
+                <?php }else{ ?>
                   <a href="<?= base_url('permohonan/filter/waiting') ?>">
-                    <h4 class="mb-0 me-2"><?= $waiting ?></h4>
-                  </a>
+                      <h4 class="mb-0 me-2"><?= $waiting ?></h4>
+                    </a>
+                <?php } ?>
                   <!-- <small class="text-success">(+29%)</small> -->
                 </div>
                 <!-- <small>Total Users</small> -->

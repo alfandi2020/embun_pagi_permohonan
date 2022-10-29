@@ -23,6 +23,9 @@ class Dashboard
             $filter = 'data_baru';
             $this->session->set_userdata('filterPermohonan', $filter);
         }
+
+
+        
         $level = $this->session->userdata('level');
         $tujuan_sklh = explode(',',$this->session->userdata('tujuan_sekolah'));
         //Waiting
