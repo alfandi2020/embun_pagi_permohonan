@@ -18,7 +18,6 @@ class Laporan extends CI_Controller {
             'titlePage' => 'Laporan',
             'data' => $user
         ];
-
 		$this->load->view('body/header', $data);
 		$this->load->view('body/laporan/index',$data);
 		$this->load->view('body/footer');
@@ -122,36 +121,98 @@ class Laporan extends CI_Controller {
         );
         echo json_encode($output);
     }
+    
     function get()
     {
         $bulan = $this->input->post('bulan');
         $tahun = $this->session->userdata('filterTahun');
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Nama Permohonan')->getDefaultColumnDimension()->setWidth(20);
-        $sheet->setCellValue('B1', 'Nomor Permohonan');
-        $sheet->setCellValue('C1', 'Tanggal Permohonan');
-        $sheet->setCellValue('D1', 'Tahun');
-        $sheet->setCellValue('E1', 'Nominal');
-        // $this->db->where('a.status_permohonan','Done');
-        // $this->db->where('a.tahun',$tahun);
-        // // $this->db->where("DATE_FORMAT(a.tgl_permohonan '%m')=",$bulan);
-        // $this->db->group_by('a.unik');
-        // $this->db->join('tb_permohonan_detail as b','a.unik=b.unik');
-        $get = $this->db->query("SELECT *,SUM(b.nominal) from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='$bulan' GROUP BY a.unik ")->result();
-        $column = 2;
+        $sheet->setCellValue('A1', 'PERMOHONAN APPROVED');
+        $sheet->setCellValue('A2', 'Nama Pemohonan')->getDefaultColumnDimension()->setWidth(20);
+        $sheet->setCellValue('B2', 'Nomor Pemohonan');
+        $sheet->setCellValue('C2', 'Tanggal Pemohonan');
+        $sheet->setCellValue('D2', 'Tahun');
+        $sheet->setCellValue('E2', 'Nominal');
+        
+        $sheet->setCellValue('G1', 'DETAIL PERMOHONAN APPROVED');
+        $sheet->setCellValue('G2', 'Isi Pemohonan')->getDefaultColumnDimension()->setWidth(20);
+        $sheet->setCellValue('H2', 'No Pemohon');
+        $sheet->setCellValue('I2', 'Tanggal');
+        $sheet->setCellValue('J2', 'Nominal');
+        //detail permohonan
+        $get_detail = $this->db->query("SELECT * from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='$bulan'")->result();
+        $column2= 3;
+        $total_nominal2 = 0;
+        foreach ($get_detail as $x) {
+            $sheet->setCellValue('G'.$column2, $x->isi_permohonan);
+            $sheet->setCellValue('H'.$column2, $x->no_permohonan);
+            $sheet->setCellValue('I'.$column2, $x->date_created);
+            $sheet->setCellValue('J'.$column2, 'Rp.'.number_format($x->nominal,0,'.','.'));
+            $column2++;
+            $total_nominal2 += $x->nominal;
+        }
+        $sheet->setCellValue('I'.$column2, 'Total Nominal');
+        $sheet->setCellValue('J'.$column2, 'Rp.'.number_format($total_nominal2,0,'.','.'));
+
+        //permohonan
+        $get = $this->db->query("SELECT *,SUM(b.nominal) as nominal_detail from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND DATE_FORMAT(a.tgl_permohonan,'%m')='$bulan' GROUP BY a.unik ")->result();
+        $column = 3;
         $total_nominal = 0;
         foreach ($get as $x) {
             $sheet->setCellValue('A'.$column, $x->nama_pemohon);
             $sheet->setCellValue('B'.$column, $x->no_permohonan);
             $sheet->setCellValue('C'.$column, $x->tgl_permohonan);
             $sheet->setCellValue('D'.$column, $x->tahun);
-            $sheet->setCellValue('E'.$column, 'Rp.'.number_format($x->nominal,0,'.','.'));
+            $sheet->setCellValue('E'.$column, 'Rp.'.number_format($x->nominal_detail,0,'.','.'));
             $column++;
-            $total_nominal += $x->nominal;
+            $total_nominal += $x->nominal_detail;
         }
         $sheet->setCellValue('D'.$column, 'Total Nominal');
         $sheet->setCellValue('E'.$column, 'Rp.'.number_format($total_nominal,0,'.','.'));
+
+        //permohonan Rejected
+        $sheet->setCellValue('L1', 'PERMOHONAN REJECTED');
+        $sheet->setCellValue('L2', 'Nama Pemohonan')->getDefaultColumnDimension()->setWidth(20);
+        $sheet->setCellValue('M2', 'Alasan Rejected');
+        $sheet->setCellValue('N2', 'Tanggal Pemohonan');
+        $sheet->setCellValue('O2', 'Tahun');
+        $sheet->setCellValue('P2', 'Nominal');
+        $get_rejected = $this->db->query("SELECT *,SUM(b.nominal) as nominal_detail from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Rejected' AND DATE_FORMAT(a.tgl_permohonan,'%m')='$bulan' GROUP BY a.unik ")->result();
+        $column_rejected = 3;
+        $total_nominal_rejected = 0;
+        foreach ($get_rejected as $x) {
+            $sheet->setCellValue('L'.$column_rejected, $x->nama_pemohon);
+            $sheet->setCellValue('M'.$column_rejected, $x->note_status_permohonan);
+            $sheet->setCellValue('N'.$column_rejected, $x->tgl_permohonan);
+            $sheet->setCellValue('O'.$column_rejected, $x->tahun);
+            $sheet->setCellValue('P'.$column_rejected, 'Rp.'.number_format($x->nominal_detail,0,'.','.'));
+            $column_rejected++;
+            $total_nominal_rejected += $x->nominal_detail;
+        }
+        $sheet->setCellValue('O'.$column_rejected, 'Total Nominal');
+        $sheet->setCellValue('P'.$column_rejected, 'Rp.'.number_format($total_nominal_rejected,0,'.','.'));
+
+         //permohonan detail Rejected
+         $sheet->setCellValue('R1', 'PERMOHONAN DETAIL REJECTED');
+         $sheet->setCellValue('R2', 'Nama Pemohonan')->getDefaultColumnDimension()->setWidth(20);
+         $sheet->setCellValue('S2', 'Tanggal Pemohonan');
+         $sheet->setCellValue('T2', 'Tahun');
+         $sheet->setCellValue('U2', 'Nominal');
+         $get_rejected2 = $this->db->query("SELECT * from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Rejected' AND DATE_FORMAT(a.tgl_permohonan,'%m')='$bulan' ")->result();
+         $column_rejected2 = 3;
+         $total_nominal_rejected2 = 0;
+         foreach ($get_rejected2 as $x) {
+             $sheet->setCellValue('R'.$column_rejected2, $x->nama_pemohon);
+             $sheet->setCellValue('S'.$column_rejected2, $x->tgl_permohonan);
+             $sheet->setCellValue('T'.$column_rejected2, $x->tahun);
+             $sheet->setCellValue('U'.$column_rejected2, 'Rp.'.number_format($x->nominal,0,'.','.'));
+             $column_rejected2++;
+             $total_nominal_rejected2 += $x->nominal;
+         }
+         $sheet->setCellValue('T'.$column_rejected2, 'Total Nominal');
+         $sheet->setCellValue('U'.$column_rejected2, 'Rp.'.number_format($total_nominal_rejected2,0,'.','.'));
+
         $filename = 'Report_'.$bulan.'_'.$tahun.'.xlsx';
         $writer = new Xlsx($spreadsheet);
         $writer->save('upload/'.$filename);

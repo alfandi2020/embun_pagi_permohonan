@@ -49,15 +49,24 @@ class Dashboard
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
         if ($level == 2) {
-            $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+                $this->db->where('status_permohonan','Waiting');
+                $this->db->where('status_permohonan','Approved');
+                $this->db->where('status_permohonan_atasan',null);
+                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                $this->db->not_like('status_permohonan','Done');
+        }else{
+            if ($level == 2) {
+                $this->db->where_in('tujuan_sekolah',$tujuan_sklh);
+            }
+            $this->db->where('status_permohonan','Approved');
+            $this->db->where('status_permohonan_atasan',null);
+            if($level == 2 || $level == 1 ) {
+                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+            }
+            $this->db->not_like('status_permohonan','Done');
         }
-        $this->db->where('status_permohonan','Approved');
-        $this->db->where('status_permohonan_atasan',null);
-        if($level == 2 || $level == 1 ) {
-            $this->db->or_not_like('status_permohonan_atasan','Rejected');
-        }
-        $this->db->not_like('status_permohonan','Done');
         $approved = $this->db->get('tb_permohonan')->num_rows();
+
 
         //Rejected
         if ($level == 2) {
@@ -78,8 +87,7 @@ class Dashboard
         }
         if ($level == 1) {
             $this->db->where('status_permohonan','Rejected');
-            $this->db->or_where('status_permohonan_atasan','Rejected');
-            $this->db->where('(status_permohonan = "Done" or status_permohonan = "Rejected")');//bisa di admin approval
+            $this->db->or_where('status_permohonan_atasan','Rejected');//bisa di admin approval
         }
        
         $rejected = $this->db->get('tb_permohonan')->num_rows();
@@ -91,8 +99,10 @@ class Dashboard
         if($level == 3) {
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
+     
         $this->db->where('status_permohonan','Done');
         $done = $this->db->get('tb_permohonan')->num_rows();
+
         $approved_dashboard_user_x = isset($approved_dashboard_user) ? $approved_dashboard_user : 0;
         $rejected_user_x = isset($rejected_user_2) ? $rejected_user_2 : 0;
         $data = [

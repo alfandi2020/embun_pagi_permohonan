@@ -4,48 +4,58 @@
 
   <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row">
-      <div class="col-sm-6 col-xl-3 mt-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex align-items-start justify-content-between">
-              <div class="content-left">
-                <span>
-                  <div class="badge bg-warning">Data Waiting</div>
-                </span>
-                <div class="d-flex align-items-end mt-2">
-                <?php if($this->session->userdata('level') == 1) { ?>
+        <div class="col-sm-6 col-xl-3 mt-4">
+          <div class="card">
+            <div class="card-body">
+             <?php if($this->session->userdata('level') != 1){ ?>
 
-                    <a href="<?= base_url('permohonan/filter/data_baru') ?>">
-                      <h4 class="mb-0 me-2"><?= $waiting ?></h4>
-                    </a>
-                <?php }else{ ?>
-                  <a href="<?= base_url('permohonan/filter/waiting') ?>">
-                      <h4 class="mb-0 me-2"><?= $waiting ?></h4>
-                    </a>
-                <?php } ?>
-                  <!-- <small class="text-success">(+29%)</small> -->
+              <div class="d-flex align-items-start justify-content-between">
+                <div class="content-left">
+                  <span>
+                    <div class="badge bg-warning">Data Waiting</div>
+                  </span>
+                  <div class="d-flex align-items-end mt-2">
+                  <?php if($this->session->userdata('level') == 1) { ?>
+
+                      <a href="<?= base_url('permohonan/filter/data_baru') ?>">
+                        <h4 class="mb-0 me-2"><?= $waiting ?></h4>
+                      </a>
+                  <?php }else{ ?>
+                    <a href="<?= base_url('permohonan/filter/waiting') ?>">
+                        <h4 class="mb-0 me-2"><?= $waiting ?></h4>
+                      </a>
+                  <?php } ?>
+                    <!-- <small class="text-success">(+29%)</small> -->
+                  </div>
+                  <!-- <small>Total Users</small> -->
                 </div>
-                <!-- <small>Total Users</small> -->
+                <span class="badge bg-label-warning rounded p-2">
+                  <i class="bx bx-time bx-sm"></i>
+                  <!-- <i class='bx bxs-time-five'></i> -->
+                </span>
               </div>
-              <span class="badge bg-label-warning rounded p-2">
-                <i class="bx bx-time bx-sm"></i>
-                <!-- <i class='bx bxs-time-five'></i> -->
-              </span>
+           <?php }else{
+             echo "Khusus Admin Filter";
+           } ?>
+
             </div>
           </div>
         </div>
-      </div>
       <div class="col-sm-6 col-xl-3 mt-4">
         <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-start justify-content-between">
               <div class="content-left">
                 <span>
+                  <?php if($this->session->userdata('level') == 2){ ?>
+                    <div class="badge bg-primary">Upload Bukti</div>
+                  <?php }else{ ?>
                   <div class="badge bg-primary">Data Approved</div>
+                  <?php } ?>
                 </span>
                 <div class="d-flex align-items-end mt-2">
                 <?php if($this->session->userdata('level') == 2) { ?>
-                  <a href="<?= base_url('permohonan/filter/waiting') ?>">
+                  <a href="<?= base_url('permohonan/filter/upload_bukti') ?>">
                     <h4 class="mb-0 me-2"><?= $approved ?></h4>
                   </a>
                   <?php }else{ ?>

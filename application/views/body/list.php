@@ -110,45 +110,7 @@
                           </a> -->
                         </div>
                       </li>
-                      <li class="timeline-item timeline-item-success mb-4">
-                        <span class="timeline-indicator timeline-indicator-success">
-                          <i class="bx bx-paper-plane"></i>
-                        </span>
-                        <div class="timeline-event">
-                          <div class="timeline-header border-bottom mb-3">
-                            <b class="mb-0">Admin Filter</b>
-                            <!-- <small class="text-muted">3rd October</small> -->
-                          </div>
-                          <?php 
-                          $no = 1;
-                          foreach($datax as $x) { 
-                            if ($x->status == 'Approved') {
-                              $color = '#1abc9c';
-                            }else if ($x->status == 'Rejected') {
-                              $color = '#e74c3c';
-                            }else{
-                              $color ='';
-                            }
-                            ?>
-                            <div class="d-flex justify-content-between flex-wrap mb-2">
-                                <div>
-                                  <span>Admin <?= $no++; ?></span>
-                                  <i class="bx bx-right-arrow-alt scaleX-n1-rtl mx-3"></i>
-                                  <span><?= $x->nama ?></span>
-                                </div>
-                                <div>
-                                  <span><?= date('d-M-Y H:i:s',strtotime($x->date_created)) ?></span>
-                                </div>
-                              </div>
-                              <b style="color: <?= $color ?>;"><?= $x->status ?></b> <br> <?= $x->status == 'Rejected' ? 'Keterangan : '. '<b>' .$x->keterangan.'</b>' : '' ?>
-                            <hr>
-                            <?php } ?>
-                          <!-- <a href="javascript:void(0)">
-                            <i class="bx bx-link"></i>
-                            bookingCard.pdf
-                          </a> -->
-                        </div>
-                      </li>
+                     
                       <!--<li class="timeline-item timeline-item-success mb-4">
                         <span class="timeline-indicator timeline-indicator-success">
                           <i class="bx bx-paint"></i>
@@ -313,6 +275,12 @@
                 class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'data_baru' ? 'active' : '' ?>">Data
                 Baru</a>&nbsp;&nbsp;
                 <?php } ?>
+              <?php if($this->session->userdata('level') == 2){ ?>
+              <a href="<?= base_url('permohonan/filter/upload_bukti') ?>"
+                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'upload_bukti' ? 'active' : '' ?>">
+                Upload Bukti</a>&nbsp;&nbsp;
+                <?php } ?>
+
               <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3 || $this->session->userdata('level') == 2){ ?>
               <a href="<?= base_url('permohonan/filter/data_lama') ?>"
                 class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'data_lama' ? 'active' : '' ?>">Data

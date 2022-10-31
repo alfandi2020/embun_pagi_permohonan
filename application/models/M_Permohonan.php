@@ -26,6 +26,7 @@ class M_Permohonan extends CI_Model {
         $filterPermohonan = $this->session->userdata('filterPermohonan');
         $level = $this->session->userdata('level');
         $this->db->from($this->tb_fo);
+        $bln = date('m');
         if(isset($setTahun)) $this->db->where('tahun', $setTahun);
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             if ($level == 2) {
@@ -53,6 +54,13 @@ class M_Permohonan extends CI_Model {
                 $this->db->or_not_like('status_permohonan_atasan','Rejected');
                 $this->db->not_like('status_permohonan','Done');
             }
+        }elseif ($this->session->userdata('filterPermohonan') == 'upload_bukti') {
+                $this->db->where('status_permohonan','Waiting');
+                $this->db->where('status_permohonan','Approved');
+                $this->db->where('status_permohonan_atasan',null);
+                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                $this->db->not_like('status_permohonan','Done');
+                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
         }else{ // data_lama
             if ($level == 2) {
                 $this->db->or_where('status_permohonan','Rejected');
@@ -67,14 +75,15 @@ class M_Permohonan extends CI_Model {
                 if($level == 3) {
                     $this->db->where('id_user', $this->session->userdata('id_user'));
                 }
-                $this->db->or_where('status_permohonan','Rejected');
                 $this->db->where('status_permohonan','Done');
-                $this->db->where('status_permohonan_atasan','Rejected');
+                $this->db->or_where('status_permohonan','Rejected');
+                // $this->db->where('status_permohonan_atasan','Rejected');
             }
         }
         if($level == 3) {
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
+ 
         // if ($level == 2) {
         //     $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
         // }
