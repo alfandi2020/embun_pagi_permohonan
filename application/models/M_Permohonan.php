@@ -26,7 +26,6 @@ class M_Permohonan extends CI_Model {
         $filterPermohonan = $this->session->userdata('filterPermohonan');
         $level = $this->session->userdata('level');
         $this->db->from($this->tb_fo);
-        $bln = date('m');
         if(isset($setTahun)) $this->db->where('tahun', $setTahun);
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             if ($level == 2) {
@@ -80,10 +79,14 @@ class M_Permohonan extends CI_Model {
                 // $this->db->where('status_permohonan_atasan','Rejected');
             }
         }
+        if ($this->session->userdata('filterSekolah') == true) {
+            $this->db->where('tujuan_sekolah',$this->session->userdata('filterSekolah'));
+        }
         if($level == 3) {
             $this->db->where('id_user', $this->session->userdata('id_user'));
         }
- 
+
+  
         // if ($level == 2) {
         //     $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
         // }

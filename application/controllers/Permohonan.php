@@ -38,6 +38,11 @@ class Permohonan extends CI_Controller {
             redirect('permohonan/list2');
         }
     }
+    public function filter_sekolah(){
+            $filter = $this->input->post('sekolah');
+            $this->session->set_userdata('filterSekolah', $filter);
+            redirect('permohonan/list2');
+    }
     public function submit()
     {
         $row = $this->input->post('row');

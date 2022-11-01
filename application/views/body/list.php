@@ -293,6 +293,20 @@
             <div class="col-md-12">
               <div class="card mb-3">
                 <div class="card-datatable table-responsive">
+                <div class="container row mt-2">
+                  <div class="col-md-2">
+                    <form action="<?= base_url('permohonan/filter_sekolah') ?>" method="POST">
+                      <label>Status Sekolah</label>
+                      <select onchange="form.submit()" name="sekolah" id="" class="form-control">
+                        <option value="">Pilih Sekolah</option>
+                        <option <?= $this->session->userdata('filterSekolah') == 'TK' ? 'selected' : '' ?> value="TK">TK </option>
+                        <option <?= $this->session->userdata('filterSekolah') == 'SD' ? 'selected' : '' ?> value="SD">SD</option>
+                        <option <?= $this->session->userdata('filterSekolah') == 'SMP' ? 'selected' : '' ?> value="SMP">SMP</option>
+                        <option <?= $this->session->userdata('filterSekolah') == 'SMA' ? 'selected' : '' ?> value="SMA">SMA</option>
+                      </select>
+                    </form>
+                  </div>
+                </div>
                   <table id="table_permohonan" class="datatables-basic table border-top">
                     <thead>
                       <tr>
