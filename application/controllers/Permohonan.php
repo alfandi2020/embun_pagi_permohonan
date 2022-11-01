@@ -43,6 +43,11 @@ class Permohonan extends CI_Controller {
             $this->session->set_userdata('filterSekolah', $filter);
             redirect('permohonan/list2');
     }
+    function reset_sekolah()
+    {
+        $this->session->unset_userdata('filterSekolah');
+        redirect('permohonan/list2');
+    }
     public function submit()
     {
         $row = $this->input->post('row');

@@ -306,6 +306,9 @@
                       </select>
                     </form>
                   </div>
+                  <div class="col-md-2">
+                    <a href="<?= base_url('permohonan/reset_sekolah') ?>" class="btn btn-warning mt-4">Reset</a>
+                  </div>
                 </div>
                   <table id="table_permohonan" class="datatables-basic table border-top">
                     <thead>
