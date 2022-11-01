@@ -258,12 +258,23 @@ class Permohonan extends CI_Controller {
             $this->db->select_max('no_permohonan');
             $this->db->where('tahun',date('Y'));
             $no = $this->db->get('tb_permohonan')->row_array();
-            $update = [
-                "no_permohonan" => $no['no_permohonan']+1,
-                // "nama_atasan" => $this->session->userdata('nama'),
-                "status_permohonan_atasan" => $status,
-                "tgl_status_atasan" => date('Y-m-d H:i:s')
-            ];
+            if ($no['no_permohonan'] == null) {
+                $no_pemohon = $no['no_permohonan']+1;
+                $update = [
+                    "no_permohonan" => $no_pemohon,
+                    // "nama_atasan" => $this->session->userdata('nama'),
+                    "status_permohonan_atasan" => $status,
+                    "tgl_status_atasan" => date('Y-m-d H:i:s')
+                ];
+            }else{
+                $update = [
+                    // "no_permohonan" => $no_pemohon,
+                    // "nama_atasan" => $this->session->userdata('nama'),
+                    "status_permohonan_atasan" => $status,
+                    "tgl_status_atasan" => date('Y-m-d H:i:s')
+                ];
+            }
+            
             $this->db->where('unik',$unik);
             $this->db->update('tb_permohonan',$update);
 
