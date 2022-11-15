@@ -17,7 +17,7 @@
                   <div class="d-flex align-items-end mt-2">
                   <?php if($this->session->userdata('level') == 1) { ?>
 
-                      <a href="<?= base_url('permohonan/filter/data_baru') ?>">
+                      <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>">
                         <h4 class="mb-0 me-2"><?= $waiting ?></h4>
                       </a>
                   <?php }else{ ?>
@@ -55,11 +55,11 @@
                 </span>
                 <div class="d-flex align-items-end mt-2">
                 <?php if($this->session->userdata('level') == 2) { ?>
-                  <a href="<?= base_url('permohonan/filter/upload_bukti') ?>">
+                  <a href="<?= base_url('permohonan/filter/permohonan_selesai') ?>">
                     <h4 class="mb-0 me-2"><?= $approved ?></h4>
                   </a>
                   <?php }else{ ?>
-                    <a href="<?= base_url('permohonan/filter/data_baru') ?>">
+                    <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>">
                     <h4 class="mb-0 me-2"><?= $approved ?></h4>
                   </a>
                   <?php } ?>

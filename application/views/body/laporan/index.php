@@ -16,7 +16,7 @@
                             <th width="200">Nama Pemohon</th>
                             <th>Nomor Pemohon</th>
                             <th width="200">Tanggal Permohonan</th>
-                            <?php if($this->session->userdata('filterPermohonan') == 'data_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){ ?>
+                            <?php if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){ ?>
                             <th width="200">Status Admin</th>
                             <th width="200">Status Atasan</th>
                             <?php } ?>

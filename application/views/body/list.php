@@ -10,14 +10,27 @@
                   class="tf-icons bx bx-chevron-left"></i> Back </a> &nbsp;&nbsp;&nbsp;&nbsp;
               <?php 
               $level = $this->session->userdata('level');
-              if((count(explode(',',$data[0]->nama_atasan)) != 3 && $level == 1) || ($level == 2 &&$data[0]->status_permohonan != 'Approved')) { ?>
+              $tb_atasan = $this->db->get_where('tb_atasan',['unik' => $this->uri->segment(3)])->result();
+              $nama_atasan_app = array();
+              foreach ($tb_atasan as $x) {
+                  $nama_atasan_app[] = $x->id_user;
+              }
+              // if((count($nama_atasan_app) != 3 && $level == 1 && strpos(implode(',',$nama_atasan_app),$this->session->userdata('id_user') !== false) ) || ($level == 2 && $data[0]->status_permohonan != 'Approved')) { 
+              if($level == 1 && strpos(implode(',',$nama_atasan_app),$this->session->userdata('id_user')) === false ){ ?>
               <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
-                class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Approved
+                class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Disetujui
               </a>&nbsp;&nbsp;&nbsp;&nbsp;
               <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i
-                  class="tf-icons bx bx-task-x"></i> Reject </button>
-                <?php } ?>
+                  class="tf-icons bx bx-task-x"></i> Ditolak </button>
+                <?php }else if($level == 2 && $data[0]->status_permohonan != 'Approved'){ ?>
+              <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
+                  <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
+                class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Disetujui
+              </a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i
+                  class="tf-icons bx bx-task-x"></i> Ditolak </button>
+                  <?php  } ?>
 
             </div>
           </div>
@@ -59,7 +72,26 @@
               </div>
             </div>
           </div>
-          <?php if($data[0]->status_permohonan_atasan == 'Approved') {?>
+          <?php 
+          function strposa(string $haystack, array $needles, int $offset = 0): bool 
+          {
+              foreach($needles as $needle) {
+                  if(strpos($haystack, $needle, $offset) !== false) {
+                      return true; // stop on first true result
+                  }
+              }
+
+              return false;
+          }
+          $cek_status = $this->db->get_where('tb_atasan',['unik' => $this->uri->segment(3)])->result();
+          $namaa = array();
+          $statuss = array();
+          foreach ($cek_status as $x) {
+            $namaa[] = $x->nama; 
+            // $statuss[] = $x->status; 
+          }
+          // if(count($namaa) == 3 && strposa('tata',$namaa) == true && strposa('Rejected',$statuss) == true ) {
+          if(count($namaa) == 3 && strposa('tata',$namaa) == true ) {?>
             <div class="row mt-5">
               <div class="col-md-12">
                 <div class="card">
@@ -70,7 +102,6 @@
                         $this->db->where('unik',$this->uri->segment(3));
                         $datax = $this->db->get('tb_atasan')->result();
                       ?>
-
                       <li class="timeline-item timeline-item-primary mb-4">
                         <span class="timeline-indicator timeline-indicator-primary">
                           <i class="bx bx-paper-plane"></i>
@@ -268,24 +299,25 @@
             <div class="col-md-5 col-sm-12">
               <?php if($this->session->userdata('level') != 1){ ?>
               <a href="<?= base_url('permohonan/filter/waiting') ?>"
-                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'waiting' ? 'active' : '' ?>">Waiting</a>&nbsp;&nbsp;
+                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'waiting' ? 'active' : '' ?>">Permohonan Baru</a>&nbsp;&nbsp;
                 <?php } ?>
               <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3){ ?>
-              <a href="<?= base_url('permohonan/filter/data_baru') ?>"
-                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'data_baru' ? 'active' : '' ?>">Data
-                Baru</a>&nbsp;&nbsp;
+              <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>"
+                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'permohonan_baru' ? 'active' : '' ?>">Permohonan Dalam Proses</a>&nbsp;&nbsp;
                 <?php } ?>
+
+
               <?php if($this->session->userdata('level') == 2){ ?>
-              <a href="<?= base_url('permohonan/filter/upload_bukti') ?>"
-                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'upload_bukti' ? 'active' : '' ?>">
+              <a href="<?= base_url('permohonan/filter/permohonan_selesai') ?>"
+                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'permohonan_selesai' ? 'active' : '' ?>">
                 Upload Bukti</a>&nbsp;&nbsp;
                 <?php } ?>
 
-              <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3 || $this->session->userdata('level') == 2){ ?>
-              <a href="<?= base_url('permohonan/filter/data_lama') ?>"
+              <!-- <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3 || $this->session->userdata('level') == 2){ ?>
+                <a href="<?= base_url('permohonan/filter/data_lama') ?>"
                 class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'data_lama' ? 'active' : '' ?>">Data
                 lama</a>
-                <?php } ?>
+                <?php } ?> -->
             </div>
           </div>
           <div class="row">
@@ -317,7 +349,7 @@
                         <th width="200">Nama Pemohon</th>
                         <th>Nomor Pemohon</th>
                         <th width="200">Tanggal Permohonan</th>
-                        <?php if($this->session->userdata('filterPermohonan') == 'data_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){ ?>
+                        <?php if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){ ?>
                         <th width="200">Status Admin</th>
                         <th width="200">Status Atasan</th>
                         <?php } ?>

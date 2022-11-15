@@ -25,47 +25,59 @@ class M_Permohonan extends CI_Model {
         $setTahun = $this->session->userdata('setTahun');
         $filterPermohonan = $this->session->userdata('filterPermohonan');
         $level = $this->session->userdata('level');
+        $id_user = $this->session->userdata('id_user');
         $this->db->from($this->tb_fo);
         if(isset($setTahun)) $this->db->where('tahun', $setTahun);
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             if ($level == 2) {
+                if ($this->session->userdata('filterSekolah') == true) {
+                    $this->db->where('tujuan_sekolah', $this->session->userdata('filterSekolah'));
+                }
                 $this->db->where('status_permohonan','Waiting');
-                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
             }else if($level == 3){
                 $this->db->where('id_user', $this->session->userdata('id_user'));
                 $this->db->where('status_permohonan','Waiting');
             }
-        }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
+        }else if ($this->session->userdata('filterPermohonan') == 'permohonan_baru') {
+            if ($this->session->userdata('filterSekolah') == true) {
+                $this->db->where('tujuan_sekolah', $this->session->userdata('filterSekolah'));
+            }
             if ($level == 2) { // admin filter
                 $this->db->where('status_permohonan','Approved');
                 $this->db->where('status_permohonan_atasan',null);
                 $this->db->or_not_like('status_permohonan_atasan','Rejected');
                 $this->db->not_like('status_permohonan','Done');
-                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
             }else if($level == 1){ // admin approval
                 $this->db->where('status_permohonan','Approved');
                 $this->db->where('status_permohonan_atasan',null);
                 $this->db->or_not_like('status_permohonan_atasan','Rejected');
                 $this->db->not_like('status_permohonan','Done');
+                // $this->db->not_like('nama_atasan',$id_user);
             }else{
                 $this->db->where('status_permohonan','Approved');
                 $this->db->where('status_permohonan_atasan',null);
                 $this->db->or_not_like('status_permohonan_atasan','Rejected');
                 $this->db->not_like('status_permohonan','Done');
             }
-        }elseif ($this->session->userdata('filterPermohonan') == 'upload_bukti') {
-                $this->db->where('status_permohonan','Waiting');
+        }elseif ($this->session->userdata('filterPermohonan') == 'permohonan_selesai') { // upload bukti
+                if ($this->session->userdata('filterSekolah') == true) {
+                    $this->db->where('tujuan_sekolah', $this->session->userdata('filterSekolah'));
+                }
+                // $this->db->where('status_permohonan','Waiting');
+                $this->db->where('status_atasan','Selesai');
                 $this->db->where('status_permohonan','Approved');
-                $this->db->where('status_permohonan_atasan',null);
-                $this->db->or_not_like('status_permohonan_atasan','Rejected');
-                $this->db->not_like('status_permohonan','Done');
-                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
+                $this->db->or_where('status_permohonan','Done');
+                // $this->db->where('status_permohonan_atasan',null);
+                // $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                // $this->db->like('status_permohonan','Done');
         }else{ // data_lama
             if ($level == 2) {
+                if ($this->session->userdata('filterSekolah') == true) {
+                    $this->db->where('tujuan_sekolah', $this->session->userdata('filterSekolah'));
+                }
                 $this->db->or_where('status_permohonan','Rejected');
                 $this->db->or_where('status_permohonan','Done');
                 $this->db->or_where('status_permohonan_atasan','Rejected');
-                $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
             }else if($level == 1){
                 $this->db->or_where('status_permohonan','Rejected');
                 $this->db->or_where('status_permohonan','Done');
@@ -88,7 +100,7 @@ class M_Permohonan extends CI_Model {
 
   
         // if ($level == 2) {
-        //     $this->db->where_in('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
+        //     $this->db->where('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
         // }
         // $level = $this->session->userdata('level');
         // if($level == 2 || $level == 22) {
@@ -221,7 +233,7 @@ class M_Permohonan extends CI_Model {
         $level = $this->session->userdata('level');
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
-        }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
+        }else if ($this->session->userdata('filterPermohonan') == 'permohonan_baru') {
             $this->db->where('status_permohonan','Approved');
             $this->db->where('status_permohonan_atasan',null);
             $this->db->or_not_like('status_permohonan_atasan','Rejected');
@@ -247,7 +259,7 @@ class M_Permohonan extends CI_Model {
         $level = $this->session->userdata('level');
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
-        }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
+        }else if ($this->session->userdata('filterPermohonan') == 'permohonan_baru') {
             $this->db->where('status_permohonan','Approved');
             $this->db->where('status_permohonan_atasan',null);
             $this->db->or_not_like('status_permohonan_atasan','Rejected');

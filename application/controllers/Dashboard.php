@@ -16,11 +16,11 @@ class Dashboard
             $this->session->set_userdata('filterPermohonan', $filter);
         }
         if ($level == 1) {
-            $filter = 'data_baru';
+            $filter = 'permohonan_baru';
             $this->session->set_userdata('filterPermohonan', $filter);
         }
         if ($level == 3) {
-            $filter = 'data_baru';
+            $filter = 'permohonan_baru';
             $this->session->set_userdata('filterPermohonan', $filter);
         }
 
@@ -64,6 +64,7 @@ class Dashboard
                 $this->db->or_not_like('status_permohonan_atasan','Rejected');
             }
             $this->db->not_like('status_permohonan','Done');
+            // $this->db->not_like('nama_atasan',$this->session->userdata('id_user'));
         }
         $approved = $this->db->get('tb_permohonan')->num_rows();
 

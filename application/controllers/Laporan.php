@@ -72,7 +72,7 @@ class Laporan extends CI_Controller {
 			$row[] = $field->nama_pemohon;
 			$row[] = $permohonan;
 			$row[] = $field->tgl_permohonan;
-            if($this->session->userdata('filterPermohonan') == 'data_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
+            if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
                 $row[] = $status_admin;
                 $row[] = $status_atasan;
             }

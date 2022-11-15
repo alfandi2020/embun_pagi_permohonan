@@ -157,7 +157,7 @@ $(document).on('click', '.status_atasan', function (e) {
 				success: function (data) {
 					console.log(data)
 					Swal.fire({
-						title: 'Keterangan Direject',
+						title: 'Keterangan Ditolak',
 						text: data.note_atasan,
 						icon: 'info',
 					})
@@ -198,7 +198,7 @@ $('.confirm-delete').on('click', function (eventx) {
     }else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
             title: 'Cencel',
-            text: 'Data Belum diapproved',
+            text: 'Data Belum disetujui',
             icon: 'error',
             // confirmButtonClass: 'btn btn-success',
         })
@@ -210,8 +210,8 @@ $('.approve-confirm').on('click', function (eventx) {
     //   var id = $(this).attr('val');
     const url = $(this).attr('href');
     Swal.fire({
-    title: 'Yakin untuk Approved?',
-    text: "Data Akan di approved !",
+    title: 'Yakin untuk disetujui?',
+    text: "Data Akan disetujui",
     icon: 'question',
     showCancelButton: true,
     cancelButtonColor: '#d33',
@@ -260,7 +260,7 @@ $('.reject-confirm').on('click', function (eventx) {
 					id: id,
 					status : "Rejected",
 					keterangan: result.value,
-					atasan : '<?= $this->session->userdata('filterPermohonan') == 'data_baru' ? 'data_baru' : 'waiting' ?>'
+					atasan : '<?= $this->session->userdata('filterPermohonan') == 'permohonan_baru' ? 'permohonan_baru' : 'waiting' ?>'
 				},
 				dataType :'json',
 				success: function (data) {

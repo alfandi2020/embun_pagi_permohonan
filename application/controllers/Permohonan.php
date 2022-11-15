@@ -19,7 +19,7 @@ class Permohonan extends CI_Controller {
         ];
         $set_unik = time() . rand(111, 999);
         $this->session->set_userdata('setUnik', $set_unik);
-        $this->session->set_userdata('filterPermohonan','data_baru');
+        $this->session->set_userdata('filterPermohonan','permohonan_baru');
 		$this->load->view('body/header', $data);
 		$this->load->view('body/permohonan');
 		$this->load->view('body/footer');
@@ -155,14 +155,20 @@ class Permohonan extends CI_Controller {
             $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
             $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
 
-            if($field->status_permohonan_atasan == 'Approved'){
-                $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.$atasan1.','.$atasan2.','.$atasan3.'</span><br>'.$field->tgl_status_admin;
+            $tb_atasan = $this->db->get_where('tb_atasan',['unik' => $field->unik])->result();
+            $nama_atasan_app = array();
+            foreach ($tb_atasan as $x) {
+                $nama_atasan_app[] = $x->nama;
+            }
+            // if($field->status_permohonan_atasan == 'Approved'){
+            if(count($nama_atasan_app) == 3){
+                $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
             }else if($field->status_permohonan_atasan == 'Rejected'){
                 $status_atasan ='<button type="button" id="'.$field->unik.'" class="btn btn-danger status_atasan"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
             }else if($field->status_permohonan == 'Rejected'){
                 $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>';
             }else{
-                $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
+                $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
             }
             
             $row = array();
@@ -171,11 +177,12 @@ class Permohonan extends CI_Controller {
 			$row[] = $field->nama_pemohon;
 			$row[] = $permohonan;
 			$row[] = $field->tgl_permohonan;
-            if($this->session->userdata('filterPermohonan') == 'data_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
+            if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
                 $row[] = $status_admin;
                 $row[] = $status_atasan;
             }
-            if (count(explode(',',$field->nama_atasan)) == 3 && $field->status_permohonan != 'Done' && $level == 2) {
+            $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$field->unik'")->row_array();
+            if ($total_permohonan['total'] == 3 && $field->status_permohonan != 'Done' && $level == 2) {
                 $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
                 <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
@@ -243,13 +250,13 @@ class Permohonan extends CI_Controller {
     function status()
     {
         //approved atau rejected untuk atasan
-        if ($this->input->post('status') == 'Rejected' && $this->input->post('atasan') == 'data_baru') {
-            $this->db->where('unik',$this->input->post('id'));
-            $this->db->set('nama_atasan',$this->session->userdata('nama'));
-            $this->db->set('status_permohonan_atasan','Rejected');
-            $this->db->set('note_atasan',$this->input->post('keterangan'));
-            $this->db->set('tgl_status_atasan',date('Y-m-d H:i:s'));
-            $this->db->update('tb_permohonan');
+        if ($this->input->post('status') == 'Rejected' && $this->input->post('atasan') == 'permohonan_baru') {
+            // $this->db->where('unik',$this->input->post('id'));
+            // $this->db->set('nama_atasan',$this->session->userdata('nama'));
+            // $this->db->set('status_permohonan_atasan','Rejected');
+            // $this->db->set('note_atasan',$this->input->post('keterangan'));
+            // $this->db->set('tgl_status_atasan',date('Y-m-d H:i:s'));
+            // $this->db->update('tb_permohonan');
 
             //insert table atasan
           
@@ -258,6 +265,7 @@ class Permohonan extends CI_Controller {
                 "nama" => $this->session->userdata('nama'),
                 "unik" => $this->input->post('id'),
                 "status" => $this->input->post('status'),
+                "keterangan" => $this->input->post('keterangan'),
                 // "tgl_status_atasan" => date('Y-m-d H:i:s')
             ];
             $this->db->insert('tb_atasan',$atasan);
@@ -267,50 +275,54 @@ class Permohonan extends CI_Controller {
             $status = $this->uri->segment(4);
             $this->db->select_max('no_permohonan');
             $this->db->where('tahun',date('Y'));
-            $no = $this->db->get('tb_permohonan')->row_array();
-            if ($no['no_permohonan'] == null) {
-                $no_pemohon = $no['no_permohonan']+1;
+            $no = $this->db->get('tb_permohonan')->result_array();
+
+            $cek_permohonan = $this->db->get_where('tb_permohonan',['unik' => $unik])->row();
+            if ($cek_permohonan->no_permohonan == null) {
+                $no_pemohon = $no[0]['no_permohonan']+1;
                 $update = [
                     "no_permohonan" => $no_pemohon,
                     // "nama_atasan" => $this->session->userdata('nama'),
-                    "status_permohonan_atasan" => $status,
-                    "tgl_status_atasan" => date('Y-m-d H:i:s')
+                    // "status_permohonan_atasan" => $status,
+                    // "tgl_status_atasan" => date('Y-m-d H:i:s')
                 ];
-            }else{
-                $update = [
+                $this->db->where('unik',$unik);
+                $this->db->update('tb_permohonan',$update);
+            }
+            // else{
+            //     $update = [
                     // "no_permohonan" => $no_pemohon,
                     // "nama_atasan" => $this->session->userdata('nama'),
-                    "status_permohonan_atasan" => $status,
-                    "tgl_status_atasan" => date('Y-m-d H:i:s')
-                ];
-            }
+                    // "status_permohonan_atasan" => $status,
+                    // "tgl_status_atasan" => date('Y-m-d H:i:s')
+            //     ];
+            // }
             
-            $this->db->where('unik',$unik);
-            $this->db->update('tb_permohonan',$update);
 
+            //kolom nama_atasan,status_permohonan_atasan,note_atasan,tgl_status_atasan tidak terpakai
             //insert table atasan
-            $id_user = $this->session->userdata('id_user');
-            $sql = "SELECT nama_atasan FROM tb_permohonan WHERE unik=$unik";
-            $query = $this->db->query($sql);
-            $result = $query->row();
-            $kalimat = $result->nama_atasan;
-            if (preg_match("/$id_user/i", $kalimat)){}else{
-                if ($kalimat == null) {
-                    $kalimat1 = $id_user;
-                    $data_update1	= array(
-                        'nama_atasan'	=> $kalimat1
-                    );
-                    $this->db->where('unik', $unik);
-                    $this->db->update('tb_permohonan', $data_update1);
-                }else{
-                    $kalimat1 = $kalimat . ',' . $id_user;
-                    $data_update1	= array(
-                        'nama_atasan'	=> $kalimat1
-                    );
-                    $this->db->where('unik', $unik);
-                    $this->db->update('tb_permohonan', $data_update1);
-                }
-            }
+            // $id_user = $this->session->userdata('id_user');
+            // $sql = "SELECT nama_atasan FROM tb_permohonan WHERE unik=$unik";
+            // $query = $this->db->query($sql);
+            // $result = $query->row();
+            // $kalimat = $result->nama_atasan;
+            // if (preg_match("/$id_user/i", $kalimat)){}else{
+            //     if ($kalimat == null) {
+            //         $kalimat1 = $id_user;
+            //         $data_update1	= array(
+            //             'nama_atasan'	=> $kalimat1
+            //         );
+            //         $this->db->where('unik', $unik);
+            //         $this->db->update('tb_permohonan', $data_update1);
+            //     }else{
+            //         $kalimat1 = $kalimat . ',' . $id_user;
+            //         $data_update1	= array(
+            //             'nama_atasan'	=> $kalimat1
+            //         );
+            //         $this->db->where('unik', $unik);
+            //         $this->db->update('tb_permohonan', $data_update1);
+            //     }
+            // }
             $atasan = [
                 "id_user" => $this->session->userdata('id_user'),
                 "nama" => $this->session->userdata('nama'),
@@ -318,6 +330,13 @@ class Permohonan extends CI_Controller {
                 "status" => $status
             ];
             $this->db->insert('tb_atasan',$atasan);
+
+            $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$unik'")->row_array();
+            if ($total_permohonan['total'] == 3) {
+                $this->db->where('unik',$unik);
+                $this->db->set('status_atasan','Selesai');
+                $this->db->update('tb_permohonan');
+            }
             redirect('permohonan/list2');
         }
 

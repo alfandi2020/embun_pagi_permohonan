@@ -156,7 +156,7 @@ class M_Laporan extends CI_Model {
         $level = $this->session->userdata('level');
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
-        }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
+        }else if ($this->session->userdata('filterPermohonan') == 'permohonan_baru') {
             $this->db->where('status_permohonan','Approved');
             $this->db->where('status_permohonan_atasan',null);
             $this->db->or_not_like('status_permohonan_atasan','Rejected');
@@ -182,7 +182,7 @@ class M_Laporan extends CI_Model {
         $level = $this->session->userdata('level');
         if ($this->session->userdata('filterPermohonan') == 'waiting') {
             $this->db->where('status_permohonan','Waiting');
-        }else if ($this->session->userdata('filterPermohonan') == 'data_baru') {
+        }else if ($this->session->userdata('filterPermohonan') == 'permohonan_baru') {
             $this->db->where('status_permohonan','Approved');
             $this->db->where('status_permohonan_atasan',null);
             $this->db->or_not_like('status_permohonan_atasan','Rejected');
