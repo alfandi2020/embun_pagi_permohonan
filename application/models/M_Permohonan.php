@@ -44,8 +44,9 @@ class M_Permohonan extends CI_Model {
             }
             if ($level == 2) { // admin filter
                 $this->db->where('status_permohonan','Approved');
-                $this->db->where('status_permohonan_atasan',null);
-                $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                $this->db->or_where('status_permohonan','Waiting');
+                // $this->db->where('status_permohonan_atasan',null);
+                // $this->db->or_not_like('status_permohonan_atasan','Rejected');
                 $this->db->not_like('status_permohonan','Done');
             }else if($level == 1){ // admin approval
                 $this->db->where('status_permohonan','Approved');

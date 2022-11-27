@@ -168,7 +168,8 @@
             <!-- Kas -->
             <?php 
             $role = $this->session->userdata('role');
-            if(strpos($role,'1') !==  false){ ?>
+            $level = $this->session->userdata('level');
+            if($level == 3){ ?>
             <li class="menu-item">
               <a href="<?= base_url('permohonan');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>Permohonan</span>">
               <i class='bx bx-notepad'></i>
@@ -182,6 +183,12 @@
               <a href="<?= base_url('permohonan/list2');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>List Permohonan</span>">
               <i class='bx bx-list-check'></i> 
                 <div data-i18n="Basic"> List Permohonan</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="<?= base_url('permohonan/track');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>Tracking</span>">
+              <i class='bx bx-list-check'></i> 
+                <div data-i18n="Basic"> Tracking</div>
               </a>
             </li>
             <?php //} ?>

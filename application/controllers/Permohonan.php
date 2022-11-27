@@ -24,6 +24,25 @@ class Permohonan extends CI_Controller {
 		$this->load->view('body/permohonan');
 		$this->load->view('body/footer');
 	}
+    function track()
+    {
+        $sekolah = $this->input->get('sekolah');
+        if ($sekolah) {
+            $this->db->where('tujuan_sekolah',$sekolah);
+        }
+        $this->db->order_by('tgl_permohonan','desc');
+        $track = $this->db->get('tb_permohonan')->result();
+        $data = [
+            'nama' => $this->session->userdata('nama'),
+            'title' => "Tracking Permohonan",
+            'titlePage' => 'Tracking Permohonan',
+            'track' => $track
+        ];
+        // $this->session->set_userdata('filterPermohonan','permohonan_baru');
+		$this->load->view('body/header', $data);
+		$this->load->view('body/tracking');
+		$this->load->view('body/footer');
+    }
     function remove_special($string) {
         $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
         $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
@@ -143,7 +162,127 @@ class Permohonan extends CI_Controller {
             }else if($field->status_permohonan == 'Rejected'){
                 $status_admin = '<button type="button" id="'.$field->unik.'" class="btn btn-danger status_admin"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
             }else{
+                // $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                $status_admin ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
+
+            }
+            $xxx = array();
+            $ex_user = explode(',',$field->nama_atasan);
+            foreach ($ex_user as $x) {
+               $user_atasan = $this->db->get_where('users',['id' => $x])->row();
+               $xxx[] = isset($user_atasan->nama) ? $user_atasan->nama : '';
+            }
+            $atasan1 = isset($xxx[0]) ? $xxx[0] :'';
+            $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
+            $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
+
+            $tb_atasan = $this->db->get_where('tb_atasan',['unik' => $field->unik])->result();
+            $nama_atasan_app = array();
+            foreach ($tb_atasan as $x) {
+                $nama_atasan_app[] = $x->nama;
+            }
+            // if($field->status_permohonan_atasan == 'Approved'){
+            if(count($nama_atasan_app) == 3){
+                $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
+            }else if($field->status_permohonan_atasan == 'Rejected'){
+                $status_atasan ='<button type="button" id="'.$field->unik.'" class="btn btn-danger status_atasan"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
+            }else if($field->status_permohonan == 'Rejected'){
+                $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>';
+            }else{
+                $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
+            }
+            
+            $row = array();
+            
+			$row[] = $no;
+			$row[] = $field->nama_pemohon;
+			$row[] = $permohonan;
+			$row[] = $field->tgl_permohonan;
+            if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
+                $row[] = $status_admin;
+                $row[] = $status_atasan;
+            }
+            $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$field->unik'")->row_array();
+            if ($total_permohonan['total'] == 3 && $field->status_permohonan != 'Done' && $level == 2) {
+                $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
+                <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+                  <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <div class="text-center mb-4">
+                        <h3>Upload File bukti bayar</h3>
+                      </div>
+                      <form action="status" method="POST" class="row g-3" enctype="multipart/form-data">
+                        <input type="hidden" name="unik" value="'.$field->unik.'">
+                        <input type="hidden" name="status" value="upload_file_bayar">
+                        <div class="col-12">
+                          <label class="form-label w-100" for="modalAddCard">File</label>
+                            <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
+                        </div>
+                        
+                        <div class="col-12 text-center">
+                          <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
+                          <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                ';
+            }else{
+                $row[] = '';
+            }
+			$row[] = $status;
+
+            
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->M_Permohonan->count_all(),
+            "recordsFiltered" => $this->M_Permohonan->count_filtered(),
+            "data" => $data,
+        );
+        echo json_encode($output);
+    }
+    function get_list_tarcking()
+    {
+        $list = $this->db->get('tb_permohonan')->result();
+        $data = array();
+        $no = $this->input->post('start');
+        $level = $this->session->userdata('level');
+        foreach ($list as $field) {
+            $no++;
+
+            if ($field->status_permohonan === 'Waiting') {
+                $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
+                <a href="'.'detail/'.$field->unik.'" class="badge bg-primary invisible"><i class="bx bx-edit"></i></a>
+                ';
+            }else if($field->status_permohonan == 'Approved'){
+                $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
+            }else if($field->status_permohonan == 'Done'){
+                $status = '<span class="badge bg-success"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
+            }else{
+                $status = '';
+            }
+
+            if ($field->no_permohonan > 0) {
+               $permohonan = '<span class="badge bg-primary">'.$field->no_permohonan.'</span>';
+            }else{
+               $permohonan='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
+            }
+
+            if($field->status_permohonan == 'Approved'){
                 $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+            }else if($field->status_permohonan == 'Rejected'){
+                $status_admin = '<button type="button" id="'.$field->unik.'" class="btn btn-danger status_admin"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+            }else{
+                // $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                $status_admin ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
+
             }
             $xxx = array();
             $ex_user = explode(',',$field->nama_atasan);
@@ -282,7 +421,7 @@ class Permohonan extends CI_Controller {
                 $no_pemohon = $no[0]['no_permohonan']+1;
                 $update = [
                     "no_permohonan" => $no_pemohon,
-                    // "nama_atasan" => $this->session->userdata('nama'),
+                    // "nama_admin" => $this->session->userdata('nama'),
                     // "status_permohonan_atasan" => $status,
                     // "tgl_status_atasan" => date('Y-m-d H:i:s')
                 ];

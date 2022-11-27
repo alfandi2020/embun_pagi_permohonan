@@ -22,6 +22,8 @@ $('div.collapse li a').filter(function() {
 }).parentsUntil(".nav > collapse li a").addClass('show');
 
 $(document).ready( function () {
+
+    $('#table_x').DataTable();
     $('#table_permohonan thead tr').clone(true).appendTo( '#table_permohonan thead' );
     $('#table_permohonan thead tr:eq(1) th').each( function (i) {
         if(i == 0 || i >= 10) $(this).html('-');
@@ -59,6 +61,71 @@ $(document).ready( function () {
         "order": [],
         "ajax": {
             "url": base_url + "permohonan/get_list_permohonan",
+            "type": "POST",
+            "data": function (data) {
+                data.nama_pemohon = $('#ser1').val();
+                data.no_permohonan = $('#ser2').val();
+                data.tgl_permohonan = $('#ser3').val();
+                data.status_admin = $('#ser4').val();
+                data.status_atasan = $('#ser5').val();
+                data.upload = $('#ser6').val();
+            }
+        },
+        "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "orderable": true
+            }
+        ],
+        "orderCellsTop": true,
+        "fixedHeader": true,
+        fnDrawCallback:function (oSettings) {
+            console.log("after table create");
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+            elems.forEach(function(html) {
+                var switchery = new Switchery(html);
+            });
+        }
+    });
+    //table tracking
+    $('#table_tracking thead tr').clone(true).appendTo( '#table_tracking thead' );
+    $('#table_tracking thead tr:eq(1) th').each( function (i) {
+        if(i == 0 || i >= 10) $(this).html('-');
+        if(i > 0 && i < 10){
+            if (i === 3) {
+                $(this).html('<input type="date" style="width: 95%" placeholder="" name="ser'+ i +'" class="ser" id="ser'+ i +'" />');
+            }
+            else if(i === 4){
+                $(this).html('');
+            }
+            else if(i === 5){
+                $(this).html('');
+            }
+            else if(i === 6){
+                $(this).html('');
+            }
+            else if(i === 7){
+                $(this).html('');
+            }
+            else{
+                $(this).html('<input type="text" style="width: 95%" placeholder="" name="ser'+ i +'" class="ser" id="ser'+ i +'" />');
+            }
+        }
+        $( 'input', this ).on( 'input', function () {
+            if ( table_track.columns(i).search() !== this.value ) {
+                table_tack.columns(i).search( this.value ).draw();
+            }
+        });
+    });
+
+    table_tack = $('#table_tracking').DataTable({
+        /*"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],*/
+        "processing": true,
+        "serverSide": true,
+        "order": [],
+        "ajax": {
+            "url": base_url + "permohonan/get_list_tarcking",
             "type": "POST",
             "data": function (data) {
                 data.nama_pemohon = $('#ser1').val();

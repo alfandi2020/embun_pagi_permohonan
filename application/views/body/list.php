@@ -17,14 +17,14 @@
               }
               // if((count($nama_atasan_app) != 3 && $level == 1 && strpos(implode(',',$nama_atasan_app),$this->session->userdata('id_user') !== false) ) || ($level == 2 && $data[0]->status_permohonan != 'Approved')) { 
               if($level == 1 && strpos(implode(',',$nama_atasan_app),$this->session->userdata('id_user')) === false ){ ?>
-              <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
+              <?php $status_approve = $data[0]->status_permohonan == 'approved' ? 'confirm_admin' : 'confirm_atasan' ?>
               <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
                 class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Disetujui
               </a>&nbsp;&nbsp;&nbsp;&nbsp;
               <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i
                   class="tf-icons bx bx-task-x"></i> Ditolak </button>
                 <?php }else if($level == 2 && $data[0]->status_permohonan != 'Approved'){ ?>
-              <?php $status_approve = $this->session->userdata('filterPermohonan') == 'waiting' ? 'confirm_admin' : 'confirm_atasan' ?>
+              <?php $status_approve = $data[0]->status_permohonan == 'approved' ? 'confirm_admin' : 'confirm_atasan' ?>
                   <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
                 class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Disetujui
               </a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -298,8 +298,8 @@
           <div class="row mb-3">
             <div class="col-md-5 col-sm-12">
               <?php if($this->session->userdata('level') != 1){ ?>
-              <a href="<?= base_url('permohonan/filter/waiting') ?>"
-                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'waiting' ? 'active' : '' ?>">Permohonan Baru</a>&nbsp;&nbsp;
+              <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>"
+                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'permohonan_baru' ? 'active' : '' ?>">Permohonan Baru</a>&nbsp;&nbsp;
                 <?php } ?>
               <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3){ ?>
               <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>"
@@ -378,9 +378,6 @@
               </div>
             </div>
           </div>
-  
-
-
         </div>
         <?php } ?>
         <!-- / Content -->
