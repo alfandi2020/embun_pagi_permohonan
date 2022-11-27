@@ -233,6 +233,48 @@
                                   </div>
                                 </div>
                               </div>
+                              <h4>Detail Permohonan</h4>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="card mb-3">
+                                    <div class="card-datatable table-responsive">
+                                      <table class="datatables-basic table">
+                                        <thead>
+                                          <tr>
+                                            <!-- <th>No</th> -->
+                                            <th>Isi Permohonan</th>
+                                            <th>File</th>
+                                            <th>Nominal</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <?php 
+                                          $this->db->where('unik',$x->unik);
+                                          $data = $this->db->get('tb_permohonan_detail')->result();
+                                          $total_nominal =0;
+                                          $no=1; foreach ($data as $xxx) {?>
+                                          <tr>
+                                            <!-- <td><?= $no++; ?></td> -->
+                                            <td><?= $xxx->isi_permohonan ?></td>
+                                            <td><a download href="<?= base_url("upload/file/".$xxx->file)?> "><?= $xxx->file ?></a></td>
+                                            <td>Rp.<?= number_format($xxx->nominal,0,'.','.') ?></td>
+                                          </tr>
+
+                                          <?php
+                                          $total_nominal += $xxx->nominal;
+                                        } ?>
+                                          <tr style="background-color: rgba(105,108,255,.1);color:black;">
+                                            <!-- <td><?= $no ?></td> -->
+                                            <td></td>
+                                            <td>TOTAL</td>
+                                            <td>Rp.<?= number_format($total_nominal,0,'.','.') ?></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                               <!-- <div class="row overflow-hidden">
                                 <div class="col-12">
                                   <ul class="timeline timeline-center mt-5">
@@ -491,6 +533,7 @@
                       </div>
                     </div>
                   </div>
+
                   <!-- <table id="table_x" class="datatables-basic table border-top">
                     <thead>
                       <tr>
