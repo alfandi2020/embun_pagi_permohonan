@@ -26,7 +26,7 @@ class Permohonan extends CI_Controller {
 	}
     function track()
     {
-        $sekolah = $this->input->get('sekolah');
+        $sekolah = $this->session->userdata('filterSekolah');
         if ($sekolah) {
             $this->db->where('tujuan_sekolah',$sekolah);
         }
@@ -62,7 +62,17 @@ class Permohonan extends CI_Controller {
             $this->session->set_userdata('filterSekolah', $filter);
             redirect('permohonan/list2');
     }
+    public function filter_sekolah2(){
+            $filter = $this->input->post('sekolah');
+            $this->session->set_userdata('filterSekolah', $filter);
+            redirect('permohonan/track');
+    }
     function reset_sekolah()
+    {
+        $this->session->unset_userdata('filterSekolah');
+        redirect('permohonan/list2');
+    }
+    function reset_sekolah2()
     {
         $this->session->unset_userdata('filterSekolah');
         redirect('permohonan/list2');

@@ -187,7 +187,7 @@
             </li>
             <li class="menu-item">
               <a href="<?= base_url('permohonan/track');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>Tracking</span>">
-              <i class='bx bx-list-check'></i> 
+              <i class='bx bx-transfer'></i>
                 <div data-i18n="Basic"> Tracking</div>
               </a>
             </li>

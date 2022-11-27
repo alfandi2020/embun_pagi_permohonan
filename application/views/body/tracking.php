@@ -29,7 +29,7 @@
                 <div class="card-datatable table-responsive">
                   <div class="container row mt-2">
                     <div class="col-md-3">
-                      <form action="<?= base_url('permohonan/filter_sekolah') ?>" method="POST">
+                      <form action="<?= base_url('permohonan/filter_sekolah2') ?>" method="POST">
                         <label>Status Sekolah</label>
                         <select onchange="form.submit()" name="sekolah" id="" class="form-control">
                           <option value="">Pilih Sekolah</option>
@@ -45,7 +45,7 @@
                       </form>
                     </div>
                     <div class="col-md-2">
-                      <a href="<?= base_url('permohonan/reset_sekolah') ?>" class="btn btn-warning mt-4">Reset</a>
+                      <a href="<?= base_url('permohonan/reset_sekolah2') ?>" class="btn btn-warning mt-4">Reset</a>
                     </div>
                     <!-- <div class="col-md-3">
                     <label>Search</label>
