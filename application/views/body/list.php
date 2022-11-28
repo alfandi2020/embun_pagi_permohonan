@@ -298,8 +298,8 @@
           <div class="row mb-3">
             <div class="col-md-5 col-sm-12">
               <?php if($this->session->userdata('level') != 1){ ?>
-              <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>"
-                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'permohonan_baru' ? 'active' : '' ?>">Permohonan Baru</a>&nbsp;&nbsp;
+              <a href="<?= base_url('permohonan/filter/waiting') ?>"
+                class="btn btn-label-primary <?= $this->session->userdata('filterPermohonan') == 'waiting' ? 'active' : '' ?>">Permohonan Baru</a>&nbsp;&nbsp;
                 <?php } ?>
               <?php if($this->session->userdata('level') == 1 || $this->session->userdata('level') == 3){ ?>
               <a href="<?= base_url('permohonan/filter/permohonan_baru') ?>"
@@ -341,6 +341,7 @@
                   <div class="col-md-2">
                     <a href="<?= base_url('permohonan/reset_sekolah') ?>" class="btn btn-warning mt-4">Reset</a>
                   </div>
+                  
                 </div>
                   <table id="table_permohonan" class="datatables-basic table border-top">
                     <thead>
