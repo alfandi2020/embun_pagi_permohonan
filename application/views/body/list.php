@@ -24,7 +24,7 @@
               <button type="button" id="<?= $this->uri->segment(3) ?>" class="btn btn-danger reject-confirm"><i
                   class="tf-icons bx bx-task-x"></i> Ditolak </button>
                 <?php }else if($level == 2 && $data[0]->status_permohonan != 'Approved'){ ?>
-              <?php $status_approve = $data[0]->status_permohonan == 'approved' ? 'confirm_admin' : 'confirm_atasan' ?>
+              <?php $status_approve = $data[0]->status_permohonan != 'approved' ? 'confirm_admin' : 'confirm_atasan' ?>
                   <a href="<?= base_url('permohonan/status/'.$this->uri->segment(3).'/Approved'.'/'.$status_approve) ?>"
                 class="btn btn-primary approve-confirm"><i class="tf-icons bx bx-task"></i> Disetujui
               </a>&nbsp;&nbsp;&nbsp;&nbsp;
