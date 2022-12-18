@@ -80,6 +80,7 @@
                     <thead>
                       <tr>
                         <th>No</th>
+                        <th>Username</th>
                         <th>Nama</th>
                         <th>Level</th>
                         <th>Status Sekolah</th>
@@ -93,6 +94,7 @@
                       foreach ($data as $x) { ?>
                       <tr>
                         <td><?= $no++ ?></td>
+                        <td><?= $x->username ?></td>  
                         <td><?= $x->nama ?></td>  
                         <td><?= $x->nama_level ?></td>
                         <td><?= $x->status_sekolah ?></td>

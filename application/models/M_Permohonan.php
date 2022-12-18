@@ -11,6 +11,9 @@ class M_Permohonan extends CI_Model {
     var $order = array('id' => 'desc');
     var $tb_fo = 'tb_permohonan';
     var $detail = 'tb_permohonan_detail';
+
+    var $id_ririn = '12';
+    var $id_tata = '13';
     function get_detail_permohonan($unik)
     {
         $this->db->where('unik', $unik);
@@ -48,11 +51,20 @@ class M_Permohonan extends CI_Model {
                 // $this->db->where('status_permohonan_atasan',null);
                 // $this->db->or_not_like('status_permohonan_atasan','Rejected');
                 $this->db->not_like('status_permohonan','Done');
-            }else if($level == 1){ // admin approval
-                $this->db->where('status_permohonan','Approved');
-                $this->db->where('status_permohonan_atasan',null);
-                $this->db->or_not_like('status_permohonan_atasan','Rejected');
-                $this->db->not_like('status_permohonan','Done');
+            }else if($level == 1){
+                // $check_admin_approval = $this->session->userdata('check_admin_approval');
+                // if ($this->id_ririn == $this->session->userdata('id_user')) {
+                //     $this->db->like('check_admin_approval',$this->id_ririn);
+                // }
+                // if ($this->session->userdata('id_user') == $this->id_ririn) {
+                    $this->db->where('status_permohonan','Approved');
+                    $this->db->where('status_permohonan_atasan',null);
+                    $this->db->or_not_like('status_permohonan_atasan','Rejected');
+                    $this->db->not_like('status_permohonan','Done');
+                // }else{
+
+                // }
+     
                 // $this->db->not_like('nama_atasan',$id_user);
             }else{
                 $this->db->where('status_permohonan','Approved');
