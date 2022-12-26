@@ -210,7 +210,7 @@
                                               <div>
                                                 <span>File Upload Bukti Transfer</span>
                                                 <i class="bx bx-right-arrow-alt scaleX-n1-rtl mx-3"></i>
-                                                <a download href="<?= base_url('upload/bukti_bayar/'.$x->file_bukti_bayar) ?>"><?= $x->file_bukti_bayar ?></a>
+                                                <a download href="<?= base_url('upload/bukti_transfer/'.$x->file_bukti_transfer) ?>"><?= $x->file_bukti_transfer ?></a>
                                               </div>
                                               <div>
                                                 <span><?= date('d-M-Y H:i:s',strtotime($x->date_created)) ?></span>

@@ -9,7 +9,88 @@ class Permohonan extends CI_Controller {
         date_default_timezone_set("Asia/Jakarta");
 
     }
-
+    function tes_api()
+    {
+        $datetime       = 'Fri, 23 Dec 2022 08:14:00 GMT';
+        $request_line   = "POST /v2/klikpajak/v1/efaktur/out  HTTP/1.1";
+        $payload        = implode("\n", ["date: {$datetime}", $request_line]);
+        $digest         = hash_hmac('sha256', $payload, 'kK14BETbFc7wQoaNfpnSRwTCAkPgHFTa', true);
+        $signature      = base64_encode($digest);
+        // echo $payload;
+        // $head = "hmac username='cauNy50mk7TtrVyY', algorithm='hmac-sha256', headers='date request-line',signature=".$signature."";
+        // $head  =  "hmac username=\"cauNy50mk7TtrVyY\", algorithm=\"hmac-sha256\", headers=\"date request-line\", signature=\"{$signature}\"";
+        echo $digest;exit;
+        // $curl = curl_init();
+        
+        // curl_setopt_array($curl, array(
+        //   CURLOPT_URL => 'https://sandbox-api.mekari.com/v2/klikpajak/v1/efaktur/out?auto_approval=false&auto_calculate=true',
+        //   CURLOPT_RETURNTRANSFER => true,
+        //   CURLOPT_ENCODING => '',
+        //   CURLOPT_MAXREDIRS => 10,
+        //   CURLOPT_TIMEOUT => 0,
+        //   CURLOPT_FOLLOWLOCATION => true,
+        //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //   CURLOPT_CUSTOMREQUEST => 'POST',
+        //   CURLOPT_POSTFIELDS =>'{
+        //     "client_reference_id": "INVOICE0000006",
+        //     "transaction_detail": "01",
+        //     "additional_trx_detail": "00",
+        //     "substitution_flag": false,
+        //     "substituted_faktur_id": null,
+        //     "document_date": "2022-10-17",
+        //     "reference": "INVOICE0000006",
+        //     "total_dpp": 0,
+        //     "total_ppn": 0,
+        //     "total_ppnbm": 0,
+        //     "downpayment_flag": null,
+        //     "downpayment_dpp": 0,
+        //     "downpayment_ppn": 0,
+        //     "downpayment_ppnbm": 0,
+        //     "customer": {
+        //         "name": "Customer Name",
+        //         "npwp": "123456789012345",
+        //         "nik": "9876543210123456",
+        //         "address": "Customer Address",
+        //         "email": "afadhitya@gmail.com"
+        //     },
+        //     "items": [
+        //         {
+        //                     "name": "item 1",
+        //                     "unit_price": 100000,
+        //                     "quantity": 10,
+        //                     "discount": 0,
+        //                     "ppnbm_rate": 0,
+        //                     "dpp": 0,
+        //                     "ppn": 0,
+        //                     "ppnbm": 0
+        //                 },
+        //                 {
+        //                     "name": "item2",
+        //                     "unit_price": 2000000,
+        //                     "quantity": 200,
+        //                     "discount": 0,
+        //                     "ppnbm_rate": 0.001,
+        //                     "dpp": 0,
+        //                     "ppn": 0,
+        //                     "ppnbm": 0
+        //                 }
+        //     ]
+        // }',
+        //   CURLOPT_HTTPHEADER => array(
+        //     'Content-Type: application/json',
+        //     'Authorization: hmac username="cauNy50mk7TtrVyY", algorithm="hmac-sha256", headers="date request-line", signature="'.$signature.'"',
+        //     'Date: Fri, 23 Dec 2022 08:14:00 GMT',
+        //     // 'Digest: '.$digest.'',
+        //     'X-Idempotency-Key: 3f004c33-76c9-4984-90b2-4d1ae3f0282b'
+        //   ),
+        // ));
+        
+        // $response = curl_exec($curl);
+        
+        // curl_close($curl);
+        // echo $response;
+        
+    }
     public function index()
 	{
         $data = [
@@ -160,7 +241,7 @@ class Permohonan extends CI_Controller {
                 $nama_atasan_app[] = $x->nama;
                 $id_atasan[] = $x->id_user;
             }
-            if (strpos($field->check_admin_approval,$id_ririn) !== false  && (strpos($field->check_admin_approval,$id_tata) !== false || $id_tata == $this->session->userdata('id_user'))) { //ririn,tata,ivo
+            if (strpos($field->check_admin_approval,$id_ririn) !== false  && (strpos($field->check_admin_approval,$id_tata) !== false || $id_tata == $this->session->userdata('id_user'))) { //ririn,tata,ivo check admin approval
                 if ($field->status_permohonan === 'Waiting') {
                     $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
                     <a href="'.'detail/'.$field->unik.'" class="badge bg-primary invisible"><i class="bx bx-edit"></i></a>
@@ -168,7 +249,8 @@ class Permohonan extends CI_Controller {
                 }else if($field->status_permohonan == 'Approved'){
                     $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
                 }else if($field->status_permohonan == 'Done'){
-                    $status = '<span class="badge bg-success"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
+                    $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
+                    // $status = '<span class="badge bg-success"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
                 }else{
                     $status = '';
                 }
@@ -203,9 +285,9 @@ class Permohonan extends CI_Controller {
                 if(count($nama_atasan_app) == 3){
                     $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
                 }else if($field->status_permohonan_atasan == 'Rejected'){
-                    $status_atasan ='<button type="button" id="'.$field->unik.'" class="btn btn-danger status_atasan"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan .'</button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
+                    $status_atasan ='<button type="button" id="'.$field->unik.'" class="btn btn-danger status_atasan"> <i class="bx bx-x-circle"></i> '. implode(',',$nama_atasan_app) .'</button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
                 }else if($field->status_permohonan == 'Rejected'){
-                    $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. $field->nama_atasan . ' </span><br>';
+                    $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. implode(',',$nama_atasan_app) . ' </span><br>';
                 }else{
                     $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
                 }
@@ -229,11 +311,11 @@ class Permohonan extends CI_Controller {
                         <div class="modal-body">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         <div class="text-center mb-4">
-                            <h3>Upload File bukti bayar</h3>
+                            <h3>Upload File bukti Transfer</h3>
                         </div>
                         <form action="status" method="POST" class="row g-3" enctype="multipart/form-data">
                             <input type="hidden" name="unik" value="'.$field->unik.'">
-                            <input type="hidden" name="status" value="upload_file_bayar">
+                            <input type="hidden" name="status" value="upload_bukti_transfer">
                             <div class="col-12">
                             <label class="form-label w-100" for="modalAddCard">File</label>
                                 <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
@@ -250,11 +332,192 @@ class Permohonan extends CI_Controller {
                 </div>
                     ';
                 }else{
-                    $row[] = '';
+                    if ($field->status_permohonan == 'Done') {
+                        $color_upload = $field->bukti_bayar_user ? 'success' : 'warning' ;
+                        $role_user = $this->session->userdata('level') == '3' ? '' : 'disabled';
+                        $row[] = '<a href="" class="badge bg-'.$color_upload.'" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
+                        <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+                                <div class="modal-content p-3 p-md-5">
+                                    <div class="modal-body">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="text-center mb-4">
+                                            <h3>Upload bukti pembayaran</h3>
+                                        </div>
+                                        <form action="status" method="POST" class="row g-3" enctype="multipart/form-data">
+                                            <input type="hidden" name="unik" value="'.$field->unik.'">
+                                            <input type="hidden" name="status" value="upload_bukti_bayar">
+                                            <div class="col-12">
+                                                <label class="form-label w-100" for="modalAddCard">File bukti bayar</label>
+                                                <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="input-group">    
+                                                    <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
+                                                    <span class="input-group-text">Rp.</span>
+                                                    <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-center">
+                                            <button '.$role_user.' type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
+                                            <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                            </div>
+                                        </form>
+                                        <hr>
+                                        <div class="col-12 ">
+                                            <label class="form-label w-100" for="modalAddCard">File bukti Bayar :</label>
+                                            <a download href="'.base_url().'upload/bukti_bayar/'.$field->bukti_bayar_user.'">'.$field->bukti_bayar_user.'</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ';
+                    }else{
+                        $row[] = '';
+                    }
                 }
                 $row[] = $status;
                 $data[] = $row;
 
+            }else{
+                if ($field->status_permohonan === 'Waiting') {
+                    $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
+                    <a href="'.'detail/'.$field->unik.'" class="badge bg-primary invisible"><i class="bx bx-edit"></i></a>
+                    ';
+                }else if($field->status_permohonan == 'Approved'){
+                    $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
+                }else if($field->status_permohonan == 'Done'){
+                    $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-primary"><i class="tf-icons bx bx-chevron-right"></i></a>';
+                    // $status = '<span class="badge bg-success"><i class="bx bx-check-circle"></i> '.$field->status_permohonan.'</span>';
+                }else{
+                    $status = '';
+                }
+
+                if ($field->no_permohonan > 0) {
+                $permohonan = '<span class="badge bg-primary">'.$field->no_permohonan.'</span>';
+                }else{
+                $permohonan='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
+                }
+
+                if($field->status_permohonan == 'Approved'){
+                    $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                }else if($field->status_permohonan == 'Rejected'){
+                    $status_admin = '<button type="button" id="'.$field->unik.'" class="btn btn-danger status_admin"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                }else{
+                    // $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                    $status_admin ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
+
+                }
+                // $xxx = array();
+                // $ex_user = explode(',',$field->nama_atasan);
+                // foreach ($ex_user as $x) {
+                //    $user_atasan = $this->db->get_where('users',['id' => $x])->row();
+                //    $xxx[] = isset($user_atasan->nama) ? $user_atasan->nama : '';
+                // }
+                // $atasan1 = isset($xxx[0]) ? $xxx[0] :'';
+                // $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
+                // $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
+
+    
+                // if($field->status_permohonan_atasan == 'Approved'){
+                if(count($nama_atasan_app) == 3){
+                    $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
+                }else if($field->status_permohonan_atasan == 'Rejected'){
+                    $status_atasan ='<button type="button" id="'.$field->unik.'" class="btn btn-danger status_atasan"> <i class="bx bx-x-circle"></i> '. implode(',',$nama_atasan_app) .'</button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_atasan));
+                }else if($field->status_permohonan == 'Rejected'){
+                    $status_atasan = '<span class="badge bg-danger"> <i class="bx bx-x-circle"></i> '. implode(',',$nama_atasan_app) . ' </span><br>';
+                }else{
+                    $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
+                }
+                
+                $row = array();
+                
+                $row[] = $no;
+                $row[] = $field->nama_pemohon ;
+                $row[] = $permohonan ;
+                $row[] = $field->tgl_permohonan;
+                if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){
+                    $row[] = $status_admin;
+                    $row[] = $status_atasan;
+                }
+                $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$field->unik'")->row_array();
+                if ($total_permohonan['total'] == 3 && $field->status_permohonan != 'Done' && $level == 2) {
+                    $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
+                    <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+                    <div class="modal-content p-3 p-md-5">
+                        <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3>Upload File bukti Transfer</h3>
+                        </div>
+                        <form action="status" method="POST" class="row g-3" enctype="multipart/form-data">
+                            <input type="hidden" name="unik" value="'.$field->unik.'">
+                            <input type="hidden" name="status" value="upload_bukti_transfer">
+                            <div class="col-12">
+                            <label class="form-label w-100" for="modalAddCard">File</label>
+                                <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
+                            </div>
+                            
+                            <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
+                            <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                    ';
+                }else{
+                    if ($field->status_permohonan == 'Done') {
+                        $color_upload = $field->bukti_bayar_user ? 'success' : 'warning' ;
+                        $role_user = $this->session->userdata('level') == '3' ? '' : 'disabled';
+                        $row[] = '<a href="" class="badge bg-'.$color_upload.'" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i></a>
+                        <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+                                <div class="modal-content p-3 p-md-5">
+                                    <div class="modal-body">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="text-center mb-4">
+                                            <h3>Upload bukti pembayaran</h3>
+                                        </div>
+                                        <form action="status" method="POST" class="row g-3" enctype="multipart/form-data">
+                                            <input type="hidden" name="unik" value="'.$field->unik.'">
+                                            <input type="hidden" name="status" value="upload_bukti_bayar">
+                                            <div class="col-12">
+                                                <label class="form-label w-100" for="modalAddCard">File bukti bayar</label>
+                                                <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="input-group">    
+                                                    <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
+                                                    <span class="input-group-text">Rp.</span>
+                                                    <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-center">
+                                            <button '.$role_user.' type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
+                                            <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                            </div>
+                                        </form>
+                                        <hr>
+                                        <div class="col-12 ">
+                                            <label class="form-label w-100" for="modalAddCard">File bukti Bayar :</label>
+                                            <a download href="'.base_url().'upload/bukti_bayar/'.$field->bukti_bayar_user.'">'.$field->bukti_bayar_user.'</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ';
+                    }else{
+                        $row[] = '';
+                    }
+                }
+                $row[] = $status;
+                $data[] = $row;
             }
         }
 
@@ -536,8 +799,8 @@ class Permohonan extends CI_Controller {
         }
 
         //upload file bayar
-        if ($this->input->post('status') == 'upload_file_bayar') {
-            $target_dir = "upload/bukti_bayar/";
+        if ($this->input->post('status') == 'upload_bukti_transfer') {
+            $target_dir = "upload/bukti_transfer/";
             $file = $_FILES['file_bayar']['name'];
             $path = pathinfo($file);
             $filename = time().'_'.$path['filename'];
@@ -548,11 +811,28 @@ class Permohonan extends CI_Controller {
 
             $this->db->where('unik',$this->input->post('unik'));
             $this->db->set('status_permohonan','Done');
-            $this->db->set('status_bayar','Sudah Dibayar');
-            $this->db->set('file_bukti_bayar',$filename.$ext);
-            $this->db->set('tgl_bayar',date('Y-m-d H:i:s'));
+            $this->db->set('status_bayar','Sudah Ditransfer');
+            $this->db->set('file_bukti_transfer',$filename.'.'.$ext);
+            $this->db->set('tgl_transfer',date('Y-m-d H:i:s'));
             $this->db->update('tb_permohonan');
             $this->session->set_flashdata('msg','<div class="alert alert-primary">File bukti Petty cash / transfer berhasil di upload</div>');
+            redirect('permohonan/list2');
+        }elseif ($this->input->post('status') == 'upload_bukti_bayar') {
+            $target_dir = "upload/bukti_bayar/";
+            $file = $_FILES['file_bayar']['name'];
+            $path = pathinfo($file);
+            $filename = time().'_'.$path['filename'];
+            $ext = $path['extension'];
+            $temp_name = $_FILES['file_bayar']['tmp_name'];
+            $path_filename_ext = $target_dir.$filename.".".$ext;
+            move_uploaded_file($temp_name,$path_filename_ext);
+            $sisa = $this->remove_special($this->input->post('sisa_dana'));
+            $this->db->where('unik',$this->input->post('unik'));
+            $this->db->set('bukti_bayar_user',$filename.'.'.$ext);
+            $this->db->set('tgl_bayar_user',date('Y-m-d H:i:s'));
+            $this->db->set('sisa_dana',$sisa);
+            $this->db->update('tb_permohonan');
+            $this->session->set_flashdata('msg','<div class="alert alert-primary">File bukti bayar berhasil di upload</div>');
             redirect('permohonan/list2');
         }
     }

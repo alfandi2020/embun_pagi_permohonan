@@ -40,7 +40,7 @@
     <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/logo.png') ?>" />
 
     <!-- Data Table JQuery -->
-    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.1.0.js"></script> -->
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -185,6 +185,14 @@
                 <div data-i18n="Basic"> List Permohonan</div>
               </a>
             </li>
+            <?php if ($level == 2) { ?>
+            <li class="menu-item">
+              <a href="<?= base_url('laporan');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>List Pembayaran</span>">
+              <i class='bx bx-wallet'></i> 
+                <div data-i18n="Basic"> List Pembayaran</div>
+              </a>
+            </li>
+            <?php } ?>
             <li class="menu-item">
               <a href="<?= base_url('permohonan/track');?>" class="menu-link" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="<i class='bx bx-trending-up bx-xs'></i> <span>Tracking</span>">
               <i class='bx bx-transfer'></i>

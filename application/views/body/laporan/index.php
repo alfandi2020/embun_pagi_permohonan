@@ -13,7 +13,7 @@
                         <thead>
                         <tr>
                             <th>No</th>
-                            <th width="200">Nama Pemohon</th>
+                            <th width="200">Nama Pemohon </th>
                             <th>Nomor Pemohon</th>
                             <th width="200">Tanggal Permohonan</th>
                             <?php if($this->session->userdata('filterPermohonan') == 'permohonan_baru' || $this->session->userdata('filterPermohonan') == 'data_lama'){ ?>
@@ -21,7 +21,7 @@
                             <th width="200">Status Atasan</th>
                             <?php } ?>
                             <th>Upload Bukti</th>
-                            <th>Action</th>
+                            <th>Sisa dana</th>
                         </tr>
                         </thead>
                         <tbody></tbody>

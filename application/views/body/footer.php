@@ -34,6 +34,7 @@
 <script src="<?= base_url()?>assets/vendor/libs/toastr/toastr.js"></script>
     <script>
 		
+		
 		window.setTimeout(function() {
 			$(".alert-success").fadeTo(500, 0).slideUp(500, function() {
 				$(this).remove();
@@ -407,14 +408,16 @@ $(document).on('click', '.detail_permohonan2', function () {
 		// ----------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------
-
+			function handle(e){
+				var input1 = document.getElementById('input1').value;
+				document.getElementById('input1').value = formatRupiah(input1);
+			}
 		
 		// Barang Masuk
 	// 	$(document).on('click', '.modaltambahbarangmasuk', function (e) {
 	// 	  $('input').val('').attr('disabled',false)
 	// 	  $('textarea').val('').attr('disabled',false)
 	//   })
-
 		//tambah barang masuk 
 		// $(document).on('click', '.tambahbarangmasuk', function (e) {
 		// 	e.preventDefault();
@@ -552,14 +555,11 @@ $(document).on('click', '.detail_permohonan2', function () {
 	</script>
   
   <script type="text/javascript">
-		
+	
 		var rupiah = document.getElementById('rupiah');
 		rupiah.addEventListener('keyup', function(e){
-			// tambahkan 'Rp.' pada saat form di ketik
-			// gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
 			rupiah.value = formatRupiah(this.value, 'Rp. ');
 		});
- 
 		/* Fungsi formatRupiah */
 		function formatRupiah(angka, prefix){
 			var number_string = angka.replace(/[^,\d]/g, '').toString(),

@@ -67,10 +67,11 @@ class M_Permohonan extends CI_Model {
      
                 // $this->db->not_like('nama_atasan',$id_user);
             }else{
-                $this->db->where('status_permohonan','Approved');
+                $this->db->or_where('status_permohonan','Approved');
+                $this->db->or_where('status_permohonan','Done');
                 $this->db->where('status_permohonan_atasan',null);
                 $this->db->or_not_like('status_permohonan_atasan','Rejected');
-                $this->db->not_like('status_permohonan','Done');
+                // $this->db->not_like('status_permohonan','Done');
             }
         }elseif ($this->session->userdata('filterPermohonan') == 'permohonan_selesai') { // upload bukti
                 if ($this->session->userdata('filterSekolah') == true) {
@@ -112,47 +113,6 @@ class M_Permohonan extends CI_Model {
         }
 
   
-        // if ($level == 2) {
-        //     $this->db->where('tujuan_sekolah', explode(',',$this->session->userdata('tujuan_sekolah')));
-        // }
-        // $level = $this->session->userdata('level');
-        // if($level == 2 || $level == 22) {
-        //     $date = date('Y-m-d');
-        //     $date1 = str_replace('-', '/', $date);
-        //     $to_date = date('Y-m-d',strtotime($date1 . "+3 days"));
-            
-        //     $this->db->where('id_user', $this->session->userdata('id'));
-        //     if(str_replace('_', ' ', $filterPermohonan) == 'Sudah Dibayar'){
-        //         $this->db->where('status_sampel', 'Diterima');
-        //         $this->db->where('status_bayar', str_replace('_', ' ', $filterPermohonan));
-        //         $this->db->where('status_terbit', 'Sudah Terbit');
-        //     }else if(str_replace('_', ' ', $filterPermohonan) == 'Belum Dibayar'){
-        //         $this->db->where('status_sampel', 'Diterima Kajiulang');
-        //     }
-        // }else{
-        //     if(str_replace('_', ' ', $filterPermohonan) == 'Sudah Dibayar'){
-        //         $this->db->where('status_terbit', 'Sudah Terbit');
-        //         $this->db->where('status_bayar', str_replace('_', ' ', $filterPermohonan));
-        //         $this->db->where('status_sampel', 'Diterima');
-        //     } else if(str_replace('_', ' ', $filterPermohonan) == 'Belum Dibayar'){
-        //         $this->db->where('status_terbit', 'Belum Terbit');
-        //         // $this->db->where('status_bayar', str_replace('_', ' ', $filterPermohonan));
-        //         // $this->db->where('status_sampel', 'Diterima');
-        //         $this->db->where('status_sampel', 'Diterima Kajiulang');
-        //         $this->db->where('status_sampel !=', 'Ditolak');
-        //         // $this->db->where('kode_sampel > ', 0);
-        //     }
-        // }
-        // $this->db->where('status_sampel', 'Diterima');
-        // $this->db->where('kode_sampel >= ', 0);
-
-        //add custom filter here
-        // if($level != 2 && $level != 22) {
-        //     if ($_POST['nama_pemohon']) {
-        //         $this->db->like('nama', $_POST['nama_pemohon']);
-        //         $this->db->or_like('nama_perusahaan', $_POST['nama_pemohon']);
-        //     }
-        // }
         
         if($_POST['nama_pemohon']) $this->db->like("nama_pemohon", $_POST['nama_pemohon']);
         if($_POST['no_permohonan']) $this->db->like("no_permohonan", $_POST['no_permohonan']);

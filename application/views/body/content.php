@@ -12,7 +12,7 @@
               <div class="d-flex align-items-start justify-content-between">
                 <div class="content-left">
                   <span>
-                    <div class="badge bg-warning">Data Waiting</div>
+                    <div class="badge bg-warning">Permohonan Baru</div>
                   </span>
                   <div class="d-flex align-items-end mt-2">
                   <?php if($this->session->userdata('level') == 1) { ?>
@@ -105,10 +105,10 @@
             <div class="d-flex align-items-start justify-content-between">
               <div class="content-left">
                 <span>
-                  <div class="badge bg-success">Data Done</div>
+                  <div class="badge bg-success">Data selesai</div>
                 </span>
                 <div class="d-flex align-items-end mt-2">
-                  <a href="<?= base_url('permohonan/filter/data_lama') ?>">
+                  <a href="<?= base_url('permohonan/filter/permohonan_selesai') ?>">
                     <h4 class="mb-0 me-2"><?= $done ?></h4>
                   </a>
                   <!-- <small class="text-success">(+29%)</small> -->
