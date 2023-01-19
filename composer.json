@@ -1,6 +1,9 @@
 {
     "require": {
-        "phpoffice/phpspreadsheet": "^1"
+        "phpoffice/phpspreadsheet": "^1",
+        "guzzlehttp/guzzle": "^7.0",
+        "nesbot/carbon": "^2.54",
+        "vlucas/phpdotenv": "^5.3"
     },
     "config": {
         "platform": {

@@ -7,6 +7,7 @@ class Permohonan extends CI_Controller {
         parent::__construct();
         $this->load->model(array('M_Permohonan'));
         date_default_timezone_set("Asia/Jakarta");
+        $this->load->library('api_whatsapp');
 
     }
     public function index()
@@ -42,10 +43,33 @@ class Permohonan extends CI_Controller {
 		$this->load->view('body/tracking');
 		$this->load->view('body/footer');
     }
+    function tgl_indo($tanggal){
+        $bulan = array (
+            1 =>   'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        );
+        $pecahkan = explode('-', $tanggal);
+
+        // variabel pecahkan 0 = tahun
+        // variabel pecahkan 1 = bulan
+        // variabel pecahkan 2 = tanggal
+
+        return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+    }
     function remove_special($string) {
         $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
         $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-     
+
         return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
      }
 
@@ -94,8 +118,15 @@ class Permohonan extends CI_Controller {
                 'status_permohonan' => 'Waiting'
             ];
             $this->db->insert('tb_permohonan',$data);
-        
-            for ($i=1; $i <count($row); $i++) { 
+
+            if (count($row) >= 3) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+
+            $isi_permohonan_x = array();
+            for ($i=1; $i <count($row); $i++) {
                     $target_dir = "upload/file/";
                     $file = $_FILES['att'.$i]['name'];
                     $path = pathinfo($file);
@@ -104,7 +135,8 @@ class Permohonan extends CI_Controller {
                     $temp_name = $_FILES['att'.$i]['tmp_name'];
                     $path_filename_ext = $target_dir.$filename.".".$ext;
                     move_uploaded_file($temp_name,$path_filename_ext);
-
+                    $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $set_unik.'_' . $i . '_'.$_FILES['att'.$i]['name'];
+                    $isi_permohonan_x[] = "Isi permohonan : *".$this->input->post('isi'.$i)."*\nNominal : *" . $this->input->post('nominal'.$i). "*\nLink file : $url_link $pisah";
                     $detail = [
                         "unik" => $set_unik,
                         "isi_permohonan" => $this->input->post('isi'.$i),
@@ -113,6 +145,11 @@ class Permohonan extends CI_Controller {
                     ];
                     $this->db->insert('tb_permohonan_detail',$detail);
             }
+             //send notif
+            //  'http://localhost/embun_pagi_pengajuan/permohonan/status/1673876843588/Approved/confirm_admin';
+            // $approve = "http://localhost/embun_pagi_pengajuan/approve/status/".$set_unik."/Approved/confirm_admin";
+            $msg = "*[Notifkasi Permohonan Baru]*\n\nPermohonan baru dari : *$nama*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+            $this->api_whatsapp->wa_notif($msg,'083897943785');
             $this->session->set_flashdata('msg','berhasil_x');
         }else{
             $this->session->set_flashdata('msg','not_item');
@@ -139,6 +176,10 @@ class Permohonan extends CI_Controller {
 		$this->load->view('body/list',$data);
 		$this->load->view('body/footer');
     }
+    function tes_api()
+    {
+        $this->api_whatsapp->wa_notif('adawdwa','083897943785');
+    }
     function get_list_permohonan()
     {
         $id_ririn = '12';
@@ -151,7 +192,7 @@ class Permohonan extends CI_Controller {
         $level = $this->session->userdata('level');
         foreach ($list as $field) {
             $no++;
-            
+
             $tb_atasan = $this->db->get_where('tb_atasan',['unik' => $field->unik])->result();
             $nama_atasan_app = array();
             $id_atasan = array();
@@ -198,7 +239,7 @@ class Permohonan extends CI_Controller {
                 // $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
                 // $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
 
-    
+
                 // if($field->status_permohonan_atasan == 'Approved'){
                 if(count($nama_atasan_app) == 3){
                     $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
@@ -209,9 +250,9 @@ class Permohonan extends CI_Controller {
                 }else{
                     $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
                 }
-                
+
                 $row = array();
-                
+
                 $row[] = $no;
                 $row[] = $field->nama_pemohon ;
                 $row[] = $permohonan ;
@@ -238,7 +279,7 @@ class Permohonan extends CI_Controller {
                             <label class="form-label w-100" for="modalAddCard">File</label>
                                 <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                             </div>
-                            
+
                             <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
                             <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -270,7 +311,7 @@ class Permohonan extends CI_Controller {
                                                 <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                                             </div>
                                             <div class="col-12">
-                                                <div class="input-group">    
+                                                <div class="input-group">
                                                     <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
                                                     <span class="input-group-text">Rp.</span>
                                                     <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
@@ -337,7 +378,7 @@ class Permohonan extends CI_Controller {
                 // $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
                 // $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
 
-    
+
                 // if($field->status_permohonan_atasan == 'Approved'){
                 if(count($nama_atasan_app) == 3){
                     $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
@@ -348,9 +389,9 @@ class Permohonan extends CI_Controller {
                 }else{
                     $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
                 }
-                
+
                 $row = array();
-                
+
                 $row[] = $no;
                 $row[] = $field->nama_pemohon ;
                 $row[] = $permohonan ;
@@ -377,7 +418,7 @@ class Permohonan extends CI_Controller {
                             <label class="form-label w-100" for="modalAddCard">File</label>
                                 <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                             </div>
-                            
+
                             <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
                             <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -409,7 +450,7 @@ class Permohonan extends CI_Controller {
                                                 <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                                             </div>
                                             <div class="col-12">
-                                                <div class="input-group">    
+                                                <div class="input-group">
                                                     <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
                                                     <span class="input-group-text">Rp.</span>
                                                     <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
@@ -475,7 +516,7 @@ class Permohonan extends CI_Controller {
                 // $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
                 // $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
 
-    
+
                 // if($field->status_permohonan_atasan == 'Approved'){
                 if(count($nama_atasan_app) == 3){
                     $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
@@ -486,9 +527,9 @@ class Permohonan extends CI_Controller {
                 }else{
                     $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
                 }
-                
+
                 $row = array();
-                
+
                 $row[] = $no;
                 $row[] = $field->nama_pemohon ;
                 $row[] = $permohonan ;
@@ -515,7 +556,7 @@ class Permohonan extends CI_Controller {
                             <label class="form-label w-100" for="modalAddCard">File</label>
                                 <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                             </div>
-                            
+
                             <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
                             <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -547,7 +588,7 @@ class Permohonan extends CI_Controller {
                                                 <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                                             </div>
                                             <div class="col-12">
-                                                <div class="input-group">    
+                                                <div class="input-group">
                                                     <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
                                                     <span class="input-group-text">Rp.</span>
                                                     <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
@@ -574,7 +615,7 @@ class Permohonan extends CI_Controller {
                 }
                 $row[] = $status;
                 $data[] = $row;
-            }else if($this->session->userdata('level') == '2'){
+            }else if($this->session->userdata('level') == '2'){ //filter
                 if ($field->status_permohonan === 'Waiting') {
                     $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
                     <a href="'.'detail/'.$field->unik.'" class="badge bg-primary invisible"><i class="bx bx-edit"></i></a>
@@ -603,17 +644,8 @@ class Permohonan extends CI_Controller {
                     $status_admin ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
 
                 }
-                // $xxx = array();
-                // $ex_user = explode(',',$field->nama_atasan);
-                // foreach ($ex_user as $x) {
-                //    $user_atasan = $this->db->get_where('users',['id' => $x])->row();
-                //    $xxx[] = isset($user_atasan->nama) ? $user_atasan->nama : '';
-                // }
-                // $atasan1 = isset($xxx[0]) ? $xxx[0] :'';
-                // $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
-                // $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
 
-    
+
                 // if($field->status_permohonan_atasan == 'Approved'){
                 if(count($nama_atasan_app) == 3){
                     $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
@@ -624,9 +656,9 @@ class Permohonan extends CI_Controller {
                 }else{
                     $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
                 }
-                
+
                 $row = array();
-                
+
                 $row[] = $no;
                 $row[] = $field->nama_pemohon ;
                 $row[] = $permohonan ;
@@ -637,7 +669,7 @@ class Permohonan extends CI_Controller {
                 }
                 $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$field->unik'")->row_array();
                 if ($total_permohonan['total'] == 3 && $field->status_permohonan != 'Done' && $level == 2) {
-                    $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i> <b>Bukti Transfer</b></a> 
+                    $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i> <b>Bukti Transfer</b></a>
                     <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
                     <div class="modal-content p-3 p-md-5">
@@ -653,7 +685,7 @@ class Permohonan extends CI_Controller {
                             <label class="form-label w-100" for="modalAddCard">File</label>
                                 <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                             </div>
-                            
+
                             <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
                             <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -688,7 +720,7 @@ class Permohonan extends CI_Controller {
                                                         <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                                                     </div>
                                                     <div class="col-12">
-                                                        <div class="input-group">    
+                                                        <div class="input-group">
                                                             <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
                                                             <span class="input-group-text">Rp.</span>
                                                             <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
@@ -701,8 +733,8 @@ class Permohonan extends CI_Controller {
                                                 </form>
                                                 <hr>
                                                 <div class="col-12 ">
-                                                    <label class="form-label w-100" for="modalAddCard">File bukti Bayar :</label>
-                                                    <a download href="'.base_url().'upload/bukti_bayar/'.$field->bukti_bayar_user.'">'.$field->bukti_bayar_user.'</a>
+                                                    <label class="form-label w-100" for="modalAddCard">File bukti Transfer :</label>
+                                                    <a class="btn btn-primary" download href="'.base_url().'upload/bukti_transfer/'.$field->file_bukti_transfer.'">'.$field->file_bukti_transfer.'</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -716,7 +748,7 @@ class Permohonan extends CI_Controller {
                 }
                 $row[] = $status;
                 $data[] = $row;
-            }elseif ($this->session->userdata('level') == '3') {
+            }elseif ($this->session->userdata('level') == '3') { //user
                 if ($field->status_permohonan === 'Waiting') {
                     $status = '<a href="'.'detail/'.$field->unik.'" class="badge bg-warning"><i class="tf-icons bx bx-chevron-right"></i></a> &nbsp;&nbsp;
                     <a href="'.'detail/'.$field->unik.'" class="badge bg-primary invisible"><i class="bx bx-edit"></i></a>
@@ -740,12 +772,14 @@ class Permohonan extends CI_Controller {
                     $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
                 }else if($field->status_permohonan == 'Rejected'){
                     $status_admin = '<button type="button" id="'.$field->unik.'" class="btn btn-danger status_admin"> <i class="bx bx-x-circle"></i> '. $field->nama_admin . ' </button><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
+                }else if($field->status_permohonan == 'Done'){
+                    $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
                 }else{
                     // $status_admin ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '. $field->nama_admin .'</span><br>'.date('Y M d H:i:s',strtotime($field->tgl_status_admin));
                     $status_admin ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i></span>';
                 }
-          
-    
+
+
                 // if($field->status_permohonan_atasan == 'Approved'){
                 if(count($nama_atasan_app) == 3){
                     $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
@@ -756,9 +790,9 @@ class Permohonan extends CI_Controller {
                 }else{
                     $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
                 }
-                
+
                 $row = array();
-                
+
                 $row[] = $no;
                 $row[] = $field->nama_pemohon ;
                 $row[] = $permohonan ;
@@ -769,7 +803,7 @@ class Permohonan extends CI_Controller {
                 }
                 $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$field->unik'")->row_array();
                 if ($total_permohonan['total'] == 3 && $field->status_permohonan != 'Done' && $level == 2) {
-                    $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i> <b>Bukti Transfer</b></a> 
+                    $row[] = '<a href="" class="badge bg-warning" data-bs-toggle="modal" data-bs-target="#modalFile'.$field->unik.'" ><i class="bx bx-file"></i> <b>Bukti Transfer</b></a>
                     <div class="modal fade" id="modalFile'.$field->unik.'" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
                     <div class="modal-content p-3 p-md-5">
@@ -785,7 +819,7 @@ class Permohonan extends CI_Controller {
                             <label class="form-label w-100" for="modalAddCard">File</label>
                                 <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                             </div>
-                            
+
                             <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
                             <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -832,7 +866,7 @@ class Permohonan extends CI_Controller {
                                                     <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                                                 </div>
                                                 <div class="col-12">
-                                                    <div class="input-group">    
+                                                    <div class="input-group">
                                                         <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
                                                         <span class="input-group-text">Rp.</span>
                                                         <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
@@ -846,7 +880,7 @@ class Permohonan extends CI_Controller {
                                             <hr>
                                             <div class="col-12 ">
                                                 <h6>File bukti Transfer : </h6>
-                                                <a class="btn btn-primary" download href="'.base_url().'upload/bukti_transfer/'.$field->file_bukti_transfer.'">'.$field->file_bukti_transfer.' <i class="bx bx-download"></i></a>
+                                                <a class="btn btn-primary" download href="'.base_url().'upload/bukti_transfer/'.$field->file_bukti_transfer.'">'.$field->file_bukti_transfer.' <i class="bx bx-download"></i></a><br>
                                                 '.$field->tgl_transfer.'
                                             </div> <br>
                                            '.$bukti_bayar.'
@@ -909,7 +943,7 @@ class Permohonan extends CI_Controller {
             //     // $atasan2 = isset($xxx[1]) ? $xxx[1] :'';
             //     // $atasan3 = isset($xxx[2]) ? $xxx[2] :'';
 
-    
+
             //     // if($field->status_permohonan_atasan == 'Approved'){
             //     if(count($nama_atasan_app) == 3){
             //         $status_atasan ='<span class="badge bg-primary"> <i class="bx bx-check"></i> '.implode(',',$nama_atasan_app).'</span><br>'.$field->tgl_status_admin;
@@ -920,9 +954,9 @@ class Permohonan extends CI_Controller {
             //     }else{
             //         $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
             //     }
-                
+
             //     $row = array();
-                
+
             //     $row[] = $no;
             //     $row[] = $field->nama_pemohon ;
             //     $row[] = $permohonan ;
@@ -949,7 +983,7 @@ class Permohonan extends CI_Controller {
             //                 <label class="form-label w-100" for="modalAddCard">File</label>
             //                     <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
             //                 </div>
-                            
+
             //                 <div class="col-12 text-center">
             //                 <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
             //                 <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -981,7 +1015,7 @@ class Permohonan extends CI_Controller {
             //                                     <input '.$role_user.' name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
             //                                 </div>
             //                                 <div class="col-12">
-            //                                     <div class="input-group">    
+            //                                     <div class="input-group">
             //                                         <label class="form-label w-100" for="modalAddCard">Sisa dana</label>
             //                                         <span class="input-group-text">Rp.</span>
             //                                         <input '.$role_user.' name="sisa_dana" id="input1" class="form-control" type="text" aria-describedby="modalAddCard2"  onkeyup="handle()"/>
@@ -1022,8 +1056,8 @@ class Permohonan extends CI_Controller {
     function strpos_arr($haystack, $needle) {
         if( !is_array($needle) ) $needle = array($needle);
         $min = false;
-        foreach($needle as $what) 
-            if( ($pos = strpos($haystack, $what)) !== false && ($min == false || $pos < $min) ) 
+        foreach($needle as $what)
+            if( ($pos = strpos($haystack, $what)) !== false && ($min == false || $pos < $min) )
                 $min = $pos;
         return $min;
     }
@@ -1089,9 +1123,9 @@ class Permohonan extends CI_Controller {
             }else{
                 $status_atasan ='<span class="badge bg-warning"> <i class="bx bx-time-five"></i> '.implode(',',$nama_atasan_app).'</span>';
             }
-            
+
             $row = array();
-            
+
 			$row[] = $no;
 			$row[] = $field->nama_pemohon;
 			$row[] = $permohonan;
@@ -1118,7 +1152,7 @@ class Permohonan extends CI_Controller {
                           <label class="form-label w-100" for="modalAddCard">File</label>
                             <input name="file_bayar" class="form-control" type="file" aria-describedby="modalAddCard2" />
                         </div>
-                        
+
                         <div class="col-12 text-center">
                           <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-3">Submit</button>
                           <button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -1134,7 +1168,7 @@ class Permohonan extends CI_Controller {
             }
 			$row[] = $status;
 
-            
+
             $data[] = $row;
         }
 
@@ -1168,6 +1202,7 @@ class Permohonan extends CI_Controller {
     }
     function status()
     {
+        $id_user = $this->session->userdata('id_user');
         //approved atau rejected untuk atasan
         if ($this->input->post('status') == 'Rejected' && $this->input->post('atasan') == 'permohonan_baru') {
             // $this->db->where('unik',$this->input->post('id'));
@@ -1178,7 +1213,7 @@ class Permohonan extends CI_Controller {
             // $this->db->update('tb_permohonan');
 
             //insert table atasan
-          
+
             $atasan = [
                 "id_user" => $this->session->userdata('id_user'),
                 "nama" => $this->session->userdata('nama'),
@@ -1196,6 +1231,7 @@ class Permohonan extends CI_Controller {
             $this->db->where('tahun',date('Y'));
             $no = $this->db->get('tb_permohonan')->result_array();
 
+           
             $cek_permohonan = $this->db->get_where('tb_permohonan',['unik' => $unik])->row();
             if ($cek_permohonan->no_permohonan == null) {
                 $no_pemohon = $no[0]['no_permohonan']+1;
@@ -1216,7 +1252,7 @@ class Permohonan extends CI_Controller {
                     // "tgl_status_atasan" => date('Y-m-d H:i:s')
             //     ];
             // }
-            
+
 
             //kolom nama_atasan,status_permohonan_atasan,note_atasan,tgl_status_atasan tidak terpakai
             //insert table atasan
@@ -1249,7 +1285,58 @@ class Permohonan extends CI_Controller {
                 "status" => $status
             ];
             $this->db->insert('tb_atasan',$atasan);
+            
+            // //// notif wa
+            // $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
+            // $user_admin = $get_user['nama'];
+            // $msg = "*[Notifkasi Admin Atasan]*\n\nPermohonan : *$user_admin*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
 
+            // //notif user
+            // $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            // //notif confirm admin
+            // $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
+            // $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            // //end
+
+            //send notif whatsapp
+            $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
+            $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
+            if (count($detail_permohonan) >= 2) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+            $isi_permohonan_x = array();
+            foreach ($detail_permohonan as $x) {
+                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
+            }
+            $nama = $get_user['nama'];
+            $no_pemohon_2 = $get_user['no_permohonan'];
+            $nama_admin_2 = $get_user['nama_admin'];
+            // $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $get_atasan = $this->db->get_where('tb_atasan',['unik' => $unik])->result();
+            if (count($get_atasan) >= 2) {
+                $pisah_atasan = "\n\n";
+            }else{
+                $pisah_atasan = "\n";
+            }
+            $isi_atasan = array();
+            $noo = 1;
+            foreach ($get_atasan as $x) {
+                $isi_atasan[] = "Disetujui Admin ".$noo++." : *".$x->nama."*\nTanggal Disetujui : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s').'*'.$pisah_atasan."";
+            }
+            $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
+            $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
+            $msg = "*[Notifkasi Admin Approved]*\n\nPermohonan : *$nama*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\nNomor Permohonan : *".$no_pemohon_2."*\nDisetujui admin filter : *".$nama_admin_2."*\n\n".implode('',$isi_atasan)."*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+
+            //notif user
+            $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            //notif confirm admin
+            $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            //end
             $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$unik'")->row_array();
             if ($total_permohonan['total'] == 3) {
                 $this->db->where('unik',$unik);
@@ -1280,11 +1367,40 @@ class Permohonan extends CI_Controller {
             //     "status_permohonan" => $status,
             //     "tgl_status_admin" => date('Y-m-d H:i:s')
             // ];
+
             $this->db->set('nama_admin',$this->session->userdata('nama'));
             $this->db->set('status_permohonan',$status);
             $this->db->set('tgl_status_admin',date('Y-m-d H:i:s'));
             $this->db->where('unik',$unik);
             $this->db->update('tb_permohonan');
+
+            //send notif whatsapp
+            $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
+            $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
+            if (count($detail_permohonan) >= 2) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+            $isi_permohonan_x = array();
+            foreach ($detail_permohonan as $x) {
+                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
+            }
+            $nama = $get_user['nama'];
+            // $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
+            $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
+            $msg = "*[Notifkasi Admin Filter]*\n\nPermohonan : *$nama*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : Disetujui oleh *".$this->session->userdata('nama')."*\nTanggal Disetujui : ".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+
+            //notif user
+            $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            //notif confirm admin
+            $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            //end
+
             redirect('permohonan/list2');
         }
 
@@ -1299,15 +1415,45 @@ class Permohonan extends CI_Controller {
             $path_filename_ext = $target_dir.$filename.".".$ext;
             move_uploaded_file($temp_name,$path_filename_ext);
 
-            $this->db->where('unik',$this->input->post('unik'));
+            $unik = $this->input->post('unik');
+            $this->db->where('unik',$unik);
             $this->db->set('status_permohonan','Done');
             $this->db->set('status_bayar','Sudah Ditransfer');
             $this->db->set('file_bukti_transfer',$filename.'.'.$ext);
             $this->db->set('tgl_transfer',date('Y-m-d H:i:s'));
             $this->db->update('tb_permohonan');
+
+            //send notif whatsapp
+            $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
+            $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
+            if (count($detail_permohonan) >= 2) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+            $isi_permohonan_x = array();
+            foreach ($detail_permohonan as $x) {
+                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
+            }
+            $nama = $get_user['nama'];
+            $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
+            $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
+            $msg = "*[Notifkasi Upload Transfer]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : *Bukti transfer berhasil diupload*\nTanggal Upload Transfer : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti transfer : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+
+            //notif user
+            $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            //notif confirm admin
+            $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            //end
+
             $this->session->set_flashdata('msg','<div class="alert alert-primary">File bukti Petty cash / transfer berhasil di upload</div>');
             redirect('permohonan/list2');
         }elseif ($this->input->post('status') == 'upload_bukti_bayar') {
+            $unik = $this->input->post('unik');
             $target_dir = "upload/bukti_bayar/";
             $file = $_FILES['file_bayar']['name'];
             $path = pathinfo($file);
@@ -1317,11 +1463,39 @@ class Permohonan extends CI_Controller {
             $path_filename_ext = $target_dir.$filename.".".$ext;
             move_uploaded_file($temp_name,$path_filename_ext);
             $sisa = $this->remove_special($this->input->post('sisa_dana'));
-            $this->db->where('unik',$this->input->post('unik'));
+            $this->db->where('unik',$unik);
             $this->db->set('bukti_bayar_user',$filename.'.'.$ext);
             $this->db->set('tgl_bayar_user',date('Y-m-d H:i:s'));
             $this->db->set('sisa_dana',$sisa);
             $this->db->update('tb_permohonan');
+
+            //send notif whatsapp
+            $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
+            $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
+            if (count($detail_permohonan) >= 2) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+            $isi_permohonan_x = array();
+            foreach ($detail_permohonan as $x) {
+                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
+            }
+            $nama = $get_user['nama'];
+            $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_bayar/". $get_user['bukti_bayar_user'];
+            $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
+            $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
+            $msg = "*[Notifkasi Upload Bayar]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : *Bukti bayar berhasil diupload*\nTanggal Upload bayar : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti bayar : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+
+            //notif user
+            $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            //notif confirm admin
+            $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            //end
+
             $this->session->set_flashdata('msg','<div class="alert alert-primary">File bukti bayar berhasil di upload</div>');
             redirect('permohonan/list2');
         }

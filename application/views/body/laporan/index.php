@@ -9,6 +9,11 @@
             <div class="col-md-12">
               <div class="card mb-3">
                 <div class="card-datatable table-responsive">
+                  <div class="card-header">
+                    <div class="col-xl-4">
+                        <a class="btn btn-primary" href="<?= base_url('laporan') ?>">Export</a>
+                    </div>
+                </div>
                     <table id="table_laporan" class="datatables-basic table border-top">
                         <thead>
                         <tr>
