@@ -8,7 +8,7 @@ class Permohonan extends CI_Controller {
         parent::__construct();
         $this->load->model(array('M_Permohonan'));
         date_default_timezone_set("Asia/Jakarta");
-        $this->load->library('api_whatsapp');
+        $this->load->library('Api_whatsapp');
 
     }
     public function index()
