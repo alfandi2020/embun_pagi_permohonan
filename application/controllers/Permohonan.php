@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Permohonan extends CI_Controller {
+    var $id_ririn = '12';
     public function __construct()
     {
         parent::__construct();
@@ -1205,15 +1206,15 @@ class Permohonan extends CI_Controller {
         $id_user = $this->session->userdata('id_user');
         //approved atau rejected untuk atasan
         if ($this->input->post('status') == 'Rejected' && $this->input->post('atasan') == 'permohonan_baru') {
-            // $this->db->where('unik',$this->input->post('id'));
+            $unik = $this->input->post('id');
+            $this->db->where('unik',$unik);
             // $this->db->set('nama_atasan',$this->session->userdata('nama'));
-            // $this->db->set('status_permohonan_atasan','Rejected');
+            $this->db->set('status_permohonan','Rejected');
             // $this->db->set('note_atasan',$this->input->post('keterangan'));
             // $this->db->set('tgl_status_atasan',date('Y-m-d H:i:s'));
-            // $this->db->update('tb_permohonan');
+            $this->db->update('tb_permohonan');
 
             //insert table atasan
-
             $atasan = [
                 "id_user" => $this->session->userdata('id_user'),
                 "nama" => $this->session->userdata('nama'),
@@ -1223,6 +1224,8 @@ class Permohonan extends CI_Controller {
                 // "tgl_status_atasan" => date('Y-m-d H:i:s')
             ];
             $this->db->insert('tb_atasan',$atasan);
+
+            
             echo json_encode('Success');
         }else if($this->uri->segment(5) == 'confirm_atasan'){
             $unik = $this->uri->segment(3);
@@ -1285,19 +1288,7 @@ class Permohonan extends CI_Controller {
                 "status" => $status
             ];
             $this->db->insert('tb_atasan',$atasan);
-            
-            // //// notif wa
-            // $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
-            // $user_admin = $get_user['nama'];
-            // $msg = "*[Notifkasi Admin Atasan]*\n\nPermohonan : *$user_admin*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
-
-            // //notif user
-            // $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
-            // //notif confirm admin
-            // $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
-            // $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
-            // //end
-
+      
             //send notif whatsapp
             $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
             $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
@@ -1319,7 +1310,7 @@ class Permohonan extends CI_Controller {
             if (count($get_atasan) >= 2) {
                 $pisah_atasan = "\n\n";
             }else{
-                $pisah_atasan = "\n";
+                $pisah_atasan = "\n\n";
             }
             $isi_atasan = array();
             $noo = 1;
@@ -1333,9 +1324,20 @@ class Permohonan extends CI_Controller {
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
             $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            
             //notif confirm admin
-            $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            $cek_atasan = $this->db->query("SELECT COUNT(*) as total FROM tb_atasan WHERE unik='$unik'")->row_array();
+            if ($cek_atasan['total'] == 1) { //send ke tata
+                $get_admin = $this->db->query('SELECT * FROM users where id="13"')->row_array();
+                $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            }elseif ($cek_atasan['total'] == 2) { //send ke ivo
+                $get_admin = $this->db->query('SELECT * FROM users where id="20"')->row_array();
+                $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            }
+            // elseif ($cek_atasan['total'] == 3) { //send ke ivo
+            //     // $get_admin = $this->db->query('SELECT * FROM users where id=""')->row_array();
+            //     // $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            // }
             //end
             $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$unik'")->row_array();
             if ($total_permohonan['total'] == 3) {
@@ -1348,14 +1350,44 @@ class Permohonan extends CI_Controller {
 
         //approved atau rejected untuk admin
         if ($this->input->post('status') == 'Rejected' && $this->input->post('atasan') == 'waiting') {
-            $this->db->where('unik',$this->input->post('id'));
+            $unik = $this->input->post('id');
+            $this->db->where('unik',$unik);
             $this->db->set('nama_admin',$this->session->userdata('nama'));
             $this->db->set('status_permohonan','Rejected');
             $this->db->set('note_status_permohonan',$this->input->post('keterangan'));
             $this->db->set('tgl_status_admin',date('Y-m-d H:i:s'));
             $this->db->update('tb_permohonan');
+
+            //send notif whatsapp
+            $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
+            $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
+            if (count($detail_permohonan) >= 2) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+            $isi_permohonan_x = array();
+            foreach ($detail_permohonan as $x) {
+                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
+            }
+            $nama = $get_user['nama'];
+            // $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
+            $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
+            $msg = "*[Notifkasi Admin Filter]*\n\nPermohonan : *$nama*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : Ditolak oleh *".$this->session->userdata('nama')."*\nAlasan : ".$this->input->post('keterangan')."\nTanggal : ".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+
+            //notif user
+            $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            //notif confirm admin
+            $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            //end
+
             echo json_encode('Success');
             // redirect('permohonan/list');
+            
         }else if($this->uri->segment(5) == 'confirm_admin'){
             $unik = $this->uri->segment(3);
             $status = $this->uri->segment(4);
@@ -1399,6 +1431,10 @@ class Permohonan extends CI_Controller {
             //notif confirm admin
             $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
             $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+
+            //admin approve 1
+            $get_admin1 = $this->db->query('SELECT * FROM users where id='.$this->id_ririn.'')->row_array();
+            $this->api_whatsapp->wa_notif($msg,$get_admin1['telp']);
             //end
 
             redirect('permohonan/list2');
@@ -1436,11 +1472,25 @@ class Permohonan extends CI_Controller {
                 $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
+
+            $get_atasan = $this->db->get_where('tb_atasan',['unik' => $unik])->result();
+            if (count($get_atasan) >= 2) {
+                $pisah_atasan = "\n\n";
+            }else{
+                $pisah_atasan = "\n\n";
+            }
+            $nama_admin_2 = $get_user['nama_admin'];
+
+            $isi_atasan = array();
+            $noo = 1;
+            foreach ($get_atasan as $x) {
+                $isi_atasan[] = "Disetujui Admin ".$noo++." : *".$x->nama."*\nTanggal Disetujui : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s').'*'.$pisah_atasan."";
+            }
             $nama = $get_user['nama'];
             $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
-            $msg = "*[Notifkasi Upload Transfer]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : *Bukti transfer berhasil diupload*\nTanggal Upload Transfer : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti transfer : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+            $msg = "*[Notifkasi Upload Transfer]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\nDisetujui admin filter : *".$nama_admin_2."*\n\n".implode($isi_atasan)."Status : *Bukti transfer berhasil diupload*\nTanggal Upload Transfer : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti transfer : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
@@ -1487,6 +1537,46 @@ class Permohonan extends CI_Controller {
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
             $msg = "*[Notifkasi Upload Bayar]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : *Bukti bayar berhasil diupload*\nTanggal Upload bayar : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti bayar : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
+
+            //send notif whatsapp
+            $get_user = $this->db->query("SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='$unik'")->row_array();
+            $detail_permohonan = $this->db->get_where('tb_permohonan_detail',['unik' => $unik])->result();
+            if (count($detail_permohonan) >= 2) {
+                $pisah = "\n===================\n";
+            }else{
+                $pisah = "\n";
+            }
+            $isi_permohonan_x = array();
+            foreach ($detail_permohonan as $x) {
+                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
+            }
+
+            $get_atasan = $this->db->get_where('tb_atasan',['unik' => $unik])->result();
+            if (count($get_atasan) >= 2) {
+                $pisah_atasan = "\n\n";
+            }else{
+                $pisah_atasan = "\n\n";
+            }
+            $nama_admin_2 = $get_user['nama_admin'];
+
+            $isi_atasan = array();
+            $noo = 1;
+            foreach ($get_atasan as $x) {
+                $isi_atasan[] = "Disetujui Admin ".$noo++." : *".$x->nama."*\nTanggal Disetujui : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s').'*'.$pisah_atasan."";
+            }
+            $nama = $get_user['nama'];
+            $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $bukti_bayar = "http://localhost/embun_pagi_pengajuan/upload/bukti_bayar/". $get_user['bukti_bayar_user'];
+            $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
+            $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
+            if ($this->input->post('sisa_dana') == true) {
+               $sisa_dana2 = "Sisa dana : *Rp.".$this->input->post('sisa_dana')."*";
+            }else{
+                $sisa_dana2 = "";
+            }
+            $status_bukti_bayar = "Status : *Bukti bayar berhasil diupload*\nTanggal Upload bayar : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\n$sisa_dana2\nLink bukti transfer : $bukti_bayar \n\n";
+            $msg = "*[Notifkasi Upload Bayar]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\nDisetujui admin filter : *".$nama_admin_2."*\n\n".implode($isi_atasan)."Status : *Bukti transfer berhasil diupload*\nTanggal Upload Transfer : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti transfer : $bukti_transfer \n\n$status_bukti_bayar*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSTATUS PERMOHONAN : *SELESAI*\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
