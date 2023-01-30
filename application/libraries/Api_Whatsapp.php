@@ -9,7 +9,7 @@ class Api_Whatsapp {
     $phone = $phonee;
     $msg = $msgg;
     
-    $sender = "fandi";
+    $sender = "embunpagi";
     
     $curl = curl_init();
     curl_setopt_array($curl, array(
