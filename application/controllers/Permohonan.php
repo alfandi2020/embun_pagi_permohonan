@@ -37,6 +37,9 @@ class Permohonan extends CI_Controller {
         curl_close($curl);
         echo $response;
     }
+    function info() {
+     echo phpinfo();
+    }
     public function index()
 	{
         $data = [
