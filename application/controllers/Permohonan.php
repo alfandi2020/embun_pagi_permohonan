@@ -19,18 +19,21 @@ class Permohonan extends CI_Controller {
         $sender = "embunpagi";
         
         $curl = curl_init();
+
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://103.171.85.211:8000/send-message',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => 'sender='.$sender.'&number='.$phonee.'&message='.$msgg,
+          CURLOPT_URL => 'http://103.171.85.211:8000/send-message',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => array('sender' => 'embunpagi','number' => '083897943785','message' => 'tes'),
         ));
+        
         $response = curl_exec($curl);
+        
         curl_close($curl);
         echo $response;
     }
