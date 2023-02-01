@@ -13,7 +13,7 @@ class Permohonan extends CI_Controller {
     }
     function wa_notif()
     {
-        $phonee = 083897943785;
+        $phonee = '083897943785';
         $msgg = 'awdawd';
         
         $sender = "embunpagi";
