@@ -13,8 +13,8 @@ class Permohonan extends CI_Controller {
     }
     function wa_notif($msgg,$phonee)
     {
-        $phone = $phonee;
-        $msg = $msgg;
+        // $phone = $phonee;
+        // $msg = $msgg;
         
         $sender = "embunpagi";
         
@@ -28,7 +28,7 @@ class Permohonan extends CI_Controller {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => 'sender='.$sender.'&number='.$phone.'&message='.$msgg,
+        CURLOPT_POSTFIELDS => 'sender='.$sender.'&number='.$phonee.'&message='.$msgg,
         ));
         $response = curl_exec($curl);
         curl_close($curl);
