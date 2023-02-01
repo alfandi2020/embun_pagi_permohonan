@@ -11,10 +11,10 @@ class Permohonan extends CI_Controller {
         $this->load->library('Api_Whatsapp');
 
     }
-    function wa_notif($msgg,$phonee)
+    function wa_notif()
     {
-        // $phone = $phonee;
-        // $msg = $msgg;
+        $phonee = 083897943785;
+        $msgg = 'awdawd';
         
         $sender = "embunpagi";
         
