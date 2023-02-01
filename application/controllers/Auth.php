@@ -112,22 +112,38 @@ class Auth extends CI_Controller {
     }
     function update()
     {
-        if ($this->input->post('level') == '1') {
-            $role = '1,2,3';
-        }else if ($this->input->post('level') == '2') {
-            $role = '1,2';
-        }else{
-            $role = '1';
-        }
+       
         if ($this->input->post('password') == "" && $this->input->post('password') == "") {
+            $get_user = $this->db->get_where('users',['username' => $this->input->post('username')])->row_array();
+            if ($this->input->post('level') == "") {
+                $level = $get_user['level'];
+                $role = $get_user['role'];
+            }else{
+                $level = $this->input->post('level');
+                if ($this->input->post('level') == '1') {
+                    $role = '1,2,3';
+                }else if ($this->input->post('level') == '2') {
+                    $role = '1,2';
+                }else{
+                    $role = '1';
+                }
+            }
+
+            if ($this->input->post('status_sekolah') == "") {
+                $status_sekolah = $get_user['status_sekolah'];
+            }else{
+                $status_sekolah = implode(',',$this->input->post('status_sekolah'));
+            }
+            
+
             $insert= [
                 "nama" => $this->input->post('nama'),
                 "username" => $this->input->post('username'),
                 "email" => $this->input->post('email'),
                 "telp" => $this->input->post('telp'),
-                "level" => $this->input->post('level'),
+                "level" => $level,
                 "role" => $role,
-                "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
+                "status_sekolah" => $status_sekolah,
             ];
             if ($this->input->post('edit_user') == true) {
                 $this->db->where('id',$this->input->post('edit_user'));
