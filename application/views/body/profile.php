@@ -41,23 +41,36 @@
                             <div class="collapse" id="collapseExample">
                    
                             </div> -->
-                            <?php if($this->session->userdata('level') == 1) { ?>
-                                <div class="row">
+                            <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label>Level</label>
+                                        <label>No Telp</label>
                                         <div class="input-group input-group-merge">
-                                            <select name="level" id="" class="form-control">
-                                                <option selected>Pilih Level</option>
-                                                <?php 
-                                                    $d = $this->db->get_where('tb_level',['status' => 1])->result();
-                                                    foreach($d as $x){ ?>
-                                                <option <?= $data['level'] == $x->id ? 'selected' : '' ?> value="<?= $x->id ?>"><?= $x->nama ?></option>
-                                                <?php } ?>
-                                            </select>
+                                            <input type="text" class="form-control" name="telp" value="<?= $data['telp']?>">
                                         </div>
                                     </div>
+                                    <?php if($this->session->userdata('level') == 1) { ?>
+                                        <div class="col-md-4 mb-3">
+                                            <label>Level</label>
+                                            <div class="input-group input-group-merge">
+                                                <select name="level" id="" class="form-control">
+                                                    <option selected>Pilih Level</option>
+                                                    <?php 
+                                                        $d = $this->db->get_where('tb_level',['status' => 1])->result();
+                                                        foreach($d as $x){ ?>
+                                                    <option <?= $data['level'] == $x->id ? 'selected' : '' ?> value="<?= $x->id ?>"><?= $x->nama ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                            </div>
+                            <?php if($this->session->userdata('level') == 1) { ?>
+                                <div class="row">
+                                    
                                     <div class="row col mb-3">
                                         <label class="form-label" for="modalAddCardCvv">Status Sekolah</label>
+                                        <div class="col-md-1">
+                                        </div>
                                         <div class="col-md-2 form-check">
                                             <input name="status_sekolah[]" <?= strpos($data['status_sekolah'],'TK') !== false ? 'checked' : '' ?> class="form-check-input" type="checkbox" value="TK"
                                                 id="defaultRadio1" />
