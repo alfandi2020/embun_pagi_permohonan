@@ -145,12 +145,7 @@ class Auth extends CI_Controller {
         if ($this->input->post('change') == 'password') {
             if ($this->input->post('password') == $this->input->post('password_konfirmasi')) {
                 $insert= [
-                    "nama" => $this->input->post('nama'),
-                    "username" => $this->input->post('username'),
                     "password" => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
-                    "level" => $this->input->post('level'),
-                    "role" => $role,
-                    "status_sekolah" => implode(',',$this->input->post('status_sekolah')),
                 ];
                 $this->db->where('id',$this->session->userdata('id_user'));
                 $this->db->update('users',$insert);
