@@ -11,6 +11,29 @@ class Permohonan extends CI_Controller {
         $this->load->library('Api_Whatsapp');
 
     }
+    function wa_notif($msgg,$phonee)
+    {
+        $phone = $phonee;
+        $msg = $msgg;
+        
+        $sender = "embunpagi";
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://103.171.85.211:8000/send-message',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => 'sender='.$sender.'&number='.$phone.'&message='.$msgg,
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
+    }
     public function index()
 	{
         $data = [
@@ -152,8 +175,8 @@ class Permohonan extends CI_Controller {
             $msg = "*[Notifkasi Permohonan Baru]*\n\nPermohonan baru dari : *$nama*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
             $get_userr = $this->db->query("SELECT * FROM users where id='$id_user'")->row_array();
             $get_admin_filter = $this->db->query("SELECT * FROM users where id='24'")->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_userr['telp']);//send to user
-            $this->api_whatsapp->wa_notif($msg,$get_admin_filter['telp']);//send to admin filter
+            $this->wa_notif($msg,$get_userr['telp']);//send to user
+            $this->wa_notif($msg,$get_admin_filter['telp']);//send to admin filter
             $this->session->set_flashdata('msg','berhasil_x');
         }else{
             $this->session->set_flashdata('msg','not_item');
@@ -182,7 +205,7 @@ class Permohonan extends CI_Controller {
     }
     function tes_api()
     {
-        $this->api_whatsapp->wa_notif('adawdwa','083897943785');
+        $this->wa_notif('adawdwa','083897943785');
     }
     function get_list_permohonan()
     {
@@ -1326,20 +1349,20 @@ class Permohonan extends CI_Controller {
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            $this->wa_notif($msg,$get_user['telp']);
             
             //notif confirm admin
             $cek_atasan = $this->db->query("SELECT COUNT(*) as total FROM tb_atasan WHERE unik='$unik'")->row_array();
             if ($cek_atasan['total'] == 1) { //send ke tata
                 $get_admin = $this->db->query('SELECT * FROM users where id="13"')->row_array();
-                $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+                $this->wa_notif($msg,$get_admin['telp']);
             }elseif ($cek_atasan['total'] == 2) { //send ke ivo
                 $get_admin = $this->db->query('SELECT * FROM users where id="20"')->row_array();
-                $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+                $this->wa_notif($msg,$get_admin['telp']);
             }
             // elseif ($cek_atasan['total'] == 3) { //send ke ivo
             //     // $get_admin = $this->db->query('SELECT * FROM users where id=""')->row_array();
-            //     // $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            //     // $this->wa_notif($msg,$get_admin['telp']);
             // }
             //end
             $total_permohonan = $this->db->query("SELECT count(id_atasan) as total FROM tb_atasan where unik='$unik'")->row_array();
@@ -1382,10 +1405,10 @@ class Permohonan extends CI_Controller {
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            $this->wa_notif($msg,$get_user['telp']);
             //notif confirm admin
             $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            $this->wa_notif($msg,$get_admin['telp']);
             //end
 
             echo json_encode('Success');
@@ -1430,14 +1453,14 @@ class Permohonan extends CI_Controller {
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            $this->wa_notif($msg,$get_user['telp']);
             //notif confirm admin
             $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            $this->wa_notif($msg,$get_admin['telp']);
 
             //admin approve 1
             $get_admin1 = $this->db->query('SELECT * FROM users where id='.$this->id_ririn.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_admin1['telp']);
+            $this->wa_notif($msg,$get_admin1['telp']);
             //end
 
             redirect('permohonan/list2');
@@ -1497,10 +1520,10 @@ class Permohonan extends CI_Controller {
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            $this->wa_notif($msg,$get_user['telp']);
             //notif confirm admin
             $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            $this->wa_notif($msg,$get_admin['telp']);
             //end
 
             $this->session->set_flashdata('msg','<div class="alert alert-primary">File bukti Petty cash / transfer berhasil di upload</div>');
@@ -1583,10 +1606,10 @@ class Permohonan extends CI_Controller {
 
             //notif user
             $get_user = $this->db->query('SELECT * FROM tb_permohonan as a left join users as b on(a.id_user=b.id) where a.unik='.$unik.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_user['telp']);
+            $this->wa_notif($msg,$get_user['telp']);
             //notif confirm admin
             $get_admin = $this->db->query('SELECT * FROM users where id='.$id_user.'')->row_array();
-            $this->api_whatsapp->wa_notif($msg,$get_admin['telp']);
+            $this->wa_notif($msg,$get_admin['telp']);
             //end
 
             $this->session->set_flashdata('msg','<div class="alert alert-primary">File bukti bayar berhasil di upload</div>');
