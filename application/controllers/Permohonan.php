@@ -32,7 +32,7 @@ class Permohonan extends CI_Controller {
         ));
         $response = curl_exec($curl);
         curl_close($curl);
-        return $response;
+        echo $response;
     }
     public function index()
 	{
