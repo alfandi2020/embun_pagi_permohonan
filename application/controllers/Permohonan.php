@@ -175,7 +175,7 @@ class Permohonan extends CI_Controller {
             $msg = "*[Notifkasi Permohonan Baru]*\n\nPermohonan baru dari : *$nama*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
             $get_userr = $this->db->query("SELECT * FROM users where id='$id_user'")->row_array();
             $get_admin_filter = $this->db->query("SELECT * FROM users where id='24'")->row_array();
-            echo $this->wa_notif($msg,$get_userr['telp']);//send to user
+            $this->wa_notif($msg,$get_userr['telp']);//send to user
             $this->wa_notif($msg,$get_admin_filter['telp']);//send to admin filter
             $this->session->set_flashdata('msg','berhasil_x');
         }else{
@@ -183,7 +183,7 @@ class Permohonan extends CI_Controller {
             redirect('permohonan');
         }
         $this->session->unset_userdata('setUnik');
-        // redirect('permohonan');
+        redirect('permohonan');
     }
     function list2()
     {
