@@ -160,7 +160,7 @@ class Permohonan extends CI_Controller {
             redirect('permohonan');
         }
         $this->session->unset_userdata('setUnik');
-        redirect('permohonan');
+        // redirect('permohonan');
     }
     function list2()
     {
