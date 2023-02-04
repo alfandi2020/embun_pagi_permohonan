@@ -13,28 +13,15 @@ class Permohonan extends CI_Controller {
     }
     function wa_notif()
     {
-        $phonee = '083897943785';
-        $msgg = 'awdawd';
-        
-        $sender = "embunpagi";
-        
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => 'http://103.171.85.211:8000/send-message',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS => array('sender' => 'embunpagi','number' => '083897943785','message' => 'tes'),
-        ));
-        
-        $response = curl_exec($curl);
-        
-        curl_close($curl);
-        var_dump($response) . 9;
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('POST', 'http://103.171.85.211:8000/send-message', [
+            'form_params' => [
+                'sender' => 'embunpagi',
+                'number' => '083897943785',
+                'message' => 'tess',
+            ]
+        ]);
+        echo $response->getBody()->getContents();
     }
     public function index()
 	{
