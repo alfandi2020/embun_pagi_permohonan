@@ -1,7 +1,8 @@
 {
     "require": {
         "phpoffice/phpspreadsheet": "^1",
-        "guzzlehttp/guzzle": "^6.0"
+        "guzzlehttp/guzzle": "^6.0",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "config": {
         "platform": {
