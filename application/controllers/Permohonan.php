@@ -19,7 +19,6 @@ class Permohonan extends CI_Controller {
         $sender = "embunpagi";
         
         $curl = curl_init();
-        echo $curl;
         curl_setopt_array($curl, array(
           CURLOPT_URL => 'http://103.171.85.211:8000/send-message',
           CURLOPT_RETURNTRANSFER => true,
@@ -35,7 +34,7 @@ class Permohonan extends CI_Controller {
         $response = curl_exec($curl);
         
         curl_close($curl);
-        echo $response . 9;
+        var_dump($response) . 9;
     }
     public function index()
 	{
