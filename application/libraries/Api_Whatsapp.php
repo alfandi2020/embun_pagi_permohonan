@@ -13,7 +13,7 @@ class Api_Whatsapp {
     
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'http://103.171.85.211:8000/send-message',
+      CURLOPT_URL => 'https://ljn.fantecno.net/cron/send',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -21,7 +21,7 @@ class Api_Whatsapp {
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS => 'sender='.$sender.'&number='.$phone.'&message='.$msgg,
+      CURLOPT_POSTFIELDS => 'key='.$sender.'&phone='.$phone.'&msg='.$msgg,
     ));
     $response = curl_exec($curl);
     curl_close($curl);
