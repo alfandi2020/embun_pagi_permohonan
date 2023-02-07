@@ -180,7 +180,7 @@
                                       </ul>
                                     </div>
                                     <?php } ?>
-                                    <?php if($x->status_bayar == 'Sudah Dibayar') { ?>
+                                    <?php if($x->status_bayar == 'Sudah Ditransfer') { ?>
                                     <div class="card-body">
                                       <ul class="timeline timeline-dashed mt-3">
                                         <?php 
@@ -214,6 +214,56 @@
                                               </div>
                                               <div>
                                                 <span><?= date('d-M-Y H:i:s',strtotime($x->date_created)) ?></span>
+                                              </div>
+                                            </div>
+                                            <!-- <b style="color: <?= $color ?>;"><?= $x->status_bayar ?></b> <br> -->
+                                            <?= $x->status_bayar == 'Sudah Ditransfer' ? 'Status : '. '<b>' .$x->status_bayar.'</b>' : '' ?>
+                                            <hr>
+                                            <?php //} ?>
+                                   
+                                          </div>
+                                        </li>
+
+                                        <li class="timeline-end-indicator">
+                                          <i class="bx bx-check-circle"></i>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <?php } ?>
+                                    <?php if($x->bukti_bayar_user == true) { ?>
+                                    <div class="card-body">
+                                      <ul class="timeline timeline-dashed mt-3">
+                                        <?php 
+                                          // $this->db->where('unik',$x->unik);
+                                          // $datax = $this->db->get('tb_atasan')->result();
+                                        ?>
+                                        <li class="timeline-item timeline-item-info mb-4">
+                                          <span class="timeline-indicator timeline-indicator-primary">
+                                            <i class="bx bx-paper-plane"></i>
+                                          </span>
+                                          <div class="timeline-event">
+                                            <div class="timeline-header border-bottom mb-3">
+                                              <b class="mb-0">Status User bayar</b>
+                                            </div>
+                                            <?php 
+                                            $no = 1;
+                                            // foreach($datax as $x) { 
+                                              if ($x->status_permohonan == 'Approved') {
+                                                $color = '#1abc9c';
+                                              }else if ($x->status_permohonan == 'Rejected') {
+                                                $color = '#e74c3c';
+                                              }else{
+                                                $color ='';
+                                              }
+                                              ?>
+                                            <div class="d-flex justify-content-between flex-wrap mb-2">
+                                              <div>
+                                                <span>File Upload Bukti Bayar</span>
+                                                <i class="bx bx-right-arrow-alt scaleX-n1-rtl mx-3"></i>
+                                                <a download href="<?= base_url('upload/bukti_bayar/'.$x->bukti_bayar_user) ?>"><?= $x->bukti_bayar_user ?></a>
+                                              </div>
+                                              <div>
+                                                <span><?= date('d-M-Y H:i:s',strtotime($x->tgl_bayar_user)) ?></span>
                                               </div>
                                             </div>
                                             <!-- <b style="color: <?= $color ?>;"><?= $x->status_bayar ?></b> <br> -->

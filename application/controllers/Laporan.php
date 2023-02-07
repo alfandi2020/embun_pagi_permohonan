@@ -74,6 +74,7 @@ class Laporan extends CI_Controller {
             // }
             
 			$row[] = 'Rp.'. number_format($field->sisa_dana);
+			$row[] = '<a class="btn btn-primary" href="laporan/belanja/'.$field->id.'"><i class="bx bxs-file-export"></i></a>';
             
             $data[] = $row;
         }
@@ -86,7 +87,46 @@ class Laporan extends CI_Controller {
         );
         echo json_encode($output);
     }
-    
+    function belanja()
+    {
+        // $bulan = $this->input->post('bulan');
+        // $tahun = $this->session->userdata('filterTahun');
+        $id = $this->uri->segment(3);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'PERMOHONAN APPROVED');
+        $sheet->setCellValue('A2', 'Nama Pemohonan')->getDefaultColumnDimension()->setWidth(20);
+        $sheet->setCellValue('B2', 'Nomor Pemohonan');
+        $sheet->setCellValue('C2', 'Tanggal Pemohonan');
+        $sheet->setCellValue('D2', 'Tahun');
+        $sheet->setCellValue('E2', 'Nominal');
+        $sheet->setCellValue('E2', 'Bukti Bayar');
+        //permohonan
+        $get = $this->db->query("SELECT *,SUM(b.nominal) as nominal_detail from tb_permohonan as a left JOIN tb_permohonan_detail as b on(a.unik=b.unik) WHERE a.status_permohonan='Done' AND a.id='$id' GROUP BY a.unik ")->result();
+        $column = 3;
+        $total_nominal = 0;
+        foreach ($get as $x) {
+            $sheet->setCellValue('A'.$column, $x->nama_pemohon);
+            $sheet->setCellValue('B'.$column, $x->no_permohonan);
+            $sheet->setCellValue('C'.$column, $x->tgl_permohonan);
+            $sheet->setCellValue('D'.$column, $x->tahun);
+            $sheet->setCellValue('E'.$column, 'Rp.'.number_format($x->nominal_detail,0,'.','.'));
+            $sheet->setCellValue('F'.$column, $x->bukti_bayar);
+            $column++;
+            $total_nominal += $x->nominal_detail;
+        }
+        $sheet->setCellValue('D'.$column, 'Total Nominal');
+        $sheet->setCellValue('E'.$column, 'Rp.'.number_format($total_nominal,0,'.','.'));
+        $filename = 'Report.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('upload/'.$filename);
+        $this->load->helper('download');
+        // read file contents
+        $data = file_get_contents(base_url('upload/'.$filename));
+        force_download($filename, $data);
+        unlink('upload/'.$filename);
+        redirect('dashboard');
+    }
     function get()
     {
         $bulan = $this->input->post('bulan');
