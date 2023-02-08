@@ -137,7 +137,7 @@ class Permohonan extends CI_Controller {
                     $temp_name = $_FILES['att'.$i]['tmp_name'];
                     $path_filename_ext = $target_dir.$filename.".".$ext;
                     move_uploaded_file($temp_name,$path_filename_ext);
-                    $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $set_unik.'_' . $i . '_'.$_FILES['att'.$i]['name'];
+                    $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $set_unik.'_' . $i . '_'.$_FILES['att'.$i]['name'];
                     $isi_permohonan_x[] = "Isi permohonan : *".$this->input->post('isi'.$i)."*\nNominal : *" . $this->input->post('nominal'.$i). "*\nLink file : $url_link $pisah";
                     $detail = [
                         "unik" => $set_unik,
@@ -148,8 +148,8 @@ class Permohonan extends CI_Controller {
                     $this->db->insert('tb_permohonan_detail',$detail);
             }
              //send notif
-            //  'http://localhost/embun_pagi_pengajuan/permohonan/status/1673876843588/Approved/confirm_admin';
-            // $approve = "http://localhost/embun_pagi_pengajuan/approve/status/".$set_unik."/Approved/confirm_admin";
+            //  'https://pengeluaran.embunpagi.sch.id/permohonan/status/1673876843588/Approved/confirm_admin';
+            // $approve = "https://pengeluaran.embunpagi.sch.id/approve/status/".$set_unik."/Approved/confirm_admin";
             $msg = "*[Notifkasi Permohonan Baru]*\n\nPermohonan baru dari : *$nama*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
             $get_userr = $this->db->query("SELECT * FROM users where id='$id_user'")->row_array();
             $get_admin_filter = $this->db->query("SELECT * FROM users where id='24'")->row_array();
@@ -1303,13 +1303,13 @@ class Permohonan extends CI_Controller {
             }
             $isi_permohonan_x = array();
             foreach ($detail_permohonan as $x) {
-                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
             $nama = $get_user['nama'];
             $no_pemohon_2 = $get_user['no_permohonan'];
             $nama_admin_2 = $get_user['nama_admin'];
-            // $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            // $bukti_transfer = "https://pengeluaran.embunpagi.sch.id/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
             $get_atasan = $this->db->get_where('tb_atasan',['unik' => $unik])->result();
             if (count($get_atasan) >= 2) {
                 $pisah_atasan = "\n\n";
@@ -1372,11 +1372,11 @@ class Permohonan extends CI_Controller {
             }
             $isi_permohonan_x = array();
             foreach ($detail_permohonan as $x) {
-                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
             $nama = $get_user['nama'];
-            // $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            // $bukti_transfer = "https://pengeluaran.embunpagi.sch.id/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
             $msg = "*[Notifkasi Admin Filter]*\n\nPermohonan : *$nama*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : Ditolak oleh *".$this->session->userdata('nama')."*\nAlasan : ".$this->input->post('keterangan')."\nTanggal : ".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
@@ -1420,11 +1420,11 @@ class Permohonan extends CI_Controller {
             }
             $isi_permohonan_x = array();
             foreach ($detail_permohonan as $x) {
-                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
             $nama = $get_user['nama'];
-            // $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            // $bukti_transfer = "https://pengeluaran.embunpagi.sch.id/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
             $msg = "*[Notifkasi Admin Filter]*\n\nPermohonan : *$nama*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : Disetujui oleh *".$this->session->userdata('nama')."*\nTanggal Disetujui : ".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
@@ -1473,7 +1473,7 @@ class Permohonan extends CI_Controller {
             }
             $isi_permohonan_x = array();
             foreach ($detail_permohonan as $x) {
-                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
 
@@ -1491,7 +1491,7 @@ class Permohonan extends CI_Controller {
                 $isi_atasan[] = "Disetujui Admin ".$noo++." : *".$x->nama."*\nTanggal Disetujui : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s').'*'.$pisah_atasan."";
             }
             $nama = $get_user['nama'];
-            $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $bukti_transfer = "https://pengeluaran.embunpagi.sch.id/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
             $msg = "*[Notifkasi Upload Transfer]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\nDisetujui admin filter : *".$nama_admin_2."*\n\n".implode($isi_atasan)."Status : *Bukti transfer berhasil diupload*\nTanggal Upload Transfer : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti transfer : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
@@ -1533,11 +1533,11 @@ class Permohonan extends CI_Controller {
             }
             $isi_permohonan_x = array();
             foreach ($detail_permohonan as $x) {
-                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
             $nama = $get_user['nama'];
-            $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_bayar/". $get_user['bukti_bayar_user'];
+            $bukti_transfer = "https://pengeluaran.embunpagi.sch.id/upload/bukti_bayar/". $get_user['bukti_bayar_user'];
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
             $msg = "*[Notifkasi Upload Bayar]*\n\nPermohonan : *$nama*\nNomor Permohonan : *".$get_user['no_permohonan']."*\nTanggal Permohonan : *". $tgl_permohonan .' '. $tgl_permohonan_jam."*\n\nStatus : *Bukti bayar berhasil diupload*\nTanggal Upload bayar : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s')."*\nLink bukti bayar : $bukti_transfer \n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
@@ -1552,7 +1552,7 @@ class Permohonan extends CI_Controller {
             }
             $isi_permohonan_x = array();
             foreach ($detail_permohonan as $x) {
-                $url_link =  "http://localhost/embun_pagi_pengajuan/upload/file/" . $unik.$x->file;
+                $url_link =  "https://pengeluaran.embunpagi.sch.id/upload/file/" . $unik.$x->file;
                 $isi_permohonan_x[] = "Isi permohonan : *".$x->isi_permohonan."*\nNominal : *" .'Rp.'.number_format($x->nominal,0,'.','.'). "*\nLink file : $url_link $pisah";
             }
 
@@ -1570,8 +1570,8 @@ class Permohonan extends CI_Controller {
                 $isi_atasan[] = "Disetujui Admin ".$noo++." : *".$x->nama."*\nTanggal Disetujui : *".$this->tgl_indo(date('Y-m-d')).' '.date('H:i:s').'*'.$pisah_atasan."";
             }
             $nama = $get_user['nama'];
-            $bukti_transfer = "http://localhost/embun_pagi_pengajuan/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
-            $bukti_bayar = "http://localhost/embun_pagi_pengajuan/upload/bukti_bayar/". $get_user['bukti_bayar_user'];
+            $bukti_transfer = "https://pengeluaran.embunpagi.sch.id/upload/bukti_transfer/". $get_user['file_bukti_transfer'];
+            $bukti_bayar = "https://pengeluaran.embunpagi.sch.id/upload/bukti_bayar/". $get_user['bukti_bayar_user'];
             $tgl_permohonan = $this->tgl_indo(date('Y-m-d',strtotime($get_user['tgl_permohonan'])));
             $tgl_permohonan_jam = date('H:i:s',strtotime($get_user['tgl_permohonan']));
             if ($this->input->post('sisa_dana') == true) {
