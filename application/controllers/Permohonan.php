@@ -152,7 +152,8 @@ class Permohonan extends CI_Controller {
             // $approve = "https://pengeluaran.embunpagi.sch.id/approve/status/".$set_unik."/Approved/confirm_admin";
             $msg = "*[Notifkasi Permohonan Baru]*\n\nPermohonan baru dari : *$nama*\nTanggal : ". $this->tgl_indo(date('Y-m-d')).' '. date('H:i:s')."\n\n*[List Permohonan]*\n". implode('',$isi_permohonan_x)."\nSilahkan cek di https://pengeluaran.embunpagi.sch.id/";
             $get_userr = $this->db->query("SELECT * FROM users where id='$id_user'")->row_array();
-            $get_admin_filter = $this->db->query("SELECT * FROM users where id='24'")->row_array();
+            $sekolah = $this->input->post('tujuan_sekolah');
+            $get_admin_filter = $this->db->query("SELECT * from users where `level`='2' and status_sekolah like '%$sekolah%'")->row_array();
             $this->api_whatsapp->wa_notif($msg,$get_userr['telp']);//send to user
             $this->api_whatsapp->wa_notif($msg,$get_admin_filter['telp']);//send to admin filter
             $this->session->set_flashdata('msg','berhasil_x');
