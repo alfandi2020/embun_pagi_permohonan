@@ -128,7 +128,7 @@
                                               </div>
                                             </div>
                                             <b style="color: <?= $color ?>;"><?= $x->status_permohonan ?></b> <br>
-                                            <?= $x->status_permohonan == 'Rejected' ? 'Keterangan : '. '<b>' .$x->keterangan.'</b>' : '' ?>
+                                            <?= $x->status_permohonan == 'Rejected' ? 'Keterangan : '. '<b>' .$x->note_status_permohonan.'</b>' : '' ?>
                                             <hr>
                                             <?php //} ?>
                                    
