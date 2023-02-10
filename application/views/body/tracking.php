@@ -28,9 +28,9 @@
               <div class="card mb-3">
                 <div class="card-datatable table-responsive">
                   <div class="container row mt-2">
-                    <div class="col-md-3">
+                    <div class="col-md-3 mt-2">
                       <form action="<?= base_url('permohonan/filter_sekolah2') ?>" method="POST">
-                        <label>Status Sekolah</label>
+                        <h6>Status Sekolah</h6>
                         <select onchange="form.submit()" name="sekolah" id="" class="form-control">
                           <option value="">Pilih Sekolah</option>
                           <option <?= $this->session->userdata('filterSekolah') == 'TK' ? 'selected' : '' ?> value="TK">
@@ -45,40 +45,40 @@
                       </form>
                       
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 mt-2">
                       <form action="<?= base_url('permohonan/filter2/tanggal') ?>" method="POST">
-                        <label>Tanggal <?= $this->session->userdata('filterTanggal') ?></label>
+                        <h6>Tanggal <?= $this->session->userdata('filterTanggal') ?></h6>
                         <input onchange="form.submit()" value="<?= $this->session->userdata('filterTanggal') ?>" type="date" name="tanggal" class="form-control">
                       </form>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 mt-3">
                       <a href="<?= base_url('permohonan/reset_sekolah2') ?>" class="btn btn-warning mt-4">Reset</a>
                     </div>
-                    <!-- <div class="col-md-3">
-                    <label>Search</label>
-                    <input type="text" class="form-control">
                   </div>
-                  <div class="col-md-2">
-                    <a href="<?= base_url('permohonan/reset_sekolah') ?>" class="btn btn-warning mt-4">Search</a>
-                  </div> -->
+                  <div class="row container mt-2">
+                    <div class="col-md-3">
+                        <h6>Total Permohonan : <div class="badge bg-primary"> <?= count($track) ?> </div></h6>
+                    </div>
                   </div>
                   <div class="row container">
                     <div class="col-md">
                       <div id="accordionIcon" class="accordion mt-3 accordion-without-arrow">
                         <?php foreach ($track as $x) { 
-                            if ($x->no_permohonan == null) {
-                              $color = 'warning';
+                            if ($x->status_permohonan == 'Waiting') {
+                              $color2 = 'warning';
                             }else if($x->status_permohonan == 'Done'){
-                              $color = 'success';
+                              $color2 = 'success';
+                            }else if($x->status_permohonan == 'Rejected'){
+                              $color2 = 'danger';
                             }else{
-                              $color = 'primary';
+                              $color2 = 'primary';
                             }
 
 
                         ?>
                         <div class="accordion-item card">
                           <h2 class="accordion-header text-body d-flex justify-content-between" id="accordionIconOne">
-                            <button type="button" class="btn btn-label-<?= $color ?> accordion-button collapsed"
+                            <button type="button" class="btn btn-label-<?= $color2 ?> accordion-button collapsed"
                               data-bs-toggle="collapse" data-bs-target="#accordionIcon-<?= $x->id ?>"
                               aria-controls="accordionIcon-1">
                              <div class="text"> No Pemohon : <?= $x->no_permohonan ==  null ? 'Menunggu Admin Filter' : $x->no_permohonan ?> ||  Nama Pemohon : <?= $x->nama_pemohon ?> -
