@@ -25,7 +25,7 @@
           <div class="row">
             <!-- Form controls -->
             <div class="col-md-12">
-              <div class="card mb-3" style="background-color: #f0f1f4;">
+              <div class="card mb-3">
                 <div class="card-datatable table-responsive">
                   <div class="container row mt-2">
                     <div class="col-md-3">
