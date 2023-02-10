@@ -25,7 +25,7 @@
           <div class="row">
             <!-- Form controls -->
             <div class="col-md-12">
-              <div class="card mb-3" style="background-color:#f5f5f9;">
+              <div class="card mb-3" style="background-color: #f0f1f4;">
                 <div class="card-datatable table-responsive">
                   <div class="container row mt-2">
                     <div class="col-md-3">
@@ -42,6 +42,13 @@
                           <option <?= $this->session->userdata('filterSekolah') == 'SMA' ? 'selected' : '' ?>
                             value="SMA">SMA</option>
                         </select>
+                      </form>
+                      
+                    </div>
+                    <div class="col-md-2">
+                      <form action="<?= base_url('permohonan/filter2/tanggal') ?>" method="POST">
+                        <label>Tanggal <?= $this->session->userdata('filterTanggal') ?></label>
+                        <input onchange="form.submit()" value="<?= $this->session->userdata('filterTanggal') ?>" type="date" name="tanggal" class="form-control">
                       </form>
                     </div>
                     <div class="col-md-2">
@@ -61,18 +68,21 @@
                         <?php foreach ($track as $x) { 
                             if ($x->no_permohonan == null) {
                               $color = 'warning';
+                            }else if($x->status_permohonan == 'Done'){
+                              $color = 'success';
                             }else{
                               $color = 'primary';
                             }
+
+
                         ?>
                         <div class="accordion-item card">
                           <h2 class="accordion-header text-body d-flex justify-content-between" id="accordionIconOne">
                             <button type="button" class="btn btn-label-<?= $color ?> accordion-button collapsed"
                               data-bs-toggle="collapse" data-bs-target="#accordionIcon-<?= $x->id ?>"
                               aria-controls="accordionIcon-1">
-                              No Pemohon : <?= $x->no_permohonan ==  null ? 0 : $x->no_permohonan ?> <i
-                                class='bx bx-right-arrow-alt'></i> Nama Pemohon : <?= $x->nama_pemohon ?> -
-                              <?= date('d M Y',strtotime($x->tgl_permohonan)) ?>
+                             <div class="text"> No Pemohon : <?= $x->no_permohonan ==  null ? 'Menunggu Admin Filter' : $x->no_permohonan ?> ||  Nama Pemohon : <?= $x->nama_pemohon ?> -
+                              <?= date('d M Y',strtotime($x->tgl_permohonan)) ?></div>
                             </button>
                           </h2>
                           <div id="accordionIcon-<?= $x->id ?>" class="collapse"

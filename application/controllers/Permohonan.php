@@ -29,8 +29,12 @@ class Permohonan extends CI_Controller {
     function track()
     {
         $sekolah = $this->session->userdata('filterSekolah');
+        $tanggal = $this->session->userdata('filterTanggal');
         if ($sekolah) {
-            $this->db->where('tujuan_sekolah',$sekolah);
+            $this->db->like('tujuan_sekolah',$sekolah);
+        }
+        if ($tanggal) {
+            $this->db->like("DATE_FORMAT(tgl_permohonan, '%Y-%m-%d')",$tanggal);
         }
         $this->db->order_by('tgl_permohonan','desc');
         $track = $this->db->get('tb_permohonan')->result();
@@ -82,6 +86,14 @@ class Permohonan extends CI_Controller {
             redirect('permohonan/list2');
         }
     }
+    function filter2()
+    {
+        if ($this->uri->segment(3) == 'tanggal') {
+            $filter = $this->input->post('tanggal');
+            $this->session->set_userdata('filterTanggal', $filter);
+            redirect('permohonan/track');
+        }
+    }
     public function filter_sekolah(){
             $filter = $this->input->post('sekolah');
             $this->session->set_userdata('filterSekolah', $filter);
@@ -100,7 +112,8 @@ class Permohonan extends CI_Controller {
     function reset_sekolah2()
     {
         $this->session->unset_userdata('filterSekolah');
-        redirect('permohonan/list2');
+        $this->session->unset_userdata('filterTanggal');
+        redirect('permohonan/track');
     }
     public function submit()
     {
